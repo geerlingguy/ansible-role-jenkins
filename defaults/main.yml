@@ -1,0 +1,10 @@
+---
+jenkins_host: localhost
+jenkins_port: 9080
+jenkins_jar_location: /opt/jenkins-cli.jar
+jenkins_webserver: apache
+jenkins_plugins:
+  - git
+  - sonar
+  - ssh
+  - job-import-plugin

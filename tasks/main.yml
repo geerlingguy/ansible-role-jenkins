@@ -14,14 +14,23 @@
 - name: Ensure Jenkins is installed.
   yum: pkg=jenkins state=installed
 
+- name: jenkins sysconfig file
+  template: >
+    src=jenkins.sysconfig.j2
+    dest=/etc/sysconfig/jenkins
+    owner=root
+    group=root
+    mode=0600
+  notify: restart jenkins
+
 - name: Ensure Jenkins is started and runs on startup.
   service: name=jenkins state=started enabled=yes
 
 - name: Wait for Jenkins to start up before proceeding.
-  wait_for: host={{ hostname }} port=8080 timeout=300
+  wait_for: host=localhost port={{ jenkins_port }} timeout=300
 
 - name: Get the jenkins-cli jarfile from the Jenkins server.
-  get_url: url=http://{{ hostname }}:8080/jnlpJars/jenkins-cli.jar dest={{ jenkins_jar_location }}
+  get_url: url=http://localhost:{{ jenkins_port }}/jnlpJars/jenkins-cli.jar dest={{ jenkins_jar_location }}
   register: jarfile_get
   until: "'OK' in jarfile_get.msg or 'file already exists' in jarfile_get.msg"
   retries: 5
@@ -41,6 +50,11 @@
   file: path=/var/lib/jenkins/updates/default.json owner=jenkins group=jenkins mode=0755
 
 - name: Install Jenkins plugins.
-  command: java -jar {{ jenkins_jar_location }} -s http://{{ hostname }}:8080/ install-plugin {{ item }} creates=/var/lib/jenkins/plugins/{{ item }}.jpi
+  command: java -jar {{ jenkins_jar_location }} -s http://{{ jenkins_host }}:{{ jenkins_port }}/ install-plugin {{ item }} creates=/var/lib/jenkins/plugins/{{ item }}.jpi
   with_items: jenkins_plugins
   notify: restart jenkins
+
+- name: copy jenkins.conf file
+  template: src=jenkins.conf.j2 dest=/etc/httpd/conf.d/jenkins.conf
+  notify: restart apache
+  when: jenkins_webserver == 'apache'

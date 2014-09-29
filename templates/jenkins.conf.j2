@@ -1,0 +1,15 @@
+<VirtualHost *:80>
+        ServerName {{ jenkins_host }}
+        DocumentRoot    /var/www/html
+
+        ProxyPass / http://localhost:{{ jenkins_port }}/ nocanon
+        ProxyPassReverse / http://localhost:{{ jenkins_port }}/
+        ProxyRequests Off
+        ProxyPreserveHost On
+        <Proxy http://localhost:{{ jenkins_port }}/*>
+                Order deny,allow
+                Allow from all
+        </Proxy>
+        # If using reverse proxy from SSL
+        #Header edit Location ^http: https:
+</VirtualHost>
