@@ -50,7 +50,7 @@
   file: path=/var/lib/jenkins/updates/default.json owner=jenkins group=jenkins mode=0755
 
 - name: Install Jenkins plugins.
-  command: java -jar {{ jenkins_jar_location }} -s http://{{ jenkins_host }}:{{ jenkins_port }}/ install-plugin {{ item }} creates=/var/lib/jenkins/plugins/{{ item }}.jpi
+  command: java -jar {{ jenkins_jar_location }} -s http://localhost:{{ jenkins_port }}/ install-plugin {{ item }} creates=/var/lib/jenkins/plugins/{{ item }}.jpi
   with_items: jenkins_plugins
   notify: restart jenkins
 
