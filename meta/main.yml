@@ -1,5 +1,6 @@
 ---
 dependencies:
+  - { role: geerlingguy.apache, when: jenkins_webserver == 'apache' }
   - { role: geerlingguy.java }
 
 galaxy_info:
