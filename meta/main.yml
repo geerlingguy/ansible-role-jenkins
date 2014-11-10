@@ -13,6 +13,10 @@ galaxy_info:
     versions:
     - 6
     - 7
+  - name: Debian
+    - all
+  - name: Ubuntu
+    - all
   categories:
     - development
     - packaging

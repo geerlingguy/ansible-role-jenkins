@@ -1,6 +1,6 @@
 # Ansible Role: Jenkins CI
 
-Installs Jenkins CI on RHEL/CentOS 6.x servers.
+Installs Jenkins CI on RHEL/CentOS and Debian/Ubuntu servers.
 
 ## Requirements
 
@@ -32,14 +32,10 @@ Jenkins plugins to be installed automatically during provisioning. You can alway
 ## Example Playbook
 
     - hosts: ci-server
-      vars_files:
-        - vars/main.yml
+      vars:
+        hostname: jenkins-example.com
       roles:
         - { role: geerlingguy.jenkins }
-
-*Inside `vars/main.yml`*:
-
-    hostname: jenkins-example.com
 
 ## License
 
