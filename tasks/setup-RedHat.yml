@@ -1,0 +1,15 @@
+---
+- name: Ensure Jenkins repo is installed.
+  get_url:
+    # LTS repo: http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo
+    url: http://pkg.jenkins-ci.org/redhat/jenkins.repo
+    dest: /etc/yum.repos.d/jenkins.repo
+
+- name: Add Jenkins repo GPG key.
+  rpm_key:
+    state: present
+    # LTS key: http://pkg.jenkins-ci.org/redhat-stable/jenkins-ci.org.key
+    key: http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
+
+- name: Ensure Jenkins is installed.
+  yum: pkg=jenkins state=installed

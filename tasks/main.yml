@@ -1,19 +1,12 @@
 ---
-- name: Ensure Jenkins repo is installed.
-  get_url:
-    # LTS repo: http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo
-    url: http://pkg.jenkins-ci.org/redhat/jenkins.repo
-    dest: /etc/yum.repos.d/jenkins.repo
+# Setup/install tasks.
+- include: setup-RedHat.yml
+  when: ansible_os_family == 'RedHat'
 
-- name: Add Jenkins repo GPG key.
-  rpm_key:
-    state: present
-    # LTS key: http://pkg.jenkins-ci.org/redhat-stable/jenkins-ci.org.key
-    key: http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
+- include: setup-Debian.yml
+  when: ansible_os_family == 'Debian'
 
-- name: Ensure Jenkins is installed.
-  yum: pkg=jenkins state=installed
-
+# Make sure Jenkins starts, then configure Jenkins.
 - name: Ensure Jenkins is started and runs on startup.
   service: name=jenkins state=started enabled=yes
 
