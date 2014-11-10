@@ -1,15 +1,15 @@
 ---
-# Install Jenkins.
-
-# If you want to use LTS releases instead of the latest Jenkins versions, switch
-# the Repo and key to the following URLs:
-# repo: http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo
-# key: http://pkg.jenkins-ci.org/redhat-stable/jenkins-ci.org.key
 - name: Ensure Jenkins repo is installed.
-  get_url: url=http://pkg.jenkins-ci.org/redhat/jenkins.repo dest=/etc/yum.repos.d/jenkins.repo
+  get_url:
+    # LTS repo: http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo
+    url: http://pkg.jenkins-ci.org/redhat/jenkins.repo
+    dest: /etc/yum.repos.d/jenkins.repo
 
 - name: Add Jenkins repo GPG key.
-  rpm_key: state=present key=http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
+  rpm_key:
+    state: present
+    # LTS key: http://pkg.jenkins-ci.org/redhat-stable/jenkins-ci.org.key
+    key: http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
 
 - name: Ensure Jenkins is installed.
   yum: pkg=jenkins state=installed
@@ -18,29 +18,19 @@
   service: name=jenkins state=started enabled=yes
 
 - name: Wait for Jenkins to start up before proceeding.
-  wait_for: host={{ hostname }} port=8080 timeout=300
+  wait_for:
+    host: "{{ hostname }}"
+    port: 8080
+    timeout: 300
 
 - name: Get the jenkins-cli jarfile from the Jenkins server.
-  get_url: url=http://{{ hostname }}:8080/jnlpJars/jenkins-cli.jar dest={{ jenkins_jar_location }}
+  get_url:
+    url: "http://{{ hostname }}:8080/jnlpJars/jenkins-cli.jar"
+    dest: "{{ jenkins_jar_location }}"
   register: jarfile_get
   until: "'OK' in jarfile_get.msg or 'file already exists' in jarfile_get.msg"
   retries: 5
-  delay: 5
+  delay: 10
 
-# Jenkins doesn't allow updates via CLI, though that is required before plugins
-# can be installed via CLI. See: https://gist.github.com/rowan-m/1026918
-- name: Create Jenkins updates folder.
-  file: path=/var/lib/jenkins/updates owner=jenkins group=jenkins mode=0755 state=directory
-
-- name: Update Jenkins plugin data.
-  shell:
-    curl -L http://updates.jenkins-ci.org/update-center.json | sed '1d;$d' > /var/lib/jenkins/updates/default.json
-    creates=/var/lib/jenkins/updates/default.json
-
-- name: Permissions for default.json updates info.
-  file: path=/var/lib/jenkins/updates/default.json owner=jenkins group=jenkins mode=0755
-
-- name: Install Jenkins plugins.
-  command: java -jar {{ jenkins_jar_location }} -s http://{{ hostname }}:8080/ install-plugin {{ item }} creates=/var/lib/jenkins/plugins/{{ item }}.jpi
-  with_items: jenkins_plugins
-  notify: restart jenkins
+# Update Jenkins and install configured plugins.
+- include: plugins.yml

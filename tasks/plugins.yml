@@ -1,0 +1,29 @@
+---
+# Jenkins doesn't allow updates via CLI, though that is required before plugins
+# can be installed via CLI. See: https://gist.github.com/rowan-m/1026918
+- name: Create Jenkins updates folder.
+  file:
+    path: /var/lib/jenkins/updates
+    owner: jenkins
+    group: jenkins
+    mode: 0755
+    state: directory
+
+- name: Update Jenkins plugin data.
+  shell: >
+    curl -L http://updates.jenkins-ci.org/update-center.json | sed '1d;$d' > /var/lib/jenkins/updates/default.json
+    creates=/var/lib/jenkins/updates/default.json
+
+- name: Permissions for default.json updates info.
+  file:
+    path: /var/lib/jenkins/updates/default.json
+    owner: jenkins
+    group: jenkins
+    mode: 0755
+
+- name: Install Jenkins plugins.
+  command: >
+    java -jar {{ jenkins_jar_location }} -s http://{{ hostname }}:8080/ install-plugin {{ item }}
+    creates=/var/lib/jenkins/plugins/{{ item }}.jpi
+  with_items: jenkins_plugins
+  notify: restart jenkins
