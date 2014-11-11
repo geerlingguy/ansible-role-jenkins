@@ -1,4 +1,7 @@
 ---
+- name: Ensure dependencies are installed.
+  yum: pkg=curl state=installed
+
 - name: Ensure Jenkins repo is installed.
   get_url:
     # LTS repo: http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo
