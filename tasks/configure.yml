@@ -1,0 +1,28 @@
+---
+- name: check if jenkins home is in /etc/passwd
+  shell: cat /etc/passwd | grep "{{ jenkins_home_path }}"
+  register: jenkins_home_check
+  ignore_errors: true
+  changed_when: jenkins_home_check|failed
+
+
+# stop the jenkins if is running otherwise 
+# can not set the new home destination 
+- name: Stoping jenkins
+  service: name=jenkins state=stopped
+  when: jenkins_home_check|failed
+
+- name: Set new home for jenkins user
+  user: name={{ jenkins_user }}
+   home={{ jenkins_home_path }}
+   move_home=yes
+
+
+- name: Add jenkins configuration file
+  template: src="jenkins.j2"
+            dest="/etc/default/jenkins"
+            owner=root
+            group=root
+            mode=0644
+  notify: restart jenkins
+
