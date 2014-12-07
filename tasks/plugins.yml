@@ -23,7 +23,7 @@
 
 - name: Install Jenkins plugins.
   command: >
-    java -jar {{ jenkins_jar_location }} -s http://{{ hostname }}:8080/ install-plugin {{ item }}
+    java -jar {{ jenkins_jar_location }} -s http://{{ hostname }}:{{ jenkins_http_port }}/ install-plugin {{ item }}
     creates={{ jenkins_plugins_dir }}/{{ item }}.jpi
   with_items: jenkins_plugins
   notify: restart jenkins
