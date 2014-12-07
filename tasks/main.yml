@@ -6,6 +6,8 @@
 - include: setup-Debian.yml
   when: ansible_os_family == 'Debian'
 
+- include: configure.yml
+
 # Make sure Jenkins starts, then configure Jenkins.
 - name: Ensure Jenkins is started and runs on startup.
   service: name=jenkins state=started enabled=yes
