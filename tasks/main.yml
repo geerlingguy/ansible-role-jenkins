@@ -15,7 +15,7 @@
 - name: Wait for Jenkins to start up before proceeding.
   wait_for:
     host: "{{ hostname }}"
-    port: 8080
+    port: "{{ jenkins_http_port }}"
     timeout: 300
 
 - name: Get the jenkins-cli jarfile from the Jenkins server.
