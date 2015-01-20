@@ -14,7 +14,7 @@
   wait_for:
     host: "{{ hostname }}"
     port: 8080
-    timeout: 300
+    timeout: "{{ startup_timeout }}"
 
 - name: Get the jenkins-cli jarfile from the Jenkins server.
   get_url:
@@ -22,8 +22,8 @@
     dest: "{{ jenkins_jar_location }}"
   register: jarfile_get
   until: "'OK' in jarfile_get.msg or 'file already exists' in jarfile_get.msg"
-  retries: 5
-  delay: 10
+  retries: "{{ retry_number }}"
+  delay: "{{ delay_duration }}"
 
 # Update Jenkins and install configured plugins.
 - include: plugins.yml
