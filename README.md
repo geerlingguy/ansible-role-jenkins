@@ -27,6 +27,10 @@ The location at which the `jenkins-cli.jar` jarfile will be kept. This is used f
 
 Jenkins plugins to be installed automatically during provisioning. You can always install more plugins via the Jenkins UI at a later time, but this is helpful in getting things up and running more quickly.
 
+    jenkins_use_lts: false
+
+Jenkins will default to pull the latest jenkins version, if set to true the latest LTS will instead be installed
+
 ## Dependencies
 
   - geerlingguy.java
