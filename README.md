@@ -12,7 +12,7 @@ None.
 
 Available variables are listed below, along with default values (see `vars/main.yml`):
 
-    hostname: localhost
+    jenkins_hostname: localhost
 
 The system hostname; usually `localhost` works fine. This will be used during setup to communicate with the running Jenkins instance via HTTP requests.
 
@@ -51,7 +51,7 @@ This role will install the latest version of Jenkins by default (using the offic
 
     - hosts: ci-server
       vars:
-        hostname: jenkins-example.com
+        jenkins_hostname: jenkins.example.com
       roles:
         - { role: geerlingguy.jenkins }
 
