@@ -4,12 +4,12 @@
 
 - name: Add Jenkins apt repository key.
   apt_key:
-    url: "https://jenkins-ci.org/debian/jenkins-ci.org.key"
+    url: "{{ jenkins_repo_key_url }}"
     state: present
 
 - name: Add Jenkins apt repository.
   apt_repository:
-    repo: "deb http://pkg.jenkins-ci.org/debian binary/"
+    repo: "{{ jenkins_repo_url }}"
     state: present
     update_cache: yes
 

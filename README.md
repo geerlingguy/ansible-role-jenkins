@@ -27,6 +27,22 @@ The location at which the `jenkins-cli.jar` jarfile will be kept. This is used f
 
 Jenkins plugins to be installed automatically during provisioning. You can always install more plugins via the Jenkins UI at a later time, but this is helpful in getting things up and running more quickly.
 
+RHEL/CENTOS:
+    jenkins_repo_url: http://pkg.jenkins-ci.org/redhat/jenkins.repo
+    jenkins_repo_key_url: http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
+Debian/Ubuntu:
+    jenkins_repo_url: deb http://pkg.jenkins-ci.org/debian binary/
+    jenkins_repo_key_url: https://jenkins-ci.org/debian/jenkins-ci.org.key
+
+Jenkins will use the latest as default. you can also override the repo to pull the latest LTS version with the following:
+
+RHEL/CENTOS:
+    jenkins_repo_url: http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo
+    jenkins_repo_key_url: http://pkg.jenkins-ci.org/redhat-stable/jenkins-ci.org.key
+Debian/Ubuntu:
+    jenkins_repo_url: deb http://pkg.jenkins-ci.org/debian-stable binary/
+    jenkins_repo_key_url: https://jenkins-ci.org/debian-stable/jenkins-ci.org.key
+
 ## Dependencies
 
   - geerlingguy.java
