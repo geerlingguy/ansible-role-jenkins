@@ -1,0 +1,3 @@
+---
+__jenkins_repo_url: deb http://pkg.jenkins-ci.org/debian binary/
+__jenkins_repo_key_url: https://jenkins-ci.org/debian/jenkins-ci.org.key
