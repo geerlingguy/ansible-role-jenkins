@@ -11,7 +11,7 @@
 
 - name: Update Jenkins plugin data.
   shell: >
-    curl -L http://updates.jenkins-ci.org/update-center.json | sed '1d;$d' > /var/lib/jenkins/updates/default.json
+    curl -L https://updates.jenkins-ci.org/update-center.json | sed '1d;$d' > /var/lib/jenkins/updates/default.json
     creates=/var/lib/jenkins/updates/default.json
 
 - name: Permissions for default.json updates info.
