@@ -5,4 +5,13 @@ jenkins_plugins:
   - git
   - sonar
   - ssh
-jenkins_use_lts: false
+jenkins_repo_rhel_url: http://pkg.jenkins-ci.org/redhat/jenkins.repo
+jenkins_repo_rhel_gpg_key_url: http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
+jenkins_repo_deb: deb http://pkg.jenkins-ci.org/debian binary/
+jenkins_repo_deb_apt_key_url: https://jenkins-ci.org/debian/jenkins-ci.org.key
+### LTS urls for reference
+#jenkins_repo_rhel_url: http://pkg.jenkins-ci.org/redhat/jenkins.repo
+#jenkins_repo_rhel_gpg_key_url: http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
+#jenkins_repo_deb: deb http://pkg.jenkins-ci.org/debian-stable binary/
+#jenkins_repo_deb_apt_key_url: https://jenkins-ci.org/debian-stable/jenkins-ci.org.key
+
