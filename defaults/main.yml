@@ -1,4 +1,7 @@
 ---
+jenkins_jar_retries: 5
+jenkins_jar_delay: 10
+jenkins_startup_timeout: 300
 jenkins_hostname: localhost
 jenkins_jar_location: /opt/jenkins-cli.jar
 jenkins_plugins:
