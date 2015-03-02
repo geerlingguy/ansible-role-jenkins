@@ -11,7 +11,7 @@
 
 - name: Update Jenkins plugin data.
   shell: >
-    curl -L http://updates.jenkins-ci.org/update-center.json | sed '1d;$d' > /var/lib/jenkins/updates/default.json
+    curl -L https://updates.jenkins-ci.org/update-center.json | sed '1d;$d' > /var/lib/jenkins/updates/default.json
     creates=/var/lib/jenkins/updates/default.json
 
 - name: Permissions for default.json updates info.
@@ -23,7 +23,7 @@
 
 - name: Install Jenkins plugins.
   command: >
-    java -jar {{ jenkins_jar_location }} -s http://{{ hostname }}:8080/ install-plugin {{ item }}
+    java -jar {{ jenkins_jar_location }} -s http://{{ jenkins_hostname }}:8080/ install-plugin {{ item }}
     creates=/var/lib/jenkins/plugins/{{ item }}.jpi
   with_items: jenkins_plugins
   notify: restart jenkins

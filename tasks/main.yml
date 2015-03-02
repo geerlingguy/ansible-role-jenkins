@@ -1,4 +1,18 @@
 ---
+# Variable setup.
+- name: Include OS-Specific variables
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Define jenkins_repo_url
+  set_fact:
+    jenkins_repo_url: "{{ __jenkins_repo_url }}"
+  when: jenkins_repo_url is not defined
+
+- name: Define jenkins_repo_key_url
+  set_fact:
+    jenkins_repo_key_url: "{{ __jenkins_repo_key_url }}"
+  when: jenkins_repo_key_url is not defined
+
 # Setup/install tasks.
 - include: setup-RedHat.yml
   when: ansible_os_family == 'RedHat'
@@ -12,18 +26,18 @@
 
 - name: Wait for Jenkins to start up before proceeding.
   wait_for:
-    host: "{{ hostname }}"
+    host: "{{ jenkins_hostname }}"
     port: 8080
-    timeout: "{{ startup_timeout }}"
+    timeout: "{{ jenkins_startup_timeout | int}}"
 
 - name: Get the jenkins-cli jarfile from the Jenkins server.
   get_url:
-    url: "http://{{ hostname }}:8080/jnlpJars/jenkins-cli.jar"
+    url: "http://{{ jenkins_hostname }}:8080/jnlpJars/jenkins-cli.jar"
     dest: "{{ jenkins_jar_location }}"
   register: jarfile_get
   until: "'OK' in jarfile_get.msg or 'file already exists' in jarfile_get.msg"
-  retries: "{{ retry_number }}"
-  delay: "{{ delay_duration }}"
+  retries: "{{ jenkins_jar_retries | int}}"
+  delay: "{{ jenkins_jar_delay | int}}"
 
 # Update Jenkins and install configured plugins.
 - include: plugins.yml
