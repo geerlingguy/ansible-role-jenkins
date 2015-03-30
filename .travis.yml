@@ -26,6 +26,9 @@ script:
   # Run the role/playbook with ansible-playbook.
   - "ansible-playbook -i tests/inventory tests/$SITE --connection=local --sudo"
 
+  # Run the role/playbook with ansible-playbook including optional parameters.
+  - "ansible-playbook -i tests/inventory tests/$SITE --connection=local --sudo --extra-vars jenkins_update_plugins=True"
+
   # Run the role/playbook again, checking to make sure it's idempotent.
   - >
     ansible-playbook -i tests/inventory tests/$SITE --connection=local --sudo
