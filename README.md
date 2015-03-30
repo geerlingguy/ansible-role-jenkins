@@ -25,7 +25,11 @@ The location at which the `jenkins-cli.jar` jarfile will be kept. This is used f
       - sonar
       - ssh
 
-Jenkins plugins to be installed automatically during provisioning. You can always install more plugins via the Jenkins UI at a later time, but this is helpful in getting things up and running more quickly.
+Jenkins plugins to be installed automatically during provisioning. You can always install more plugins via the Jenkins UI at a later time, but this is helpful in getting things up and running more quickly. New plugins are automatically installed in the latest version.
+
+    jenkins_update_plugins: False
+
+By default, no previously installed plugins will be updated. If you however want all previously installed plugins to be updated to their latest version, set the `jenkins_update_plugins` variable to `True`. You can also turn on plugin updating ad-hoc for an `ansible-playbook` call on the command line, by specifying `--extra-vars jenkins_update_plugins=True`.
 
     # For RedHat/CentOS (role default):
     jenkins_repo_url: http://pkg.jenkins-ci.org/redhat/jenkins.repo

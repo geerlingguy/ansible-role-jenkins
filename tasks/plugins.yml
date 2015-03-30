@@ -27,3 +27,20 @@
     creates=/var/lib/jenkins/plugins/{{ item }}.jpi
   with_items: jenkins_plugins
   notify: restart jenkins
+
+- name: Check for updates.
+  shell: >
+    java -jar {{ jenkins_jar_location }} -s http://{{ jenkins_hostname }}:8080/ list-plugins
+  changed_when: false
+  when: jenkins_update_plugins
+  register: updates
+
+- name: Update all Jenkins plugins.
+  # The plugin name is the first white space-separated column in a list-plugins stdout_line, the plugin name does not contain spaces
+  command: >
+    java -jar {{ jenkins_jar_location }} -s http://{{ jenkins_hostname }}:8080/ install-plugin {{ item.split(' ')[0] }}
+  with_items:
+     - "{{ updates.stdout_lines }}"
+  # If an update is available, Jenkins' list-plugins command returns the update version number in parenthesis at the end of the line
+  when: jenkins_update_plugins and item | last == ")"
+  notify: restart jenkins
