@@ -5,3 +5,4 @@ jenkins_plugins:
   - git
   - sonar
   - ssh
+jenkins_update_plugins: False
