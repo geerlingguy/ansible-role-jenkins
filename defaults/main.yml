@@ -1,4 +1,6 @@
 ---
+jenkins_connection_delay: 5
+jenkins_connection_retries: 60
 jenkins_hostname: localhost
 jenkins_jar_location: /opt/jenkins-cli.jar
 jenkins_plugins:
