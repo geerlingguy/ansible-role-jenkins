@@ -28,12 +28,9 @@ The location at which the `jenkins-cli.jar` jarfile will be kept. This is used f
 Jenkins plugins to be installed automatically during provisioning. You can always install more plugins via the Jenkins UI at a later time, but this is helpful in getting things up and running more quickly.
 
     jenkins_connection_delay: 5
-
-The amount of time to wait between connection attempts to the Jenkins web interface to verify it has started.
-
     jenkins_connection_retries: 60
 
-The number of times to attempt to connect to the Jenkins web interface looking for a 200 response before giving up.
+Amount of time and number of times to wait when connecting to Jenkins after initial startup, to verify that Jenkins is running. Total time to wait = `delay` * `retries`, so by default this role will wait up to 300 seconds before timing out.
 
     # For RedHat/CentOS (role default):
     jenkins_repo_url: http://pkg.jenkins-ci.org/redhat/jenkins.repo
