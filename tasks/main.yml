@@ -25,10 +25,11 @@
   service: name=jenkins state=started enabled=yes
 
 - name: Wait for Jenkins to start up before proceeding.
-  wait_for:
-    host: "{{ jenkins_hostname }}"
-    port: 8080
-    timeout: 300
+  shell: curl --head --silent http://{{ jenkins_hostname }}:8080/cli/
+  register: result
+  until: result.stdout.find("200 OK") != -1
+  retries: 18
+  delay: 5
 
 - name: Get the jenkins-cli jarfile from the Jenkins server.
   get_url:
