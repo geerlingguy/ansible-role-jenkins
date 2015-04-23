@@ -6,7 +6,7 @@ Installs Jenkins CI on RHEL/CentOS and Debian/Ubuntu servers.
 
 ## Requirements
 
-None.
+Requires `curl` to be installed on the server.
 
 ## Role Variables
 
