@@ -31,7 +31,7 @@ Jenkins plugins to be installed automatically during provisioning. You can alway
 
 The amount of time to wait between connection attempts to the Jenkins web interface to verify it has started.
 
-    jenkins_connection_retries: 12
+    jenkins_connection_retries: 60
 
 The number of times to attempt to connect to the Jenkins web interface looking for a 200 response before giving up.
 
