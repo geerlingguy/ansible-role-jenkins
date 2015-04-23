@@ -28,8 +28,9 @@
   shell: curl --head --silent http://{{ jenkins_hostname }}:8080/cli/
   register: result
   until: result.stdout.find("200 OK") != -1
-  retries: 18
+  retries: 12
   delay: 5
+  changed_when: false
 
 - name: Get the jenkins-cli jarfile from the Jenkins server.
   get_url:
