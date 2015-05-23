@@ -27,3 +27,19 @@
     creates=/var/lib/jenkins/plugins/{{ item }}.jpi
   with_items: jenkins_plugins
   notify: restart jenkins
+
+- name: Get Plugins to update
+  # plugins which have an update show the newest available version in () at the right
+  # example:
+  # javadoc                           Javadoc Plugin                                   1.1 (1.3)
+  shell: java -jar {{ jenkins_jar_location }} -s http://{{ jenkins_hostname }}:8080/ list-plugins | grep "([0-9]\+\..*)" | awk '{print $1}'
+  register: pluginsToUpdate
+  changed_when: false
+  when: jenkins_plugin_update
+
+- name: Update Jenkins Plugins
+  command: >
+    java -jar {{ jenkins_jar_location }} -s http://{{ jenkins_hostname }}:8080/ install-plugin {{ item }}
+  with_items: pluginsToUpdate.stdout_lines
+  notify: restart jenkins
+  when: jenkins_plugin_update

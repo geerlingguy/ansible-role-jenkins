@@ -25,6 +25,10 @@ The location at which the `jenkins-cli.jar` jarfile will be kept. This is used f
       - sonar
       - ssh
 
+By default jenkins installs all your plugins but does not update any of the currently installed plugins. If you would like the currently installed plugins updated, set jenkins_plugin_update to true
+
+    jenkins_plugin_update: False
+
 Jenkins plugins to be installed automatically during provisioning. You can always install more plugins via the Jenkins UI at a later time, but this is helpful in getting things up and running more quickly.
 
     jenkins_url_prefix: ""

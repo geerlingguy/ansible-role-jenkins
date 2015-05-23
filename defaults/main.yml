@@ -8,3 +8,4 @@ jenkins_plugins:
   - sonar
   - ssh
 jenkins_url_prefix: ""
+jenkins_plugin_update: False
