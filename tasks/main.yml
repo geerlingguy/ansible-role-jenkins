@@ -28,9 +28,9 @@
   service: name=jenkins state=started enabled=yes
 
 - name: Wait for Jenkins to start up before proceeding.
-  shell: "curl --head --silent http://{{ jenkins_hostname }}:8080{{ jenkins_url_prefix }}/cli/"
+  shell: "curl -D - --silent http://{{ jenkins_hostname }}:8080{{ jenkins_url_prefix }}/cli/"
   register: result
-  until: result.stdout.find("200 OK") != -1
+  until: (result.stdout.find("200 OK") != -1) and (result.stdout.find("Please wait while") == -1)
   retries: "{{ jenkins_connection_retries }}"
   delay: "{{ jenkins_connection_delay }}"
   changed_when: false
