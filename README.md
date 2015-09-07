@@ -48,6 +48,14 @@ This role will install the latest version of Jenkins by default (using the offic
     jenkins_repo_url: deb http://pkg.jenkins-ci.org/debian-stable binary/
     jenkins_repo_key_url: http://pkg.jenkins-ci.org/debian-stable/jenkins-ci.org.key
 
+### Optional Variables
+
+Optional variables that are not defined by default are listed below, along with example values
+
+    jenkins_url_prefix: '/ci'
+
+This will add `--prefix=/ci` to the Jenkins initialization `java` invocation, and will cause the Jenkins instance to be hosted with a `/ci` path prefix (e.g. http://www.example.com/ci). This is particularly useful for hosting Jenkins behind a reverse proxy.
+
 ## Dependencies
 
   - geerlingguy.java

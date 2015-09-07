@@ -14,3 +14,27 @@
 
 - name: Ensure Jenkins is installed.
   yum: pkg=jenkins state=installed
+
+- name: Add URL prefix to /etc/sysconfig/jenkins
+  lineinfile:
+    dest: /etc/sysconfig/jenkins
+    insertafter: '^JENKINS_ARGS='
+    line: 'JENKINS_ARGS+=" --prefix={{ jenkins_url_prefix }}"'
+  when: jenkins_url_prefix is defined
+  register: init_config
+
+- name: Restart Jenkins on init config change
+  service: name=jenkins state=restarted
+  when: init_config.changed
+
+- name: Remove URL prefix from /etc/sysconfig/jenkins
+  lineinfile:
+    dest: /etc/sysconfig/jenkins
+    regexp: '^JENKINS_ARGS\+=" --prefix=.+'
+    state: absent
+  when: jenkins_url_prefix is not defined
+  register: init_config
+
+- name: Restart Jenkins on init config change
+  service: name=jenkins state=restarted
+  when: init_config.changed
