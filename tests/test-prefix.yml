@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  remote_user: root
+
+  vars:
+    - jenkins_url_prefix: /jenkins
+
+  roles:
+    - geerlingguy.java
+    - ansible-role-jenkins

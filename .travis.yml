@@ -4,6 +4,9 @@ python: "2.7"
 
 env:
   - SITE=test.yml
+    PREFIX=''
+  - SITE=test-prefix.yml
+    PREFIX='jenkins'
 
 before_install:
   - sudo apt-get update -qq
@@ -34,4 +37,4 @@ script:
     || (echo 'Idempotence test: fail' && exit 1)
 
   # Make sure Jenkins is running.
-  # TODO
+  - curl http://localhost:8080/$PREFIX

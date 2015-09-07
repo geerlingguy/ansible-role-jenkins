@@ -7,3 +7,4 @@ jenkins_plugins:
   - git
   - sonar
   - ssh
+jenkins_url_prefix: ""

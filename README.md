@@ -27,6 +27,10 @@ The location at which the `jenkins-cli.jar` jarfile will be kept. This is used f
 
 Jenkins plugins to be installed automatically during provisioning. You can always install more plugins via the Jenkins UI at a later time, but this is helpful in getting things up and running more quickly.
 
+    jenkins_url_prefix: ""
+
+Used for setting a URL prefix for your Jenkins installation. The option is added as `--prefix={{ jenkins_url_prefix }}` to the Jenkins initialization `java` invocation, so you can access the installation at a path like `http://www.example.com/{{ jenkins_url_prefix }}. Make sure you start the prefix with a `/` (e.g. `/jenkins`).
+
     jenkins_connection_delay: 5
     jenkins_connection_retries: 60
 
@@ -47,14 +51,6 @@ This role will install the latest version of Jenkins by default (using the offic
     # For Debian/Ubuntu LTS:
     jenkins_repo_url: deb http://pkg.jenkins-ci.org/debian-stable binary/
     jenkins_repo_key_url: http://pkg.jenkins-ci.org/debian-stable/jenkins-ci.org.key
-
-### Optional Variables
-
-Optional variables that are not defined by default are listed below, along with example values
-
-    jenkins_url_prefix: '/ci'
-
-This will add `--prefix=/ci` to the Jenkins initialization `java` invocation, and will cause the Jenkins instance to be hosted with a `/ci` path prefix (e.g. http://www.example.com/ci). This is particularly useful for hosting Jenkins behind a reverse proxy.
 
 ## Dependencies
 

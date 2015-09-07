@@ -1,0 +1,11 @@
+---
+- name: Ensure URL prefix is present in Jenkins config.
+  lineinfile:
+    dest: "{{ jenkins_init_file }}"
+    insertafter: '^JENKINS_ARGS='
+    line: 'JENKINS_ARGS+=" --prefix={{ jenkins_url_prefix }}"'
+  register: jenkins_init_config
+
+- name: Restart Jenkins if config changed.
+  service: name=jenkins state=restarted
+  when: jenkins_init_config.changed
