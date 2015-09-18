@@ -25,6 +25,12 @@ The location at which the `jenkins-cli.jar` jarfile will be kept. This is used f
       - sonar
       - ssh
 
+You can also install plugins from another site instead of the jenkins repository. All you need to do is give an object with a name that is going to be the name of the file installed without the jpi suffix and the url of the jpi
+
+    jenkins_plugins:
+      - name: some-plugin
+        url: https://somesite.invalid/jenkins/some-plugin.jpi
+
 Jenkins plugins to be installed automatically during provisioning. You can always install more plugins via the Jenkins UI at a later time, but this is helpful in getting things up and running more quickly.
 
     jenkins_url_prefix: ""
