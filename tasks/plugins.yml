@@ -24,7 +24,7 @@
 - name: Install Jenkins plugins.
   command: >
     java -jar {{ jenkins_jar_location }}
-     -s http://{{ jenkins_hostname }}:8080/
+     -s http://{{ jenkins_hostname }}:8080{{ jenkins_url_prefix | default('') }}/
      install-plugin {{ item.url if item.url is defined else item }}
     creates=/var/lib/jenkins/plugins/{{ item.name if item.name is defined else item }}.jpi
   with_items: jenkins_plugins

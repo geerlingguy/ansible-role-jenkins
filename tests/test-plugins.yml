@@ -1,0 +1,13 @@
+---
+- hosts: localhost
+  remote_user: root
+
+  vars:
+    jenkins_plugins:
+      - name: git
+        url: http://updates.jenkins-ci.org/latest/git.hpi
+      - sonar
+      - ssh
+  roles:
+    - geerlingguy.java
+    - ansible-role-jenkins

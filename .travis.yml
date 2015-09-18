@@ -5,6 +5,8 @@ python: "2.7"
 env:
   - SITE=test.yml
     PREFIX=''
+  - SITE=test-plugins.yml
+    PREFIX=''
   - SITE=test-prefix.yml
     PREFIX='jenkins'
 
