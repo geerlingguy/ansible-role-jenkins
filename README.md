@@ -62,11 +62,11 @@ This role will install the latest version of Jenkins by default (using the offic
       vars:
         jenkins_hostname: jenkins.example.com
       roles:
-        - { role: geerlingguy.jenkins }
+        - geerlingguy.jenkins
 
 ## License
 
-MIT / BSD
+MIT (Expat) / BSD
 
 ## Author Information
 
