@@ -6,5 +6,5 @@
     - jenkins_url_prefix: /jenkins
 
   roles:
-    - geerlingguy.java
+    - ansible-role-java
     - ansible-role-jenkins

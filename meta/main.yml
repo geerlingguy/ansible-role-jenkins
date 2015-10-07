@@ -1,6 +1,6 @@
 ---
 dependencies:
-  - { role: geerlingguy.java }
+  - { role: ansible-role-java }
 
 galaxy_info:
   author: geerlingguy
