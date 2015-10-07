@@ -54,7 +54,7 @@ This role will install the latest version of Jenkins by default (using the offic
 
 ## Dependencies
 
-  - ansible-role-javaa
+  - ansible-role-java
 
 ## Example Playbook
 
