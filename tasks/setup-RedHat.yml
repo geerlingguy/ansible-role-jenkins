@@ -6,6 +6,7 @@
   get_url:
     url: "{{ jenkins_repo_url }}"
     dest: /etc/yum.repos.d/jenkins.repo
+    use_proxy: "{{ jenkins_get_url_use_proxy }}"
 
 - name: Add Jenkins repo GPG key.
   rpm_key:
