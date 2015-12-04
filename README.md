@@ -16,6 +16,10 @@ Available variables are listed below, along with default values (see `vars/main.
 
 The system hostname; usually `localhost` works fine. This will be used during setup to communicate with the running Jenkins instance via HTTP requests.
 
+    jenkins_http_port: 8080
+
+The HTTP port for Jenkins' web interface.
+
     jenkins_jar_location: /opt/jenkins-cli.jar
 
 The location at which the `jenkins-cli.jar` jarfile will be kept. This is used for communicating with Jenkins via the CLI.
