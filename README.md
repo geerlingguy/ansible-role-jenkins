@@ -29,7 +29,7 @@ Jenkins plugins to be installed automatically during provisioning. You can alway
 
     jenkins_url_prefix: ""
 
-Used for setting a URL prefix for your Jenkins installation. The option is added as `--prefix={{ jenkins_url_prefix }}` to the Jenkins initialization `java` invocation, so you can access the installation at a path like `http://www.example.com/{{ jenkins_url_prefix }}. Make sure you start the prefix with a `/` (e.g. `/jenkins`).
+Used for setting a URL prefix for your Jenkins installation. The option is added as `--prefix={{ jenkins_url_prefix }}` to the Jenkins initialization `java` invocation, so you can access the installation at a path like `http://www.example.com{{ jenkins_url_prefix }}`. Make sure you start the prefix with a `/` (e.g. `/jenkins`).
 
     jenkins_connection_delay: 5
     jenkins_connection_retries: 60
