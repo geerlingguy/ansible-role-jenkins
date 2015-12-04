@@ -2,6 +2,7 @@
 jenkins_connection_delay: 5
 jenkins_connection_retries: 60
 jenkins_hostname: localhost
+jenkins_port: 8080
 jenkins_jar_location: /opt/jenkins-cli.jar
 jenkins_plugins:
   - git
