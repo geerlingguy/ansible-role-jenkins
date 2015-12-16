@@ -3,13 +3,16 @@ language: python
 python: "2.7"
 
 env:
-  - SITE=test.yml
+  - >
+    SITE=test.yml
     PREFIX=''
     HTTP_PORT=8080
-  - SITE=test-prefix.yml
+  - >
+    SITE=test-prefix.yml
     PREFIX='jenkins'
     HTTP_PORT=8080
-  - SITE=test-http-port.yml
+  - >
+    SITE=test-http-port.yml
     PREFIX=''
     HTTP_PORT=8081
 
