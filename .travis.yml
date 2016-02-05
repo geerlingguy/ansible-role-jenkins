@@ -46,3 +46,6 @@ script:
 
   # Make sure Jenkins is running.
   - curl http://localhost:$HTTP_PORT/$PREFIX
+
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/
