@@ -58,7 +58,7 @@ This role will install the latest version of Jenkins by default (using the offic
 
 ## Dependencies
 
-  - geerlingguy.java
+  - ansible-role-java
 
 ## Example Playbook
 
@@ -66,7 +66,7 @@ This role will install the latest version of Jenkins by default (using the offic
       vars:
         jenkins_hostname: jenkins.example.com
       roles:
-        - geerlingguy.jenkins
+        - ansible-role-jenkins
 
 ## License
 

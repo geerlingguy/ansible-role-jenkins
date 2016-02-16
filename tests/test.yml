@@ -2,5 +2,5 @@
 - hosts: localhost
   remote_user: root
   roles:
-    - geerlingguy.java
+    - ansible-role-java
     - ansible-role-jenkins
