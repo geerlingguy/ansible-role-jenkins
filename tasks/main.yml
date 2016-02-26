@@ -28,9 +28,9 @@
   service: name=jenkins state=started enabled=yes
 
 - name: Wait for Jenkins to start up before proceeding.
-  uri: url='http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}/cli/' status_code=200
+  uri: url='http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}/cli/' status_code=200 return_content=True
   register: result
-  until: "(result | success) and (result.status == 200)"
+  until: "(result | success) and (result.status == 200) and (result.content.find('Please wait while') == -1)"
   retries: "{{ jenkins_connection_retries }}"
   delay: "{{ jenkins_connection_delay }}"
   changed_when: false
