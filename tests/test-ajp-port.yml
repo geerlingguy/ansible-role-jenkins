@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  remote_user: root
+
+  vars:
+    - jenkins_ajp_port: 8009
+
+  roles:
+    - geerlingguy.java
+    - ansible-role-jenkins

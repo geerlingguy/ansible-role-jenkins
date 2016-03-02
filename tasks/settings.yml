@@ -19,6 +19,14 @@
     line: '{{ jenkins_http_port_param }}={{ jenkins_http_port }}'
   register: jenkins_http_config
 
+- name: Set AJP port in Jenkins config.
+  lineinfile:
+    backrefs: yes
+    dest: "{{ jenkins_init_file }}"
+    regexp: '^{{ jenkins_ajp_port_param }}='
+    line: '{{ jenkins_ajp_port_param }}={{ jenkins_ajp_port }}'
+  register: jenkins_ajp_config
+
 - name: Immediately restart Jenkins on http config changes.
   service: name=jenkins state=restarted
-  when: jenkins_http_config.changed
+  when: jenkins_http_config.changed or jenkins_ajp_config.changed 
