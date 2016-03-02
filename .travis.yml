@@ -16,6 +16,10 @@ env:
     SITE=test-http-port.yml
     PREFIX=''
     HTTP_PORT=8081
+  - >
+    SITE=test-ajp-port.yml
+    PREFIX=''
+    HTTP_PORT=-1
 
 before_install:
   - sudo apt-get update -qq
