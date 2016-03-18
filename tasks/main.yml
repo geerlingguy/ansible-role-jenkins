@@ -3,6 +3,7 @@
 - name: Include OS-Specific variables
   include_vars: "{{ ansible_os_family }}.yml"
 
+
 - name: Define jenkins_repo_url
   set_fact:
     jenkins_repo_url: "{{ __jenkins_repo_url }}"
@@ -14,18 +15,28 @@
   when: jenkins_repo_key_url is not defined
 
 # Setup/install tasks.
-- include: setup-RedHat.yml
-  when: ansible_os_family == 'RedHat'
+- block:
+  - include: setup-RedHat.yml
+    when: ansible_os_family == 'RedHat'
 
-- include: setup-Debian.yml
-  when: ansible_os_family == 'Debian'
+  - include: setup-Debian.yml
+    when: ansible_os_family == 'Debian'
+  become: yes
+  become_user: root
+  become_method: sudo
 
 # Configure Jenkins init settings.
 - include: settings.yml
+  become: yes
+  become_user: root
+  become_method: sudo
 
 # Make sure Jenkins starts, then configure Jenkins.
 - name: Ensure Jenkins is started and runs on startup.
   service: name=jenkins state=started enabled=yes
+  become: yes
+  become_user: root
+  become_method: sudo
 
 - name: Wait for Jenkins to start up before proceeding.
   shell: "curl -D - --silent http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}/cli/"
@@ -34,6 +45,9 @@
   retries: "{{ jenkins_connection_retries }}"
   delay: "{{ jenkins_connection_delay }}"
   changed_when: false
+  become: yes
+  become_user: root
+  become_method: sudo
 
 - name: Get the jenkins-cli jarfile from the Jenkins server.
   get_url:
@@ -43,6 +57,9 @@
   until: "'OK' in jarfile_get.msg or 'file already exists' in jarfile_get.msg"
   retries: 5
   delay: 10
+  become: yes
+  become_user: root
+  become_method: sudo
 
 # Update Jenkins and install configured plugins.
 - include: plugins.yml
