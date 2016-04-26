@@ -1,52 +1,84 @@
 ---
 sudo: required
-language: python
-python: "2.7"
 
 env:
-  - >
-    SITE=test.yml
-    PREFIX=''
-    HTTP_PORT=8080
-  - >
-    SITE=test-prefix.yml
-    PREFIX='jenkins'
-    HTTP_PORT=8080
-  - >
-    SITE=test-http-port.yml
-    PREFIX=''
-    HTTP_PORT=8081
+  - distribution: centos
+    version: 6
+    init: /sbin/init
+    run_opts: ""
+    site: test.yml
+    prefix: ''
+    http_port: 8080
+  - distribution: centos
+    version: 7
+    init: /usr/lib/systemd/systemd
+    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    site: test.yml
+    prefix: ''
+    http_port: 8080
+  - distribution: ubuntu
+    version: 14.04
+    init: /sbin/init
+    run_opts: ""
+    site: test.yml
+    prefix: ''
+    http_port: 8080
+  - distribution: ubuntu
+    version: 12.04
+    init: /sbin/init
+    run_opts: ""
+    site: test.yml
+    prefix: ''
+    http_port: 8080
+
+  - distribution: ubuntu
+    version: 14.04
+    init: /sbin/init
+    run_opts: ""
+    site: test-http-port.yml
+    prefix: ''
+    http_port: 8081
+  - distribution: ubuntu
+    version: 14.04
+    init: /sbin/init
+    run_opts: ""
+    site: test-http-port.yml
+    prefix: jenkins
+    http_port: 8080
+
+services:
+  - docker
 
 before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -y curl
-
-install:
-  # Install Ansible.
-  - pip install ansible
-
-  # Add ansible.cfg to pick up roles path.
-  - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
-
-  # Install required dependencies.
-  - ansible-galaxy install geerlingguy.java
+  # - sudo apt-get update
+  # Pull container
+  - 'sudo docker pull ${distribution}:${version}'
+  # Customize container
+  - 'sudo docker build --rm=true --file=tests/Dockerfile.${distribution}-${version} --tag=${distribution}-${version}:ansible tests'
 
 script:
-  # Check the role/playbook's syntax.
-  - "ansible-playbook -i tests/inventory tests/$SITE --syntax-check"
+  - container_id=$(mktemp)
+    # Run container in detached state
+  - 'sudo docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} ${distribution}-${version}:ansible "${init}" > "${container_id}"'
 
-  # Run the role/playbook with ansible-playbook.
-  - "ansible-playbook -i tests/inventory tests/$SITE --connection=local --sudo"
+  # Ansible syntax check.
+  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/$site.yml --syntax-check'
 
-  # Run the role/playbook again, checking to make sure it's idempotent.
+  # Test role.
+  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/$site.yml'
+
+  # Test role idempotence.
   - >
-    ansible-playbook -i tests/inventory tests/$SITE --connection=local --sudo
+    sudo docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/$site.yml
     | grep -q 'changed=0.*failed=0'
     && (echo 'Idempotence test: pass' && exit 0)
     || (echo 'Idempotence test: fail' && exit 1)
 
   # Make sure Jenkins is running.
-  - curl http://localhost:$HTTP_PORT/$PREFIX
+  - curl http://localhost:$http_port/$prefix
+
+  # Clean up
+  - 'sudo docker stop "$(cat ${container_id})"'
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/

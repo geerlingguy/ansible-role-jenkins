@@ -1,10 +1,9 @@
 ---
-- hosts: localhost
-  remote_user: root
+- hosts: all
 
   vars:
-    - jenkins_http_port: 8081
+    jenkins_http_port: 8081
 
   roles:
     - geerlingguy.java
-    - ansible-role-jenkins
+    - role_under_test
