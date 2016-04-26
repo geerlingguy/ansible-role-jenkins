@@ -1,4 +1,11 @@
 ---
+- name: Ensure SetupWizard is disabled in Jenkins config.
+  lineinfile:
+    backrefs: yes
+    dest: "{{ jenkins_init_file }}"
+    regexp: '^JENKINS_JAVA_OPTIONS="(.*)(?<! -Djenkins.install.runSetupWizard=false)"$'
+    line: 'JENKINS_JAVA_OPTIONS="\1 -Djenkins.install.runSetupWizard=false"'
+
 - name: Ensure URL prefix is present in Jenkins config.
   lineinfile:
     dest: "{{ jenkins_init_file }}"
