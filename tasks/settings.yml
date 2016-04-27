@@ -1,22 +1,16 @@
 ---
-- name: Ensure SetupWizard is disabled in Jenkins config.
-  lineinfile:
-    backrefs: yes
-    dest: "{{ jenkins_init_file }}"
-    regexp: '^JENKINS_JAVA_OPTIONS="(.*)(?<! -Djenkins.install.runSetupWizard=false)"$'
-    line: 'JENKINS_JAVA_OPTIONS="\1 -Djenkins.install.runSetupWizard=false"'
-
 - name: Ensure URL prefix is present in Jenkins config.
   lineinfile:
     dest: "{{ jenkins_init_file }}"
     insertafter: '^JENKINS_ARGS='
     regexp: '^JENKINS_ARGS\+=" --prefix='
     line: 'JENKINS_ARGS+=" --prefix={{ jenkins_url_prefix }}"'
-  register: jenkins_init_config
+    state: present
+  register: jenkins_init_prefix
 
 - name: Immediately restart Jenkins on init config changes.
   service: name=jenkins state=restarted
-  when: jenkins_init_config.changed
+  when: jenkins_init_setupwizard.changed or jenkins_init_prefix.changed
 
 - name: Set HTTP port in Jenkins config.
   lineinfile:

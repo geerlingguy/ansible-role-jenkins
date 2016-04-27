@@ -13,4 +13,4 @@
     key: "{{ jenkins_repo_key_url }}"
 
 - name: Ensure Jenkins is installed.
-  yum: pkg=jenkins state=installed
+  yum: name=jenkins state=installed

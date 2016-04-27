@@ -78,7 +78,7 @@ script:
     || (echo 'Idempotence test: fail' && exit 1)
 
   # Make sure Jenkins is running.
-  - curl http://localhost:$http_port/$prefix
+  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm curl http://localhost:$http_port/$prefix'
 
   # Clean up
   - 'sudo docker stop "$(cat ${container_id})"'

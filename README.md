@@ -24,12 +24,9 @@ The HTTP port for Jenkins' web interface.
 
 The location at which the `jenkins-cli.jar` jarfile will be kept. This is used for communicating with Jenkins via the CLI.
 
-    jenkins_plugins:
-      - git
-      - sonar
-      - ssh
+    jenkins_plugins: []
 
-Jenkins plugins to be installed automatically during provisioning. You can always install more plugins via the Jenkins UI at a later time, but this is helpful in getting things up and running more quickly.
+Jenkins plugins to be installed automatically during provisioning. (_Note_: This feature is currently undergoing some changes due to the `jenkins-cli` authentication changes in Jenkins 2.0, and may not work as expected.)
 
     jenkins_url_prefix: ""
 
