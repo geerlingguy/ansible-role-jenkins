@@ -10,7 +10,7 @@
 
 - name: Immediately restart Jenkins on init config changes.
   service: name=jenkins state=restarted
-  when: jenkins_init_setupwizard.changed or jenkins_init_prefix.changed
+  when: jenkins_init_prefix.changed
 
 - name: Set HTTP port in Jenkins config.
   lineinfile:
