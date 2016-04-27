@@ -42,7 +42,7 @@ env:
     version: 14.04
     init: /sbin/init
     run_opts: ""
-    site: test-http-port.yml
+    site: test-prefix.yml
     prefix: jenkins
     http_port: 8080
 
@@ -80,6 +80,11 @@ script:
   # Make sure Jenkins is running.
   - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm curl http://localhost:$http_port/$prefix'
 
+after_failure:
+  # Check what happened via journalctl
+  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm journalctl -xe'
+
+after_success:
   # Clean up
   - 'sudo docker stop "$(cat ${container_id})"'
 
