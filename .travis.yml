@@ -9,13 +9,13 @@ env:
     site: test.yml
     prefix: ''
     http_port: 8080
-  - distribution: centos
-    version: 7
-    init: /usr/lib/systemd/systemd
-    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
-    site: test.yml
-    prefix: ''
-    http_port: 8080
+  # - distribution: centos
+  #   version: 7
+  #   init: /usr/lib/systemd/systemd
+  #   run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+  #   site: test.yml
+  #   prefix: ''
+  #   http_port: 8080
   - distribution: ubuntu
     version: 14.04
     init: /sbin/init
