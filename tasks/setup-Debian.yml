@@ -13,6 +13,23 @@
     state: present
     update_cache: yes
 
+- name: Download specific Jenkins version.
+  get_url:
+    url: "{{ jenkins_pkg_url }}/jenkins_{{ jenkins_version }}_all.deb"
+    dest: "/tmp/jenkins.deb"
+  when: jenkins_version is defined
+
+- stat: path="/tmp/jenkins.deb"
+  register: specific_version
+
+- name: Install correct version of Jenkins is installed.
+  apt:
+    deb="/tmp/jenkins.deb"
+    state=installed
+  when: specific_version.stat.exists
+
 - name: Ensure Jenkins is installed.
   apt: name=jenkins state=present
   register: jenkins_install_package_deb
+  apt: name=jenkins state=installed
+  when: jenkins_version is undefined

@@ -12,6 +12,20 @@
     state: present
     key: "{{ jenkins_repo_key_url }}"
 
+- name: Download specific Jenkins version.
+  get_url:
+    url: "{{ jenkins_pkg_url }}/jenkins-{{ jenkins_version }}-1.1.noarch.rpm"
+    dest: "/tmp/jenkins.rpm"
+  when: jenkins_version is defined
+
+- stat: path="/tmp/jenkins.rpm"
+  register: specific_version
+
+- name: Install correct version of Jenkins is installed.
+  yum: name="/tmp/jenkins.rpm" state=present
+  when: specific_version.stat.exists
+
 - name: Ensure Jenkins is installed.
   yum: name=jenkins state=installed
   register: jenkins_install_package_rh
+  when: jenkins_version is undefined
