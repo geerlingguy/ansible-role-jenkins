@@ -46,3 +46,7 @@
 
 # Update Jenkins and install configured plugins.
 - include: plugins.yml
+
+# Remove init.groovy.d/basic-security settings
+- name: Remove Jenkins security init scripts
+  shell: "rm -f /var/lib/jenkins/init.groovy.d/basic-security.groovy"

@@ -1,16 +1,19 @@
 #!groovy
-
-import jenkins.model.*
 import hudson.security.*
+import jenkins.model.*
 
 def instance = Jenkins.getInstance()
 
-println "--> creating local user 'admin'"
+println "--> Checking if security has been set already"
 
-def hudsonRealm = new HudsonPrivateSecurityRealm(false)
-hudsonRealm.createAccount('{{ jenkins_admin.username }}','{{ jenkins_admin.password }}')
-instance.setSecurityRealm(hudsonRealm)
+if (!instance.isUseSecurity()) {
+    println "--> creating local user 'admin'"
 
-def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
-instance.setAuthorizationStrategy(strategy)
-instance.save()
+    def hudsonRealm = new HudsonPrivateSecurityRealm(false)
+    hudsonRealm.createAccount('{{ jenkins_admin.username }}', '{{ jenkins_admin.password }}')
+    instance.setSecurityRealm(hudsonRealm)
+
+    def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
+    instance.setAuthorizationStrategy(strategy)
+    instance.save()
+}
