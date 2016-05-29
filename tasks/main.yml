@@ -49,4 +49,4 @@
 
 # Remove init.groovy.d/basic-security settings
 - name: Remove Jenkins security init scripts
-  shell: "rm -f /var/lib/jenkins/init.groovy.d/basic-security.groovy"
+  file: path=/var/lib/jenkins/init.groovy.d/basic-security.groovy state=absent
