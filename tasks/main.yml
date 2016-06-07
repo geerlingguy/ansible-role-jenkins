@@ -13,6 +13,14 @@
     jenkins_repo_key_url: "{{ __jenkins_repo_key_url }}"
   when: jenkins_repo_key_url is not defined
 
+- name: Create Jenkins user with ssh keys
+  user:
+    name: "{{ jenkins_user }}"
+    home: "{{ jenkins_home }}"
+    shell: /bin/bash
+    generate_ssh_key: yes
+  notify: share ssh public key
+
 # Setup/install tasks.
 - include: setup-RedHat.yml
   when: ansible_os_family == 'RedHat'
