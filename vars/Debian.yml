@@ -1,5 +1,5 @@
 ---
-__jenkins_repo_url: deb http://pkg.jenkins-ci.org/debian binary/
-__jenkins_repo_key_url: http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key
+__jenkins_repo_url: deb http://pkg.jenkins-ci.org/debian-stable binary/
+__jenkins_repo_key_url: http://pkg.jenkins-ci.org/debian-stable/jenkins-ci.org.key
 jenkins_init_file: /etc/default/jenkins
 jenkins_http_port_param: HTTP_PORT
