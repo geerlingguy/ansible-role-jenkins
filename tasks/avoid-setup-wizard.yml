@@ -1,10 +1,22 @@
 ---
+  - name: stat jenkins.install.InstallUtil.lastExecVersion
+    stat: path={{ jenkins_home }}/jenkins.install.InstallUtil.lastExecVersion
+    register: lastexecversion
+
   - name: Bypass - jenkins.install.InstallUtil.lastExecVersion
     copy: src={{ jenkins_home }}/jenkins.install.UpgradeWizard.state
           dest={{ jenkins_home }}/jenkins.install.InstallUtil.lastExecVersion
+          remote_src=True
+    when: lastexecversion.stat.exists == False and ansible_version.major >= 2
+
+  - name: Bypass - jenkins.install.InstallUtil.lastExecVersion
+    shell: cp {{ jenkins_home }}/jenkins.install.UpgradeWizard.state {{ jenkins_home }}/jenkins.install.InstallUtil.lastExecVersion
+    when: lastexecversion.stat.exists == False and ansible_version.major < 2
+
+  - name: ownership - jenkins.install.InstallUtil.lastExecVersion
+    file: path={{ jenkins_home }}/jenkins.install.InstallUtil.lastExecVersion
           owner={{ jenkins_user }}
           group={{ jenkins_user }}
-          remote_src=True
 
   - stat: path={{ jenkins_home }}/secrets/initialAdminPassword
     register: adminpassword
