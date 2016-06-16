@@ -1,0 +1,20 @@
+---
+  - name: Bypass - jenkins.install.InstallUtil.lastExecVersion
+    copy: src={{ jenkins_home }}/jenkins.install.UpgradeWizard.state
+          dest={{ jenkins_home }}/jenkins.install.InstallUtil.lastExecVersion
+          owner={{ jenkins_user }}
+          group={{ jenkins_user }}
+          remote_src=True
+
+  - stat: path={{ jenkins_home }}/secrets/initialAdminPassword
+    register: adminpassword
+
+  # keep it for the Jenkins CLI --password-file argument
+  - name: Bypass - initialAdminPassword
+    shell: mv {{ jenkins_home }}/secrets/initialAdminPassword /root
+    when: adminpassword.stat.exists == True
+
+  - name: restart jenkins
+    service: name=jenkins state=restarted
+    when: adminpassword.stat.exists == True
+

@@ -23,6 +23,10 @@
 # Configure Jenkins init settings.
 - include: settings.yml
 
+# Avoid Jenkins 2 setup wizard
+- include: avoid-setup-wizard.yml
+  when: jenkins_setup_wizard == False
+
 # Make sure Jenkins starts, then configure Jenkins.
 - name: Ensure Jenkins is started and runs on startup.
   service: name=jenkins state=started enabled=yes

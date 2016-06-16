@@ -6,3 +6,6 @@ jenkins_http_port: 8080
 jenkins_jar_location: /opt/jenkins-cli.jar
 jenkins_plugins: []
 jenkins_url_prefix: ""
+jenkins_home: "/var/lib/jenkins"
+jenkins_user: "jenkins"
+jenkins_setup_wizard: False
