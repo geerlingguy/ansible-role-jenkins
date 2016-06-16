@@ -53,3 +53,23 @@
   when: (jenkins_users_config is defined and jenkins_users_config.changed) or
         (jenkins_http_config is defined and jenkins_http_config.changed) or
         (jenkins_home_config is defined and jenkins_home_config.changed)
+
+- name: Ensure config.xml is present.
+  stat:
+    path: "{{ jenkins_home }}/config.xml"
+  register: configxml
+  until: configxml.stat.exists == True
+  retries: 20
+  delay: 3
+
+- name: set TCP port for JNLP
+  lineinfile:
+     dest="{{ jenkins_home }}/config.xml"
+     regexp='<slaveAgentPort>'
+     line='  <slaveAgentPort>{{ jenkins_jnlp_port_param }}</slaveAgentPort>'
+  register: jenkins_jnlp_port
+
+- name: Immediately restart Jenkins on http or user changes.
+  service: name=jenkins state=restarted
+  when: (jenkins_jnlp_port is defined and jenkins_jnlp_port.changed)
+
