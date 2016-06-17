@@ -27,7 +27,14 @@
     dest: "{{ jenkins_init_file }}"
     regexp: '^{{ jenkins_http_port_param }}='
     line: '{{ jenkins_http_port_param }}={{ jenkins_http_port }}'
-  register: jenkins_http_config
+  register: jenkins_http_port_config
+
+# Set HTTP listen address. Registers jenkins_http_listen_address_config.
+- include: listen-RedHat.yml
+  when: ansible_os_family == 'RedHat'
+
+- include: listen-Debian.yml
+  when: ansible_os_family == 'Debian'
 
 - name: Ensure jenkins_home {{ jenkins_home }} exists
   file:
@@ -51,5 +58,6 @@
 - name: Immediately restart Jenkins on http or user changes.
   service: name=jenkins state=restarted
   when: (jenkins_users_config is defined and jenkins_users_config.changed) or
-        (jenkins_http_config is defined and jenkins_http_config.changed) or
+        (jenkins_http_port_config is defined and jenkins_http_port_config.changed) or
+        (jenkins_http_listen_address_config is defined and jenkins_http_listen_address_config.changed) or
         (jenkins_home_config is defined and jenkins_home_config.changed)

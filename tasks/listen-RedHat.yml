@@ -1,0 +1,8 @@
+---
+- name: Set HTTP listen address in Jenkins config.
+  lineinfile:
+    backrefs: yes
+    dest: "{{ jenkins_init_file }}"
+    regexp: '^JENKINS_LISTEN_ADDRESS='
+    line: 'JENKINS_LISTEN_ADDRESS={{ jenkins_http_listen_address }}'
+  register: jenkins_http_listen_address_config
