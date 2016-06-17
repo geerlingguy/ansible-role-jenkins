@@ -30,6 +30,12 @@ env:
     prefix: ''
     http_port: 8081
 
+  # tests/test-http-listen-address.yml
+  - distro: ubuntu1604
+    playbook: test-http-listen-address.yml
+    prefix: ''
+    http_port: 8080
+
   # tests/test-prefix.yml
   - distro: ubuntu1604
     playbook: test-prefix.yml
