@@ -3,6 +3,13 @@
     stat: path={{ jenkins_home }}/jenkins.install.InstallUtil.lastExecVersion
     register: lastexecversion
 
+  - name: Ensure jenkins.install.UpgradeWizard.state
+    stat: path={{ jenkins_home }}/jenkins.install.UpgradeWizard.state
+    register: upgradewizard
+    until: upgradewizard.stat.exists == True
+    retries: 12
+    delay: 3
+
   - name: Bypass - jenkins.install.InstallUtil.lastExecVersion
     copy: src={{ jenkins_home }}/jenkins.install.UpgradeWizard.state
           dest={{ jenkins_home }}/jenkins.install.InstallUtil.lastExecVersion
