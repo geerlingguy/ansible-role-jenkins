@@ -11,9 +11,10 @@
     delay: 3
 
   - name: Bypass - jenkins.install.InstallUtil.lastExecVersion
-    copy: src={{ jenkins_home }}/jenkins.install.UpgradeWizard.state
-          dest={{ jenkins_home }}/jenkins.install.InstallUtil.lastExecVersion
-          remote_src=True
+    copy: >
+      src={{ jenkins_home }}/jenkins.install.UpgradeWizard.state
+      dest={{ jenkins_home }}/jenkins.install.InstallUtil.lastExecVersion
+      remote_src=True
     when: lastexecversion.stat.exists == False and ansible_version.major >= 2
 
   - name: Bypass - jenkins.install.InstallUtil.lastExecVersion
@@ -30,8 +31,10 @@
 
   # keep it for the Jenkins CLI --password-file argument
   - name: Bypass - initialAdminPassword
-    shell: mv {{ jenkins_home }}/secrets/initialAdminPassword /root
-           creates=/root/initialAdminPassword
+    shell: >
+      mv {{ jenkins_home }}/secrets/initialAdminPassword /root
+      creates=/root/initialAdminPassword
+    failed_when: false
     when: adminpassword.stat.exists == True
 
   - name: restart jenkins
