@@ -51,9 +51,6 @@ services:
 
 before_install:
   # - sudo apt-get update
-  - >
-    sudo docker rm  $(docker ps -aq)     2>/dev/null &&
-    sudo docker rmi $(docker images -aq) 2>/dev/null
   # Pull container
   - 'sudo docker pull ${distribution}:${version}'
   # Customize container
