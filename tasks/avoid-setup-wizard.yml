@@ -1,0 +1,43 @@
+---
+  - name: stat jenkins.install.InstallUtil.lastExecVersion
+    stat: path={{ jenkins_home }}/jenkins.install.InstallUtil.lastExecVersion
+    register: lastexecversion
+
+  - name: Ensure jenkins.install.UpgradeWizard.state
+    stat: path={{ jenkins_home }}/jenkins.install.UpgradeWizard.state
+    register: upgradewizard
+    until: upgradewizard.stat.exists == True
+    retries: 12
+    delay: 3
+
+  - name: Bypass - jenkins.install.InstallUtil.lastExecVersion
+    copy: >
+      src={{ jenkins_home }}/jenkins.install.UpgradeWizard.state
+      dest={{ jenkins_home }}/jenkins.install.InstallUtil.lastExecVersion
+      remote_src=True
+    when: lastexecversion.stat.exists == False and ansible_version.major >= 2
+
+  - name: Bypass - jenkins.install.InstallUtil.lastExecVersion
+    shell: cp {{ jenkins_home }}/jenkins.install.UpgradeWizard.state {{ jenkins_home }}/jenkins.install.InstallUtil.lastExecVersion
+    when: lastexecversion.stat.exists == False and ansible_version.major < 2
+
+  - name: ownership - jenkins.install.InstallUtil.lastExecVersion
+    file: path={{ jenkins_home }}/jenkins.install.InstallUtil.lastExecVersion
+          owner={{ jenkins_user }}
+          group={{ jenkins_user }}
+
+  - stat: path={{ jenkins_home }}/secrets/initialAdminPassword
+    register: adminpassword
+
+  # keep it for the Jenkins CLI --password-file argument
+  - name: Bypass - initialAdminPassword
+    shell: >
+      mv {{ jenkins_home }}/secrets/initialAdminPassword /root
+      creates=/root/initialAdminPassword
+    failed_when: false
+    when: adminpassword.stat.exists == True
+
+  - name: restart jenkins
+    service: name=jenkins state=restarted
+    when: adminpassword.stat.exists == True
+
