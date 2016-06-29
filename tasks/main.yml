@@ -13,6 +13,14 @@
     jenkins_repo_key_url: "{{ __jenkins_repo_key_url }}"
   when: jenkins_repo_key_url is not defined
 
+- name: Ensure jenkins user properly setup
+  user:
+    name: jenkins
+    #group: jenkins
+    state: present
+    shell: /bin/bash
+    home: /var/lib/jenkins
+
 # Setup/install tasks.
 - include: setup-RedHat.yml
   when: ansible_os_family == 'RedHat'
