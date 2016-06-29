@@ -28,6 +28,14 @@ The location at which the `jenkins-cli.jar` jarfile will be kept. This is used f
 
 Jenkins plugins to be installed automatically during provisioning. (_Note_: This feature is currently undergoing some changes due to the `jenkins-cli` authentication changes in Jenkins 2.0, and may not work as expected.)
 
+    jenkins_version: 1.644
+
+Jenkins version can be pinned to any version available on http://pkg.jenkins-ci.org/debian/ or http://pkg.jenkins-ci.org/redhat/ (depending on the {{ ansible_os_family }}).
+
+    jenkins_pkg_url: http://example.com/
+
+If the Jenkins version you need is not available in http://pkg.jenkins-ci.org/debian/ or http://pkg.jenkins-ci.org/redhat/, the URL can be customized by setting jenkins_pkg_url (_Note_: the role depends on the same naming convention that http://pkg.jenkins-ci.org/ uses).
+
     jenkins_url_prefix: ""
 
 Used for setting a URL prefix for your Jenkins installation. The option is added as `--prefix={{ jenkins_url_prefix }}` to the Jenkins initialization `java` invocation, so you can access the installation at a path like `http://www.example.com{{ jenkins_url_prefix }}`. Make sure you start the prefix with a `/` (e.g. `/jenkins`).
