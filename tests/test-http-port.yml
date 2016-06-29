@@ -1,6 +1,9 @@
 ---
 - hosts: all
 
+  vars:
+    jenkins_http_port: 8081
+
   roles:
     - geerlingguy.java
     - role_under_test
