@@ -1,3 +1,6 @@
 ---
 - name: restart jenkins
   service: name=jenkins state=restarted
+  become: yes
+  become_user: root
+  become_method: sudo
