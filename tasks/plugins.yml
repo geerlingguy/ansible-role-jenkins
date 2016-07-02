@@ -8,6 +8,7 @@
     group: jenkins
     mode: 0755
     state: directory
+  register: jenkins_plugins_folder_create
 
 - name: Update Jenkins plugin data.
   shell: >
@@ -20,6 +21,7 @@
     owner: jenkins
     group: jenkins
     mode: 0755
+  when: jenkins_plugins_folder_create.changed
 
 - name: Install Jenkins plugins.
   command: >
