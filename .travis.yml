@@ -45,6 +45,13 @@ env:
     site: test-prefix.yml
     prefix: jenkins
     http_port: 8080
+  - distribution: ubuntu
+    version: 14.04
+    init: /sbin/init
+    run_opts: ""
+    site: test-plugins.yml
+    prefix: ''
+    http_port: 8080
 
 services:
   - docker

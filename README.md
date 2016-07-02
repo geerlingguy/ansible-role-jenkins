@@ -20,6 +20,11 @@ The system hostname; usually `localhost` works fine. This will be used during se
 
 The HTTP port for Jenkins' web interface.
 
+    jenkins_admin_username: admin
+    jenkins_admin_password: admin
+
+Default admin account credentials which will be created the first time Jenkins is installed.
+
     jenkins_jar_location: /opt/jenkins-cli.jar
 
 The location at which the `jenkins-cli.jar` jarfile will be kept. This is used for communicating with Jenkins via the CLI.
