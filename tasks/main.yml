@@ -44,7 +44,6 @@
   retries: 5
   delay: 10
 
-# Remove init.groovy.d/basic-security settings. (TODO: Idempotence).
 - name: Remove Jenkins security init scripts after first startup.
   file:
     path: /var/lib/jenkins/init.groovy.d/basic-security.groovy

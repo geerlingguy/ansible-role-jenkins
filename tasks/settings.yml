@@ -33,6 +33,7 @@
     src: basic-security.groovy
     dest: /var/lib/jenkins/init.groovy.d/basic-security.groovy
   register: jenkins_users_config
+  when: jenkins_install_package.changed
 
 - name: Immediately restart Jenkins on http or user changes.
   service: name=jenkins state=restarted
