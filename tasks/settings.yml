@@ -8,6 +8,15 @@
     state: present
   register: jenkins_init_prefix
 
+- name: Add Java options to Jenkins launch command
+  lineinfile:
+    dest: "{{ jenkins_init_file }}"
+    insertafter: '^JENKINS_JAVA_OPTIONS='
+    regexp: '^JENKINS_JAVA_OPTIONS=\"\$JENKINS_JAVA_OPTIONS '
+    line: 'JENKINS_JAVA_OPTIONS="$JENKINS_JAVA_OPTIONS {{ jenkins_java_options }}"'
+    state: present
+  register: jenkins_init_prefix
+
 - name: Immediately restart Jenkins on init config changes.
   service: name=jenkins state=restarted
   when: jenkins_init_prefix.changed
