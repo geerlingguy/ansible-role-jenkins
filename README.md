@@ -58,9 +58,17 @@ This role will install the latest version of Jenkins by default (using the offic
     jenkins_repo_url: deb http://pkg.jenkins-ci.org/debian-stable binary/
     jenkins_repo_key_url: http://pkg.jenkins-ci.org/debian-stable/jenkins-ci.org.key
 
-Extra Java options for the Jenkins launch command configured in the init file can be set with the var `jenkins_java_options`. This is set to a default value to disable the Jenkins 2.0 setup wizard:
-
     jenkins_java_options: "-Djenkins.install.runSetupWizard=false"
+
+Extra Java options for the Jenkins launch command configured in the init file can be set with the var `jenkins_java_options`. By default the option to disable the Jenkins 2.0 setup wizard is added.
+
+    jenkins_init_changes:
+      - option: "JENKINS_ARGS"
+        value: "--prefix={{ jenkins_url_prefix }}"
+      - option: "JENKINS_JAVA_OPTIONS"
+        value: "{{ jenkins_java_options }}"
+
+Changes made to the Jenkins init script; the default set of changes set the configured URL prefix and add in configured Java options for Jenkins' startup. You can add other option/value pairs if you need to set other options for the Jenkins init file.
 
 ## Dependencies
 
