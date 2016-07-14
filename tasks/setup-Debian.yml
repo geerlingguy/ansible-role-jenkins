@@ -6,12 +6,24 @@
   apt_key:
     url: "{{ jenkins_repo_key_url }}"
     state: present
+  when: jenkins_version == 'latest'
 
 - name: Add Jenkins apt repository.
   apt_repository:
     repo: "{{ jenkins_repo_url }}"
     state: present
     update_cache: yes
+  when: jenkins_version == 'latest'
+
+- name: Construct deb file name
+  set_fact:
+    jenkins_deb_file_name:  "jenkins_{{ jenkins_version }}.1_all.deb"
+
+- name: Install from deb file
+  apt:
+    deb: "{{ jenkins_deb_baseurl }}/{{ jenkins_deb_file_name }}"
+  when: jenkins_version != 'latest'
 
 - name: Ensure Jenkins is installed.
   apt: name=jenkins state=installed
+  when: jenkins_version == 'latest'
