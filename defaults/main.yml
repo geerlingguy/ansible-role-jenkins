@@ -1,4 +1,5 @@
 ---
+jenkins_version: 1.651  # latest
 jenkins_connection_delay: 5
 jenkins_connection_retries: 60
 jenkins_hostname: localhost
