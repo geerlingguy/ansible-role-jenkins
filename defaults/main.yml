@@ -13,5 +13,7 @@ jenkins_admin_password: admin
 jenkins_admin_password_file: ""
 
 jenkins_init_changes:
-  - {option: "JENKINS_ARGS", value: "--prefix={{ jenkins_url_prefix }}"}
-  - {option: "JENKINS_JAVA_OPTIONS", value: "{{ jenkins_java_options }}"}
+  - option: "JENKINS_ARGS"
+    value: "--prefix={{ jenkins_url_prefix }}"
+  - option: "JENKINS_JAVA_OPTIONS"
+    value: "{{ jenkins_java_options }}"
