@@ -15,4 +15,4 @@
 
 - name: Ensure Jenkins is installed.
   apt: name=jenkins state=present
-  register: jenkins_install_package
+  register: jenkins_install_package_deb
