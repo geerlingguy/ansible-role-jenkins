@@ -16,6 +16,10 @@ Available variables are listed below, along with default values (see `defaults/m
 
 The system hostname; usually `localhost` works fine. This will be used during setup to communicate with the running Jenkins instance via HTTP requests.
 
+    jenkins_home: /var/lib/jenkins
+
+The Jenkins home directory which, amongst others, is being used for storing artifacts, workspaces and plugins. This variable allows you to override the default `/var/lib/jenkins` location.
+
     jenkins_http_port: 8080
 
 The HTTP port for Jenkins' web interface.
