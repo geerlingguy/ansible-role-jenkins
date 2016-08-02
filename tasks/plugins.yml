@@ -3,7 +3,7 @@
 # can be installed via CLI. See: https://gist.github.com/rowan-m/1026918
 - name: Create Jenkins updates folder.
   file:
-    path: /var/lib/jenkins/updates
+    path: "{{ jenkins_home }}/updates"
     owner: jenkins
     group: jenkins
     mode: 0755
@@ -12,12 +12,12 @@
 
 - name: Update Jenkins plugin data.
   shell: >
-    curl -L https://updates.jenkins-ci.org/update-center.json | sed '1d;$d' > /var/lib/jenkins/updates/default.json
-    creates=/var/lib/jenkins/updates/default.json
+    curl -L https://updates.jenkins-ci.org/update-center.json | sed '1d;$d' > "{{ jenkins_home }}/updates/default.json"
+    creates="{{ jenkins_home }}/updates/default.json"
 
 - name: Permissions for default.json updates info.
   file:
-    path: /var/lib/jenkins/updates/default.json
+    path: "{{ jenkins_home }}/updates/default.json"
     owner: jenkins
     group: jenkins
     mode: 0755
@@ -32,7 +32,7 @@
     install-plugin {{ item }}
     --username {{ jenkins_admin_username }}
     --password {{ jenkins_admin_password }}
-    creates=/var/lib/jenkins/plugins/{{ item }}.jpi
+    creates="{{ jenkins_home }}/plugins/{{ item }}.jpi"
   with_items: "{{ jenkins_plugins }}"
   when: jenkins_admin_password != ""
   notify: restart jenkins
@@ -43,7 +43,7 @@
     install-plugin {{ item }}
     --username {{ jenkins_admin_username }}
     --password-file {{ jenkins_admin_password_file }}
-    creates=/var/lib/jenkins/plugins/{{ item }}.jpi
+    creates={{ jenkins_home }}/plugins/{{ item }}.jpi
   with_items: "{{ jenkins_plugins }}"
   when: adminpasswordfile.stat.exists == True
   notify: restart jenkins
