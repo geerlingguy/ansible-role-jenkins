@@ -1,11 +1,8 @@
 ---
 - name: Ensure dependencies are installed.
   apt:
-    pkg: "{{ item }}"
+    pkg: curl
     state: installed
-  with_items:
-    - curl
-    - apt-transport-https
 
 - name: Add Jenkins apt repository key.
   apt_key:
