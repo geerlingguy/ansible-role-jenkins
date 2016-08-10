@@ -2,27 +2,34 @@
 sudo: required
 
 env:
-  - distribution: centos
-    version: 6
-    init: /sbin/init
-    run_opts: ""
-    site: test.yml
-    prefix: ''
-    http_port: 8080
-  - distribution: centos
-    version: 6
-    init: /sbin/init
-    run_opts: ""
-    site: test-jenkins-version.yml
-    prefix: ''
-    http_port: 8080
   # - distribution: centos
-  #   version: 7
-  #   init: /usr/lib/systemd/systemd
-  #   run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+  #   version: 6
+  #   init: /sbin/init
+  #   run_opts: ""
   #   site: test.yml
   #   prefix: ''
   #   http_port: 8080
+  # - distribution: centos
+  #   version: 6
+  #   init: /sbin/init
+  #   run_opts: ""
+  #   site: test-jenkins-version.yml
+  #   prefix: ''
+  #   http_port: 8080
+  - distribution: centos
+    version: 7
+    init: /usr/lib/systemd/systemd
+    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    site: test-jenkins-version.yml
+    prefix: ''
+    http_port: 8080
+  - distribution: centos
+    version: 7
+    init: /usr/lib/systemd/systemd
+    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    site: test.yml
+    prefix: ''
+    http_port: 8080
   - distribution: ubuntu
     version: 14.04
     init: /sbin/init
@@ -98,8 +105,9 @@ script:
   - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm curl http://localhost:$http_port/$prefix'
 
 after_failure:
-  # Check what happened via journalctl
-  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm journalctl -xe'
+  # Check what happened on systemd systems.
+  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm systemctl -l status jenkins.service'
+  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm journalctl -xe --no-pager'
 
 after_success:
   # Clean up
