@@ -9,6 +9,13 @@ env:
     site: test.yml
     prefix: ''
     http_port: 8080
+  - distribution: centos
+    version: 6
+    init: /sbin/init
+    run_opts: ""
+    site: test-jenkins-version.yml
+    prefix: ''
+    http_port: 8080
   # - distribution: centos
   #   version: 7
   #   init: /usr/lib/systemd/systemd
@@ -50,6 +57,7 @@ env:
     init: /sbin/init
     run_opts: ""
     site: test-plugins.yml
+    site: test-jenkins-version.yml
     prefix: ''
     http_port: 8080
 
