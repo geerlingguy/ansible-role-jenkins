@@ -106,8 +106,8 @@ script:
 
 after_failure:
   # Check what happened on systemd systems.
-  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm systemctl status jenkins.service'
-  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm journalctl -xe'
+  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm systemctl -l status jenkins.service'
+  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm journalctl -xe --no-pager'
 
 after_success:
   # Clean up
