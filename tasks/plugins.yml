@@ -11,9 +11,9 @@
   register: jenkins_plugins_folder_create
 
 - name: Update Jenkins plugin data.
-  shell: >
-    curl -L https://updates.jenkins-ci.org/update-center.json | sed '1d;$d' > "{{ jenkins_home }}/updates/default.json"
-    creates="{{ jenkins_home }}/updates/default.json"
+  shell: curl -L https://updates.jenkins-ci.org/update-center.json | sed '1d;$d' > "{{ jenkins_home }}/updates/default.json"
+  args:
+    creates: "{{ jenkins_home }}/updates/default.json"
 
 - name: Permissions for default.json updates info.
   file:
@@ -23,7 +23,9 @@
     mode: 0755
   when: jenkins_plugins_folder_create.changed
 
-- stat: path={{ jenkins_admin_password_file }}
+- name: Check if we're using a password file for authentication
+  stat:
+    path: "{{ jenkins_admin_password_file }}"
   register: adminpasswordfile
 
 - name: Install Jenkins plugins using password.
