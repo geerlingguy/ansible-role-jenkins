@@ -1,6 +1,8 @@
 - hosts: localhost
   vars:
-    jenkins_version: 1.644
+    jenkins_version: 2.14
+    jenkins_plugins:
+      - ant
 
   roles:
     - geerlingguy.java
