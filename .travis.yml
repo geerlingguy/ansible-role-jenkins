@@ -2,27 +2,7 @@
 sudo: required
 
 env:
-  # - distribution: centos
-  #   version: 6
-  #   init: /sbin/init
-  #   run_opts: ""
-  #   site: test.yml
-  #   prefix: ''
-  #   http_port: 8080
-  # - distribution: centos
-  #   version: 6
-  #   init: /sbin/init
-  #   run_opts: ""
-  #   site: test-jenkins-version.yml
-  #   prefix: ''
-  #   http_port: 8080
-  - distribution: centos
-    version: 7
-    init: /usr/lib/systemd/systemd
-    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
-    site: test-jenkins-version.yml
-    prefix: ''
-    http_port: 8080
+  # tests/test.yml
   - distribution: centos
     version: 7
     init: /usr/lib/systemd/systemd
@@ -45,10 +25,11 @@ env:
     prefix: ''
     http_port: 8080
 
-  - distribution: ubuntu
-    version: 14.04
-    init: /sbin/init
-    run_opts: ""
+  # tests/test-http-port.yml
+  - distribution: centos
+    version: 7
+    init: /usr/lib/systemd/systemd
+    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
     site: test-http-port.yml
     prefix: ''
     http_port: 8081
@@ -56,15 +37,55 @@ env:
     version: 14.04
     init: /sbin/init
     run_opts: ""
+    site: test-http-port.yml
+    prefix: ''
+    http_port: 8081
+
+  # tests/test-prefix.yml
+  - distribution: centos
+    version: 7
+    init: /usr/lib/systemd/systemd
+    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    site: test-prefix.yml
+    prefix: ''
+    http_port: 8080
+  - distribution: ubuntu
+    version: 14.04
+    init: /sbin/init
+    run_opts: ""
     site: test-prefix.yml
     prefix: jenkins
+    http_port: 8080
+
+  # tests/test-jenkins-version.yml
+  - distribution: centos
+    version: 7
+    init: /usr/lib/systemd/systemd
+    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    site: test-jenkins-version.yml
+    prefix: ''
+    http_port: 8080
+  - distribution: ubuntu
+    version: 14.04
+    init: /sbin/init
+    run_opts: ""
+    site: test-jenkins-version.yml
+    prefix: ''
+    http_port: 8080
+
+  # tests/test-plugins.yml
+  - distribution: centos
+    version: 7
+    init: /usr/lib/systemd/systemd
+    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    site: test-plugins.yml
+    prefix: ''
     http_port: 8080
   - distribution: ubuntu
     version: 14.04
     init: /sbin/init
     run_opts: ""
     site: test-plugins.yml
-    site: test-jenkins-version.yml
     prefix: ''
     http_port: 8080
 
