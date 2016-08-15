@@ -26,13 +26,6 @@ env:
     http_port: 8080
 
   # tests/test-http-port.yml
-  - distribution: centos
-    version: 7
-    init: /usr/lib/systemd/systemd
-    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
-    site: test-http-port.yml
-    prefix: ''
-    http_port: 8081
   - distribution: ubuntu
     version: 14.04
     init: /sbin/init
@@ -42,13 +35,6 @@ env:
     http_port: 8081
 
   # tests/test-prefix.yml
-  - distribution: centos
-    version: 7
-    init: /usr/lib/systemd/systemd
-    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
-    site: test-prefix.yml
-    prefix: ''
-    http_port: 8080
   - distribution: ubuntu
     version: 14.04
     init: /sbin/init
@@ -74,13 +60,6 @@ env:
     http_port: 8080
 
   # tests/test-plugins.yml
-  - distribution: centos
-    version: 7
-    init: /usr/lib/systemd/systemd
-    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
-    site: test-plugins.yml
-    prefix: ''
-    http_port: 8080
   - distribution: ubuntu
     version: 14.04
     init: /sbin/init
@@ -90,13 +69,6 @@ env:
     http_port: 8080
 
   # tests/test-plugins-with-pinning.yml
-  - distribution: centos
-    version: 7
-    init: /usr/lib/systemd/systemd
-    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
-    site: test-plugins-with-pinning.yml
-    prefix: ''
-    http_port: 8080
   - distribution: ubuntu
     version: 14.04
     init: /sbin/init
