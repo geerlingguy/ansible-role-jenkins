@@ -37,14 +37,11 @@
     group: jenkins
     mode: 0775
 
-- name: Configure Jenkins default users.
-  template:
-    src: basic-security.groovy
-    dest: "{{ jenkins_home }}/init.groovy.d/basic-security.groovy"
-  register: jenkins_users_config
-  when: (jenkins_install_package_deb is defined and jenkins_install_package_deb.changed) or
-        (jenkins_install_package_rh is defined and jenkins_install_package_rh.changed)
+- name: Trigger handlers immediately in case Jenkins was installed
+  meta: flush_handlers
 
 - name: Immediately restart Jenkins on http or user changes.
   service: name=jenkins state=restarted
-  when: jenkins_users_config.changed or jenkins_http_config.changed or jenkins_home_config.changed
+  when: (jenkins_users_config is defined and jenkins_users_config.changed) or
+        (jenkins_http_config is defined and jenkins_http_config.changed) or
+        (jenkins_home_config is defined and jenkins_home_config.changed)

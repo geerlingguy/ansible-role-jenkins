@@ -30,12 +30,14 @@
     name: "/tmp/jenkins.rpm"
     state: installed
   when: specific_version.stat.exists
+  notify: configure default users
 
 - name: Validate Jenkins is installed and register package name.
   yum:
     name: jenkins
     state: present
-  register: jenkins_install_package_rh
+  when: not specific_version.stat.exists
+  notify: configure default users
 
 - name: Install Jenkins from repository.
   yum:
