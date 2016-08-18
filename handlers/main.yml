@@ -10,3 +10,9 @@
     group: "{{ jenkins_process_group }}"
     mode: 0775
   register: jenkins_users_config
+
+- name: configure proxy
+  template:
+    src: basic-proxy.groovy
+    dest: "{{ jenkins_home }}/init.groovy.d/basic-proxy.groovy"
+  register: jenkins_proxy_config

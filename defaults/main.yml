@@ -30,6 +30,9 @@ jenkins_admin_token_file: ""
 jenkins_process_user: jenkins
 jenkins_process_group: "{{ jenkins_process_user }}"
 
+jenkins_http_proxy: "{{ ansible_env.http_proxy | default('') or ansible_env.HTTP_PROXY | default('') }}"
+jenkins_no_proxy: "{{ ansible_env.no_proxy | default('') or ansible_env.NO_PROXY | default('') }}"
+
 jenkins_init_changes:
   - option: "JENKINS_ARGS"
     value: "--prefix={{ jenkins_url_prefix }}"

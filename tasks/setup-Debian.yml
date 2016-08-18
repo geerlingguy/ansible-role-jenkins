@@ -35,10 +35,14 @@
     deb: "/tmp/jenkins_{{ jenkins_version }}_all.deb"
     state: installed
   when: jenkins_version is defined and specific_version.stat.exists
-  notify: configure default users
+  notify:
+    - configure default users
+    - configure proxy
 
 - name: Ensure Jenkins is installed.
   apt:
     name: jenkins
     state: "{{ jenkins_package_state }}"
-  notify: configure default users
+  notify:
+    - configure default users
+    - configure proxy

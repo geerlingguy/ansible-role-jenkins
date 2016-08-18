@@ -56,5 +56,10 @@
     path: "{{ jenkins_home }}/init.groovy.d/basic-security.groovy"
     state: absent
 
+- name: Remove Jenkins proxy init scripts after first startup.
+  file:
+    path: "{{ jenkins_home }}/init.groovy.d/basic-proxy.groovy"
+    state: absent
+
 # Update Jenkins and install configured plugins.
 - include: plugins.yml
