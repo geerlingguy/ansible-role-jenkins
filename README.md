@@ -21,8 +21,18 @@ The system hostname; usually `localhost` works fine. This will be used during se
 The Jenkins home directory which, amongst others, is being used for storing artifacts, workspaces and plugins. This variable allows you to override the default `/var/lib/jenkins` location.
 
     jenkins_http_port: 8080
+    jenkins_https_port: 8443
 
-The HTTP port for Jenkins' web interface.
+The HTTP/HTTPS ports for Jenkins' web interface.
+
+    jenkins_https
+
+Optional boolean to define whether to allow Jenkins HTTPS access. Enables setting HTTPS port & Java keystore (jks) location and password.
+
+    jenkins_jks
+    jenkins_jks_password
+
+Location & password of Java keystore file for HTTPS. e.g. `/etc/ssl/jenkins-server.fqdn.com/jenkins-server.fqdn.com.jks`
 
     jenkins_admin_username: admin
     jenkins_admin_password: admin
