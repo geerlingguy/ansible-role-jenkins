@@ -4,3 +4,6 @@ __jenkins_repo_key_url: http://pkg.jenkins.io/redhat/jenkins.io.key
 __jenkins_pkg_url: http://pkg.jenkins.io/redhat
 jenkins_init_file: /etc/sysconfig/jenkins
 jenkins_http_port_param: JENKINS_PORT
+jenkins_https_port_param: JENKINS_HTTPS_PORT
+jenkins_jks_param: JENKINS_HTTPS_KEYSTORE
+jenkins_jks_pass_param: JENKINS_HTTPS_KEYSTORE_PASSWORD

@@ -3,7 +3,7 @@ dependencies:
   - geerlingguy.java
 
 galaxy_info:
-  author: geerlingguy
+  author: courtlandj
   description: Jenkins CI
   company: "Midwestern Mac, LLC"
   license: "license (BSD, MIT)"

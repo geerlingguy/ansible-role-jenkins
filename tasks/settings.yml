@@ -29,6 +29,33 @@
     line: '{{ jenkins_http_port_param }}={{ jenkins_http_port }}'
   register: jenkins_http_config
 
+- name: Set HTTPS port in Jenkins config.
+  lineinfile:
+    backrefs: yes
+    dest: "{{ jenkins_init_file }}"
+    regexp: '^{{ jenkins_https_port_param }}='
+    line: '{{ jenkins_https_port_param }}={{ jenkins_https_port }}'
+  when: jenkins_https
+  register: jenkins_http_config
+
+- name: Set JKS location
+  lineinfile:
+    backrefs: yes
+    dest: "{{ jenkins_init_file }}"
+    regexp: '^{{ jenkins_jks_param }}='
+    line: '{{ jenkins_jks_param }}={{ jenkins_jks }}'
+  when: jenkins_https
+  register: jenkins_http_config
+
+- name: Set JKS password
+  lineinfile:
+    backrefs: yes
+    dest: "{{ jenkins_init_file }}"
+    regexp: '^{{ jenkins_jks_pass_param }}='
+    line: '{{ jenkins_jks_pass_param }}={{ jenkins_jks_pass }}'
+  when: jenkins_https and jenkins_jks_pass is defined
+  register: jenkins_http_config
+
 - name: Create custom init scripts directory.
   file:
     path: "{{ jenkins_home }}/init.groovy.d"

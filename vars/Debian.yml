@@ -4,3 +4,6 @@ __jenkins_repo_key_url: http://pkg.jenkins.io/debian/jenkins.io.key
 __jenkins_pkg_url: http://pkg.jenkins.io/debian/binary/
 jenkins_init_file: /etc/default/jenkins
 jenkins_http_port_param: HTTP_PORT
+jenkins_https_port_param: HTTPS_PORT
+jenkins_jks_param: HTTPS_KEYSTORE
+jenkins_jks_pass_param: HTTPS_KEYSTORE_PASSWORD
