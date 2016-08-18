@@ -102,8 +102,11 @@ Changes made to the Jenkins init script; the default set of changes set the conf
     - hosts: ci-server
       vars:
         jenkins_hostname: jenkins.example.com
+        jenkins_https: true
+        jenkins_jks: /etc/ssl/jenkins.example.com/jenkins.example.com.jks
+        jenkins_jks_pass: "{{ password_from_vault }}"
       roles:
-        - geerlingguy.jenkins
+        - courtlandj.jenkins
 
 ## License
 
