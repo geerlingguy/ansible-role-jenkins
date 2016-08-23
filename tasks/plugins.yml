@@ -23,7 +23,7 @@
     mode: 0755
   when: jenkins_plugins_folder_create.changed
 
-- name: Check if we're using a password file for authentication
+- name: Check if using a password file for authentication
   stat:
     path: "{{ jenkins_admin_password_file }}"
   register: adminpasswordfile
