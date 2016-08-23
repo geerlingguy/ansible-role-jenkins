@@ -21,6 +21,6 @@ jenkins_admin_password_file: ""
 
 jenkins_init_changes:
   - option: "JENKINS_ARGS"
-    value: "--prefix={{ jenkins_url_prefix }}"
+    value: "--prefix={{ jenkins_url_prefix }}{{ ('Debian' in ansible_os_family) | ternary(' --httpsPort={{ jenkins_https_port }} --httpsKeyStore={{ jenkins_jks }} --httpsKeyStorePassword={{ jenkins_jks_pass }}','')}}"
   - option: "JENKINS_JAVA_OPTIONS"
     value: "{{ jenkins_java_options }}"
