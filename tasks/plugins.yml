@@ -30,7 +30,9 @@
 
 - name: Install Jenkins plugins using password.
   command: >
-    java -jar {{ jenkins_jar_location }} -s http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix | default('') }}/
+    java
+    -jar {{ jenkins_jar_location }}{{ (jenkins_http_port == -1) | ternary("-noCertificateCheck","") }}
+    -s {{ (jenkins_http_port == -1) | ternary("https","http") }}://{{ jenkins_hostname }}:{{ (jenkins_http_port != -1) | ternary("{{ jenkins_http_port }}","{{ jenkins_https_port }}") }}{{ jenkins_url_prefix | default("") }}/
     install-plugin {{ item }}
     --username {{ jenkins_admin_username }}
     {{ (jenkins_admin_password != "") | ternary("--password {{ jenkins_admin_password }}","") }}

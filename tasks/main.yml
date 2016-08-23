@@ -33,7 +33,7 @@
   service: name=jenkins state=started enabled=yes
 
 - name: Wait for Jenkins to start up before proceeding.
-  shell: "curl -D - --silent --max-time 5 http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}/cli/"
+  shell: "curl -D - --silent --max-time 5 {{ (jenkins_http_port == -1) | ternary('-k','') }} {{ (jenkins_http_port == -1) | ternary('https','http') }}://{{ jenkins_hostname }}:{{ (jenkins_http_port != -1)|ternary(jenkins_http_port,jenkins_https_port) }}{{ jenkins_url_prefix }}/cli/"
   args:
     warn: no
   register: result
@@ -44,8 +44,9 @@
 
 - name: Get the jenkins-cli jarfile from the Jenkins server.
   get_url:
-    url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}/jnlpJars/jenkins-cli.jar"
+    url: "{{ (jenkins_http_port == -1) | ternary('https','http') }}://{{ jenkins_hostname }}:{{ (jenkins_http_port != -1) | ternary(jenkins_http_port,jenkins_https_port) }}{{ jenkins_url_prefix }}/jnlpJars/jenkins-cli.jar"
     dest: "{{ jenkins_jar_location }}"
+    validate_certs: no
   register: jarfile_get
   until: "'OK' in jarfile_get.msg or 'file already exists' in jarfile_get.msg"
   retries: 5
