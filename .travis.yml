@@ -3,22 +3,22 @@ sudo: required
 
 env:
   # tests/test.yml
-  - distribution: centos
-    version: 7
+  - repository: geerlingguy/docker-centos7-ansible
+    version: latest
     init: /usr/lib/systemd/systemd
     run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
     site: test.yml
     prefix: ''
     http_port: 8080
-  - distribution: ubuntu
-    version: 14.04
+  - repository: geerlingguy/docker-ubuntu1404-ansible
+    version: latest
     init: /sbin/init
     run_opts: ""
     site: test.yml
     prefix: ''
     http_port: 8080
-  - distribution: ubuntu
-    version: 12.04
+  - repository: geerlingguy/docker-ubuntu1204-ansible
+    version: latest
     init: /sbin/init
     run_opts: ""
     site: test.yml
@@ -26,8 +26,8 @@ env:
     http_port: 8080
 
   # tests/test-http-port.yml
-  - distribution: ubuntu
-    version: 14.04
+  - repository: geerlingguy/docker-ubuntu1404-ansible
+    version: latest
     init: /sbin/init
     run_opts: ""
     site: test-http-port.yml
@@ -35,8 +35,8 @@ env:
     http_port: 8081
 
   # tests/test-prefix.yml
-  - distribution: ubuntu
-    version: 14.04
+  - repository: geerlingguy/docker-ubuntu1404-ansible
+    version: latest
     init: /sbin/init
     run_opts: ""
     site: test-prefix.yml
@@ -44,15 +44,15 @@ env:
     http_port: 8080
 
   # tests/test-jenkins-version.yml
-  - distribution: centos
-    version: 7
+  - repository: geerlingguy/docker-centos7-ansible
+    version: latest
     init: /usr/lib/systemd/systemd
     run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
     site: test-jenkins-version.yml
     prefix: ''
     http_port: 8080
-  - distribution: ubuntu
-    version: 14.04
+  - repository: geerlingguy/docker-ubuntu1404-ansible
+    version: latest
     init: /sbin/init
     run_opts: ""
     site: test-jenkins-version.yml
@@ -60,8 +60,8 @@ env:
     http_port: 8080
 
   # tests/test-plugins.yml
-  - distribution: ubuntu
-    version: 14.04
+  - repository: geerlingguy/docker-ubuntu1404-ansible
+    version: latest
     init: /sbin/init
     run_opts: ""
     site: test-plugins.yml
@@ -69,8 +69,8 @@ env:
     http_port: 8080
 
   # tests/test-plugins-with-pinning.yml
-  - distribution: ubuntu
-    version: 14.04
+  - repository: geerlingguy/docker-ubuntu1404-ansible
+    version: latest
     init: /sbin/init
     run_opts: ""
     site: test-plugins-with-pinning.yml
@@ -81,16 +81,13 @@ services:
   - docker
 
 before_install:
-  # - sudo apt-get update
   # Pull container
-  - 'sudo docker pull ${distribution}:${version}'
-  # Customize container
-  - 'sudo docker build --rm=true --file=tests/Dockerfile.${distribution}-${version} --tag=${distribution}-${version}:ansible tests'
+  - 'sudo docker pull ${repository}:${version}'
 
 script:
   - container_id=$(mktemp)
   # Run container in detached state
-  - 'sudo docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} ${distribution}-${version}:ansible "${init}" > "${container_id}"'
+  - 'sudo docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} ${repository}:${version} "${init}" > "${container_id}"'
 
   # Install dependencies.
   - 'sudo docker exec "$(cat ${container_id})" ansible-galaxy install -r /etc/ansible/roles/role_under_test/tests/requirements.yml'
