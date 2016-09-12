@@ -1,7 +1,7 @@
 ---
 - name: Ensure dependencies are installed.
-  yum:
-    pkg: curl
+  package:
+    name: curl
     state: installed
 
 - name: Ensure Jenkins repo is installed.
@@ -26,21 +26,21 @@
   register: specific_version
 
 - name: Install our specific version of Jenkins.
-  yum:
+  package:
     name: "/tmp/jenkins.rpm"
     state: installed
   when: specific_version.stat.exists
   notify: configure default users
 
 - name: Validate Jenkins is installed and register package name.
-  yum:
+  package:
     name: jenkins
     state: present
   when: not specific_version.stat.exists
   notify: configure default users
 
 - name: Install Jenkins from repository.
-  yum:
+  package:
     name: jenkins
     state: installed
   when: jenkins_version is undefined
