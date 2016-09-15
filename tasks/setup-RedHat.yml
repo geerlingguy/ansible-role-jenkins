@@ -1,7 +1,9 @@
 ---
 - name: Ensure dependencies are installed.
   package:
-    name: curl
+    name: 
+      - curl
+      - libselinux-python
     state: installed
 
 - name: Ensure Jenkins repo is installed.
