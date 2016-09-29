@@ -3,6 +3,28 @@
 - name: Include OS-Specific variables
   include_vars: "{{ ansible_os_family }}.yml"
 
+- name: Discovering apache if available
+  stat:
+    path: /etc/init.d/apache2
+  register: apache2_state
+
+- name: Stopping apache2
+  service:
+    name: apache2
+    state: stopped
+  when: apache2_state.stat.exists
+
+- name: Discovering nginx if available
+  stat:
+    path: /etc/init.d/nginx
+  register: nginx_state
+
+- name: Stopping nginx
+  service:
+    name: nginx
+    state: stopped
+  when: nginx_state.stat.exists
+
 - name: Define jenkins_repo_url
   set_fact:
     jenkins_repo_url: "{{ __jenkins_repo_url }}"
