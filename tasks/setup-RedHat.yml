@@ -1,37 +1,40 @@
 ---
-- name: Ensure dependencies are installed.
-  yum:
-    pkg: curl
-    state: installed
+- block:
+    - name: Ensure dependencies are installed.
+      yum:
+        pkg: curl
+        state: installed
+    
+    - name: Ensure Jenkins repo is installed.
+      get_url:
+        url: "{{ jenkins_repo_url }}"
+        dest: /etc/yum.repos.d/jenkins.repo
+    
+    - name: Add Jenkins repo GPG key.
+      rpm_key:
+        state: present
+        key: "{{ jenkins_repo_key_url }}"
+    
+    - name: Download specific Jenkins version.
+      get_url:
+        url: "{{ jenkins_pkg_url }}/jenkins-{{ jenkins_version }}-1.1.noarch.rpm"
+        dest: "/tmp/jenkins.rpm"
+      when: jenkins_version is defined
 
-- name: Ensure Jenkins repo is installed.
-  get_url:
-    url: "{{ jenkins_repo_url }}"
-    dest: /etc/yum.repos.d/jenkins.repo
-
-- name: Add Jenkins repo GPG key.
-  rpm_key:
-    state: present
-    key: "{{ jenkins_repo_key_url }}"
-
-- name: Download specific Jenkins version.
-  get_url:
-    url: "{{ jenkins_pkg_url }}/jenkins-{{ jenkins_version }}-1.1.noarch.rpm"
-    dest: "/tmp/jenkins.rpm"
-  when: jenkins_version is defined
+  when: jenkins_download == false
 
 - name: Check if we downloaded a specific version of Jenkins.
   stat:
     path: "/tmp/jenkins.rpm"
   register: specific_version
-
+    
 - name: Install our specific version of Jenkins.
   yum:
     name: "/tmp/jenkins.rpm"
     state: installed
   when: specific_version.stat.exists
   notify: configure default users
-
+    
 - name: Validate Jenkins is installed and register package name.
   yum:
     name: jenkins
