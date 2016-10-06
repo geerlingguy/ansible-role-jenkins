@@ -34,7 +34,7 @@
     state: installed
   when: specific_version.stat.exists
   notify: configure default users
- 
+
 - name: Validate Jenkins is installed and register package name.
   yum:
     name: jenkins
