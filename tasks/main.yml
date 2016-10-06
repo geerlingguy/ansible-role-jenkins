@@ -1,5 +1,9 @@
 ---
 # Variable setup.
+- name: "Set install Jenkins plugins to true, if not already set."
+  set_fact:
+    jenkins_install_plugins: "{{ jenkins_install_plugins|default(true) }}"
+
 - name: Include OS-Specific variables
   include_vars: "{{ ansible_os_family }}.yml"
 
@@ -56,3 +60,4 @@
 
 # Update Jenkins and install configured plugins.
 - include: plugins.yml
+  when: jenkins_install_plugins == true
