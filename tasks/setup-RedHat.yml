@@ -1,4 +1,8 @@
 ---
+- name: "Set download Jenkins to true, if not already set."
+  set_fact:
+    jenkins_download: "{{ jenkins_download|default(true) }}"
+
 - block:
     - name: Ensure dependencies are installed.
       yum:
@@ -21,7 +25,7 @@
         dest: "/tmp/jenkins.rpm"
       when: jenkins_version is defined
 
-  when: jenkins_download == false
+  when: jenkins_download == true
 
 - name: Check if we downloaded a specific version of Jenkins.
   stat:
