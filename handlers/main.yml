@@ -6,4 +6,5 @@
   template:
     src: basic-security.groovy
     dest: "{{ jenkins_home }}/init.groovy.d/basic-security.groovy"
+    mode: 0755
   register: jenkins_users_config
