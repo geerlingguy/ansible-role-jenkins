@@ -27,14 +27,14 @@
   stat:
     path: "/tmp/jenkins.rpm"
   register: specific_version
-    
+
 - name: Install our specific version of Jenkins.
   yum:
     name: "/tmp/jenkins.rpm"
     state: installed
   when: specific_version.stat.exists
   notify: configure default users
-    
+ 
 - name: Validate Jenkins is installed and register package name.
   yum:
     name: jenkins
