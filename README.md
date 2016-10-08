@@ -35,6 +35,11 @@ Default admin password file which will be created the first time Jenkins is inst
 
     jenkins_jar_location: /opt/jenkins-cli.jar
 
+The Jenkins Update URL to use. This is useful when one wants to install plugins from an alternate url
+such as the experimental update center, default is normal update center https://updates.jenkins-ci.org/update-center.json:
+
+    jenkins_update_url: "http://updates.jenkins-ci.org/experimental/update-center.json"
+
 The location at which the `jenkins-cli.jar` jarfile will be kept. This is used for communicating with Jenkins via the CLI.
 
     jenkins_plugins: []
