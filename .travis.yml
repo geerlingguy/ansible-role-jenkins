@@ -9,6 +9,12 @@ env:
     site: test.yml
     prefix: ''
     http_port: 8080
+  - distro: fedora24
+    init: /usr/lib/systemd/systemd
+    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    site: test.yml
+    prefix: ''
+    http_port: 8080
   - distro: ubuntu1404
     init: /sbin/init
     run_opts: ""
