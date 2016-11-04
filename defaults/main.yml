@@ -17,6 +17,7 @@ jenkins_java_options: "-Djenkins.install.runSetupWizard=false"
 jenkins_admin_username: admin
 jenkins_admin_password: admin
 jenkins_admin_password_file: ""
+jenkins_admin_pubkey: ""
 
 jenkins_init_changes:
   - option: "JENKINS_ARGS"

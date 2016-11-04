@@ -33,6 +33,10 @@ Default admin account credentials which will be created the first time Jenkins i
 
 Default admin password file which will be created the first time Jenkins is installed as /var/lib/jenkins/secrets/initialAdminPassword
 
+    jenkins_admin_pubkey: ""
+
+Default public SSH authorised key which will be added to the admin user the first time Jenkins is installed. Useful for authenticating against the Jenkins CLI.
+
     jenkins_jar_location: /opt/jenkins-cli.jar
 
 The location at which the `jenkins-cli.jar` jarfile will be kept. This is used for communicating with Jenkins via the CLI.
