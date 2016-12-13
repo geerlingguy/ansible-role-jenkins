@@ -19,7 +19,7 @@
 
 
 - name: Create repo latest directory Structure
-  file: path={{jenkins_root}}{{ item }}  state=directory recurse=true owner=jenkins group=jenkins
+  file: path={{jenkins_root}}{{ item }}  state=directory  owner={{jenkins_user}} group={{jenkins_group}} mode=0755
   with_items:
   - /etc/init.d
   - /etc/logrotate.d 
@@ -28,10 +28,13 @@
   - /usr/sbin                                                           
   - /var/cache/jenkins
   - /var/lib/jenkins
+  - /var/lib/jenkins/init.groovy.d
   - /var/log/jenkins
   - /tmp
   - /scripts
   - /opt
+  notify: configure admin user
+  register: jenkins_home_config
 
 - name: Download specific Jenkins war.
   get_url:
@@ -44,45 +47,53 @@
 - name: update jenkins war
   copy: 
     remote_src: true
-    src: "{{jenkins_root}}/tmp/jenkins.war"
-    dest: "{{jenkins_root}}/usr/lib/jenkins"
-    owner: jenkins
-    group: jenkins
-    mode: 0755
+    src: "{{ jenkins_root }}/tmp/jenkins.war"
+    dest: "{{ jenkins_root }}/usr/lib/jenkins"
+    owner: "{{ jenkins_user }}"
+    group: "{{ jenkins_group }}"
+    mode: 0644
+  register: jenkins_war_file
   
 - name: Jenkins logrotation config
   template:
     src: logrotate.jenkins
-    dest: "{{jenkins_root}}/etc/logrotate.d/jenkins"
-    owner: jenkins
-    group: jenkins
+    dest: "{{ jenkins_root }}/etc/logrotate.d/jenkins"
+    owner: "{{ jenkins_user }}"
+    group: "{{ jenkins_group }}"
     mode: 0644
+    
 - name: Jenkins Global config
   template:
     src: sysconfig.jenkins
-    dest: "{{jenkins_root}}/etc/sysconfig/jenkins"
-    owner: jenkins
-    group: jenkins
-    mode: 0600    
-- name: Jenkins Init Script
+    dest: "{{ jenkins_root }}/etc/sysconfig/jenkins"
+    owner: "{{ jenkins_user }}"
+    group: "{{ jenkins_group }}"
+    mode: 0644    
+  register: jenkins_http_config
+    
+- name: Configure Jenkins Service Script
   template:
-    src: init.jenkins
-    dest: "{{jenkins_root}}/etc/init.d/jenkins"
-    owner: jenkins
-    group: jenkins
+    src: service.jenkins
+    dest: "{{ jenkins_root }}/etc/init.d/jenkins"
+    owner: "{{ jenkins_user }}"
+    group: "{{ jenkins_group }}"
     mode: 0755    
-- name: Install init script
+    
+- name: Install Service script
   copy: 
     remote_src: True
-    src: "{{jenkins_root}}/etc/init.d/jenkins"
+    src: "{{ jenkins_root }}/etc/init.d/jenkins"
     dest: /etc/init.d/jenkins
     owner: root
     group: root
     mode: 0755      
 
-#- name: Install our specific version of Jenkins.
-#  package:
-#    name: "/tmp/jenkins.war"
-#    state: installed
-#  when: warfile.stat.exists
-#  notify: configure default users
+- name: Trigger handlers immediately in case Jenkins was installed
+  meta: flush_handlers
+
+- name: Immediately restart Jenkins on http or user changes.
+  service: name=jenkins state=restarted
+  when: (jenkins_users_config is defined and jenkins_users_config.changed) or
+        (jenkins_http_config is defined and jenkins_http_config.changed) or
+        (jenkins_war_file is defined and jenkins_war_file.changed) or
+        (jenkins_home_config is defined and jenkins_home_config.changed)

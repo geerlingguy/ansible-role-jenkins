@@ -1,4 +1,4 @@
-{{jenkins_root}}/var/log/jenkins/jenkins.log {{jenkins_root}}/var/log/jenkins/access_log {
+{{ jenkins_root }}/var/log/jenkins/jenkins.log {{ jenkins_root }}/var/log/jenkins/access_log {
     compress
     dateext
     maxage 365

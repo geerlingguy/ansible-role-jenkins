@@ -2,15 +2,8 @@
 - name: restart jenkins
   service: name=jenkins state=restarted
 
-- name: configure default users
+- name: configure admin user
   template:
     src: basic-security.groovy
     dest: "{{ jenkins_home }}/init.groovy.d/basic-security.groovy"
   register: jenkins_users_config
-
-- name: update jenkins war
-  copy: 
-    remote_src: true
-    src: "{{jenkins_root}}/tmp/jenkins.war"
-    dest: "{{jenkins_root}}/usr/lib/jenkins"
-  

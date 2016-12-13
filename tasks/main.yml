@@ -16,7 +16,7 @@
 # Setup/install tasks.
 - include: setup-RedHat-Offline.yml
   when: ansible_os_family == 'RedHat'
-  notify: configure default users
+
 
 # Configure Jenkins init settings.
 - include: settings.yml

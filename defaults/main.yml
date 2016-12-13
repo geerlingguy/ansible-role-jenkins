@@ -4,12 +4,15 @@
 # jenkins_version: "1.644"
 # jenkins_pkg_url: "https://www.example.com/"
 
+jenkins_user: jenkins
+jenkins_group: jenkins
+jenkin_root: /app/jenkins
 jenkins_connection_delay: 5
 jenkins_connection_retries: 60
-jenkins_home: /apps/jenkins/var/lib/jenkins
+jenkins_home: "{{ jenkins_root }}/var/lib/jenkins"
 jenkins_hostname: localhost
 jenkins_http_port: 8080
-jenkins_jar_location: /apps/jenkins/opt/jenkins-cli.jar
+jenkins_jar_location: "{{ jenkins_root }}/opt/jenkins-cli.jar"
 jenkins_plugins: []
 jenkins_url_prefix: ""
 jenkins_java_options: "-Djenkins.install.runSetupWizard=false"
@@ -18,7 +21,7 @@ jenkins_admin_username: admin
 jenkins_admin_password: admin
 jenkins_admin_password_file: ""
 
-jenkins_init_changes:
+jenkins_init_overrides:
   - option: "JENKINS_ARGS"
     value: "--prefix={{ jenkins_url_prefix }}"
   - option: "{{ jenkins_java_options_env_var }}"

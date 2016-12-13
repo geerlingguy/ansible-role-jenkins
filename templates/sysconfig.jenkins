@@ -26,7 +26,7 @@ JENKINS_JAVA_CMD=""
 # Be careful when you change this, as you need to update
 # permissions of $JENKINS_HOME and /var/log/jenkins.
 #
-JENKINS_USER="jenkins"
+JENKINS_USER="{{ jenkins_user }}"
 
 ## Type:        string
 ## Default: "false"
@@ -53,7 +53,7 @@ JENKINS_JAVA_OPTIONS="-Djava.awt.headless=true"
 # Port Jenkins is listening on.
 # Set to -1 to disable
 #
-JENKINS_PORT="8080"
+JENKINS_PORT="{{ jenkins_http_port }}"
 
 ## Type:        string
 ## Default:     ""
@@ -142,3 +142,14 @@ JENKINS_HANDLER_IDLE="20"
 # Full option list: java -jar jenkins.war --help
 #
 JENKINS_ARGS=""
+
+#################################################
+## Master OverRides placed here.
+## Note that variables may b deined twice, and this is a 
+## technical debt, but the overrides will hold.
+## Testing burden lies with the user
+
+
+{% for item in jenkins_init_overrides  %}
+{{ item.option }}="{{ item.value }}"
+{% endfor %}
