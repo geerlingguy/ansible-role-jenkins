@@ -1,12 +1,21 @@
 ---
-- name: Ensure URL prefix is present in Jenkins config.
+- name: Modify variables in init file
   lineinfile:
     dest: "{{ jenkins_init_file }}"
-    insertafter: '^JENKINS_ARGS='
-    regexp: '^JENKINS_ARGS=\"\$JENKINS_ARGS --prefix='
-    line: 'JENKINS_ARGS="$JENKINS_ARGS --prefix={{ jenkins_url_prefix }}"'
+    insertafter: '^{{ item.option }}='
+    regexp: '^{{ item.option}}=\"\${{ item.option }} '
+    line: '{{ item.option }}="${{ item.option }} {{ item.value }}"'
     state: present
+  with_items:
+      "{{ jenkins_init_changes }}"
   register: jenkins_init_prefix
+
+- name: Set the Jenkins home directory
+  lineinfile:
+    dest: "{{ jenkins_init_file }}"
+    regexp: '^JENKINS_HOME=.*'
+    line: 'JENKINS_HOME={{ jenkins_home }}'
+  register: jenkins_home_config
 
 - name: Immediately restart Jenkins on init config changes.
   service: name=jenkins state=restarted
@@ -22,19 +31,17 @@
 
 - name: Create custom init scripts directory.
   file:
-    path: /var/lib/jenkins/init.groovy.d
+    path: "{{ jenkins_home }}/init.groovy.d"
     state: directory
     owner: jenkins
     group: jenkins
     mode: 0775
 
-- name: Configure Jenkins default users.
-  template:
-    src: basic-security.groovy
-    dest: /var/lib/jenkins/init.groovy.d/basic-security.groovy
-  register: jenkins_users_config
-  when: jenkins_install_package.changed
+- name: Trigger handlers immediately in case Jenkins was installed
+  meta: flush_handlers
 
 - name: Immediately restart Jenkins on http or user changes.
   service: name=jenkins state=restarted
-  when: jenkins_users_config.changed or jenkins_http_config.changed
+  when: (jenkins_users_config is defined and jenkins_users_config.changed) or
+        (jenkins_http_config is defined and jenkins_http_config.changed) or
+        (jenkins_home_config is defined and jenkins_home_config.changed)

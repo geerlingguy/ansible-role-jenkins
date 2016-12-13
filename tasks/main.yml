@@ -13,6 +13,11 @@
     jenkins_repo_key_url: "{{ __jenkins_repo_key_url }}"
   when: jenkins_repo_key_url is not defined
 
+- name: Define jenkins_pkg_url
+  set_fact:
+    jenkins_pkg_url: "{{ __jenkins_pkg_url }}"
+  when: jenkins_pkg_url is not defined
+
 # Setup/install tasks.
 - include: setup-RedHat.yml
   when: ansible_os_family == 'RedHat'
@@ -29,6 +34,7 @@
 
 - name: Wait for Jenkins to start up before proceeding.
   shell: "curl -D - --silent --max-time 5 http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}/cli/"
+  check_mode: no
   register: result
   until: (result.stdout.find("403 Forbidden") != -1) or (result.stdout.find("200 OK") != -1) and (result.stdout.find("Please wait while") == -1)
   retries: "{{ jenkins_connection_retries }}"
@@ -39,14 +45,10 @@
   get_url:
     url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}/jnlpJars/jenkins-cli.jar"
     dest: "{{ jenkins_jar_location }}"
-  register: jarfile_get
-  until: "'OK' in jarfile_get.msg or 'file already exists' in jarfile_get.msg"
-  retries: 5
-  delay: 10
 
 - name: Remove Jenkins security init scripts after first startup.
   file:
-    path: /var/lib/jenkins/init.groovy.d/basic-security.groovy
+    path: "{{ jenkins_home }}/init.groovy.d/basic-security.groovy"
     state: absent
 
 # Update Jenkins and install configured plugins.

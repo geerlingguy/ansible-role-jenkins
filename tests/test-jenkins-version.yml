@@ -1,0 +1,7 @@
+- hosts: localhost
+  vars:
+    jenkins_version: 1.644
+
+  roles:
+    - geerlingguy.java
+    - role_under_test
