@@ -1,0 +1,88 @@
+---
+- name: Ensure dependencies are installed.
+  package:
+    name: 
+      - curl
+      - libselinux-python
+    state: installed
+
+#- name: Ensure Jenkins repo is installed.
+#  get_url:
+#    url: "{{ jenkins_repo_url }}"
+#    dest: /etc/yum.repos.d/jenkins.repo
+#
+#- name: Add Jenkins repo GPG key.
+#  rpm_key:
+#    state: present
+#    key: "{{ jenkins_repo_key_url }}"
+
+
+
+- name: Create repo latest directory Structure
+  file: path={{jenkins_root}}{{ item }}  state=directory recurse=true owner=jenkins group=jenkins
+  with_items:
+  - /etc/init.d
+  - /etc/logrotate.d 
+  - /etc/sysconfig
+  - /usr/lib/jenkins
+  - /usr/sbin                                                           
+  - /var/cache/jenkins
+  - /var/lib/jenkins
+  - /var/log/jenkins
+  - /tmp
+  - /scripts
+  - /opt
+
+- name: Download specific Jenkins war.
+  get_url:
+    url: "{{ jenkins_nexus_url }}"
+    dest: "{{jenkins_root}}/tmp/jenkins.war"
+ # should be yes, but temporarily disabled to speed up testing
+ #   force: yes
+    force: no
+ 
+- name: update jenkins war
+  copy: 
+    remote_src: true
+    src: "{{jenkins_root}}/tmp/jenkins.war"
+    dest: "{{jenkins_root}}/usr/lib/jenkins"
+    owner: jenkins
+    group: jenkins
+    mode: 0755
+  
+- name: Jenkins logrotation config
+  template:
+    src: logrotate.jenkins
+    dest: "{{jenkins_root}}/etc/logrotate.d/jenkins"
+    owner: jenkins
+    group: jenkins
+    mode: 0644
+- name: Jenkins Global config
+  template:
+    src: sysconfig.jenkins
+    dest: "{{jenkins_root}}/etc/sysconfig/jenkins"
+    owner: jenkins
+    group: jenkins
+    mode: 0600    
+- name: Jenkins Init Script
+  template:
+    src: init.jenkins
+    dest: "{{jenkins_root}}/etc/init.d/jenkins"
+    owner: jenkins
+    group: jenkins
+    mode: 0755    
+- name: Install init script
+  copy: 
+    remote_src: True
+    src: "{{jenkins_root}}/etc/init.d/jenkins"
+    dest: /etc/init.d/jenkins
+    owner: root
+    group: root
+    mode: 0755      
+
+#- name: Install our specific version of Jenkins.
+#  package:
+#    name: "/tmp/jenkins.war"
+#    state: installed
+#  when: warfile.stat.exists
+#  notify: configure default users

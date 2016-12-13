@@ -3,27 +3,20 @@
 - name: Include OS-Specific variables
   include_vars: "{{ ansible_os_family }}.yml"
 
-- name: Define jenkins_repo_url
+- name: Define jenkins_nexus_url
   set_fact:
-    jenkins_repo_url: "{{ __jenkins_repo_url }}"
-  when: jenkins_repo_url is not defined
+    jenkins_nexus_url: "{{ __jenkins_nexus_url }}"
+  when: jenkins_nexus_url is not defined
 
-- name: Define jenkins_repo_key_url
-  set_fact:
-    jenkins_repo_key_url: "{{ __jenkins_repo_key_url }}"
-  when: jenkins_repo_key_url is not defined
-
-- name: Define jenkins_pkg_url
-  set_fact:
-    jenkins_pkg_url: "{{ __jenkins_pkg_url }}"
-  when: jenkins_pkg_url is not defined
+# fail if not redhat
+- fail:
+    msg: "Non RedHat installations not supported yet" 
+  when: ansible_os_family != 'RedHat'
 
 # Setup/install tasks.
-- include: setup-RedHat.yml
+- include: setup-RedHat-Offline.yml
   when: ansible_os_family == 'RedHat'
-
-- include: setup-Debian.yml
-  when: ansible_os_family == 'Debian'
+  notify: configure default users
 
 # Configure Jenkins init settings.
 - include: settings.yml
