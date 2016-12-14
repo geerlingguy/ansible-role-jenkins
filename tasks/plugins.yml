@@ -2,7 +2,7 @@
 # Jenkins doesn't allow updates via CLI, though that is required before plugins
 # can be installed via CLI. See: https://gist.github.com/rowan-m/1026918
 
-- name: Jenkins plugin installer
+- name: Jenkins plugin installer script
   template:
     src: install_plugin.sh
     dest: "{{ jenkins_root }}/scripts"
@@ -10,8 +10,10 @@
     group: "{{ jenkins_group }}"
     mode: 0755    
 
-- name: Install plugins
-  command : "{{jenkins_root}}/scripts/install_plugin.sh {{ item }}"
+- name: Install plugins 
+  command: "{{ jenkins_root }}/scripts/install_plugin.sh {{ item }}"  
   args:
     chdir: "{{ jenkins_root }}/scripts"
+    creates: "{{ jenkins_root }}/var/lib/jenkins/plugins/{{ item }}.hpi"
   with_items: "{{ jenkins_plugins }}"
+  notify: restart jenkins

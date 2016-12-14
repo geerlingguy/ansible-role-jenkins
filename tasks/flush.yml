@@ -1,0 +1,3 @@
+---
+- name: Trigger handlers immediately in case Jenkins was installed
+  meta: flush_handlers

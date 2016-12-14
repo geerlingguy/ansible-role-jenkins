@@ -18,8 +18,8 @@
   when: ansible_os_family == 'RedHat'
 
 
-# Configure Jenkins init settings.
-- include: settings.yml
+# FLush any handlers
+- include: flush.yml
 
 # Make sure Jenkins starts, then configure Jenkins.
 - name: Ensure Jenkins is started and runs on startup.
