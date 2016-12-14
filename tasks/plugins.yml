@@ -11,7 +11,7 @@
     mode: 0755    
 
 - name: Install plugins
-  command : "{{jenkins_root}}/scripts/install_plugins.sh"
+  command : "{{jenkins_root}}/scripts/install_plugin.sh {{ item }}"
   args:
     chdir: "{{ jenkins_root }}/scripts"
-    
+  with_items: "{{ jenkins_plugins }}"

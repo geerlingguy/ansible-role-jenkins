@@ -30,6 +30,7 @@
   - /var/lib/jenkins
   - /var/lib/jenkins/init.groovy.d
   - /var/log/jenkins
+  - /var/run
   - /tmp
   - /scripts
   - /opt
