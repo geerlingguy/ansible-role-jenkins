@@ -17,3 +17,7 @@
     creates: "{{ jenkins_root }}/var/lib/jenkins/plugins/{{ item }}.hpi"
   with_items: "{{ jenkins_plugins }}"
   notify: restart jenkins
+  register: installed_plugins
+  
+- debug:
+    msg: "{{ installed_plugins.results|map(attribute='stdout_lines')|list|unique}}"

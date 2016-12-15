@@ -42,10 +42,10 @@
   retries: 5
   delay: 10
 
-- name: Remove Jenkins security init scripts after first startup.
-  file:
-    path: "{{ jenkins_home }}/init.groovy.d/basic-security.groovy"
-    state: absent
+#- name: Remove Jenkins security init scripts after first startup.
+#  file:
+#    path: "{{ jenkins_home }}/init.groovy.d/basic-security.groovy"
+#    state: absent
 
 # Update Jenkins and install configured plugins.
 - include: plugins.yml

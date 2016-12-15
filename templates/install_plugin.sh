@@ -14,7 +14,7 @@ mkdir -p ${plugin_dir}
 
 installPlugin() {
 ## Test if plugin exists on remote repo
-curl -I --silent {{ jenkins_plugins_nexus_url }}/${1}.hpi
+curl -I --silent {{ jenkins_plugins_nexus_url }}/${1}.hpi >/dev/null
   if [ -f ${plugin_dir}/${1}.hpi -o -f ${plugin_dir}/${1}.jpi ]; then
     if [ "$2" == "1" ]; then
       return 1
