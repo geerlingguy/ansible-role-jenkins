@@ -93,22 +93,20 @@ if(authStrategy instanceof RoleBasedAuthorizationStrategy){
   
 ////////////////////////////////////////   
   def journeys = "{{ jenkins_role_auth.journeys | join(',') | trim }}"
+
  
   for (String journey: journeys.split(',')){
-  
-  String allResources = journey + "-.+"
-  String codebase = journey + "-(?!selfserve).+"
-  
-  String buildUsers = journey + "-builder"
-  String adminUsers = journey + "-selfserve"
-  String configUsers = journey + "-config"
-  String readonlyUsers = journey + "-ro"
-  
-  roleAuthStrategy.addRole(RoleBasedAuthorizationStrategy.PROJECT, new Role(buildUsers, codebase, builderPerms));
-  roleAuthStrategy.addRole(RoleBasedAuthorizationStrategy.PROJECT, new Role(adminUsers, allResources, selfServePerms));
-  roleAuthStrategy.addRole(RoleBasedAuthorizationStrategy.PROJECT, new Role(configUsers, codebase, configuratorPerms));
-  roleAuthStrategy.addRole(RoleBasedAuthorizationStrategy.PROJECT, new Role(readonlyUsers, codebase, readOnlyPerms));
-
+	String buildUsers = journey + "-builder"
+	String adminUsers = journey + "-selfserve"
+	String configUsers = journey + "-config"
+	String readonlyUsers = journey + "-ro"
+    String allResources = journey + "-.+"
+	String codebase = journey + "-(?!selfserve).+"
+	
+    roleAuthStrategy.addRole(RoleBasedAuthorizationStrategy.PROJECT, new Role(buildUsers, codebase, builderPerms));
+	roleAuthStrategy.addRole(RoleBasedAuthorizationStrategy.PROJECT, new Role(adminUsers, allResources, selfServePerms));
+	roleAuthStrategy.addRole(RoleBasedAuthorizationStrategy.PROJECT, new Role(configUsers, codebase, configuratorPerms));
+	roleAuthStrategy.addRole(RoleBasedAuthorizationStrategy.PROJECT, new Role(readonlyUsers, codebase, readOnlyPerms));
   }
 
 
