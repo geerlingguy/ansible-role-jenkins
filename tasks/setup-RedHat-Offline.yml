@@ -35,7 +35,6 @@
   - /tmp
   - /scripts
   - /opt
-  notify: configure admin user
   register: jenkins_home_config
 
 - name: Download specific Jenkins war.
@@ -89,8 +88,6 @@
     owner: root
     group: root
     mode: 0755      
-
-
 
 - name: Immediately restart Jenkins on http or user changes.
   service: name=jenkins state=restarted

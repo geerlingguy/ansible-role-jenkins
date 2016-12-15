@@ -9,6 +9,9 @@ jenkins_group: jenkins
 jenkin_root: /app/jenkins
 jenkins_nexus_url: http://mirrors.jenkins.io/war-stable/latest/jenkins.war
 jenkins_plugins_nexus_url: http://updates.jenkins-ci.org/latest
+jenkins_role_auth:
+  force: false
+  journeys: []
 jenkins_connection_delay: 5
 jenkins_connection_retries: 60
 jenkins_home: "{{ jenkins_root }}/var/lib/jenkins"

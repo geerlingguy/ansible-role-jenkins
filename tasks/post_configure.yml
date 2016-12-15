@@ -1,0 +1,18 @@
+---
+
+- name: reset authorization
+  template:
+    src: configure_roles.groovy
+    dest: "{{ jenkins_home }}/init.groovy.d/30-configure_roles.groovy"
+  register: jenkins_users_config
+  notify: restart jenkins
+  when: jenkins_role_auth.force
+  
+- name: reset users
+  template:
+    src: configure_users.groovy
+    dest: "{{ jenkins_home }}/init.groovy.d/35-configure_users.groovy"
+  register: jenkins_users_config
+  notify: restart jenkins
+  when: jenkins_role_auth.force
+  notify: restart jenkins
