@@ -1,0 +1,97 @@
+---
+- name: Ensure dependencies are installed.
+  package:
+    name: 
+      - curl
+      - libselinux-python
+      - unzip
+    state: installed
+
+#- name: Ensure Jenkins repo is installed.
+#  get_url:
+#    url: "{{ jenkins_repo_url }}"
+#    dest: /etc/yum.repos.d/jenkins.repo
+#
+#- name: Add Jenkins repo GPG key.
+#  rpm_key:
+#    state: present
+#    key: "{{ jenkins_repo_key_url }}"
+
+
+
+- name: Create repo latest directory Structure
+  file: path={{jenkins_root}}{{ item }}  state=directory  owner={{jenkins_user}} group={{jenkins_group}} mode=0755
+  with_items:
+  - /etc/init.d
+  - /etc/logrotate.d 
+  - /etc/sysconfig
+  - /usr/lib/jenkins
+  - /usr/sbin                                                           
+  - /var/cache/jenkins
+  - /var/lib/jenkins
+  - /var/lib/jenkins/init.groovy.d
+  - /var/log/jenkins
+  - /var/run
+  - /tmp
+  - /scripts
+  - /opt
+  register: jenkins_home_config
+
+- name: Download specific Jenkins war.
+  get_url:
+    url: "{{ jenkins_nexus_url }}"
+    dest: "{{jenkins_root}}/tmp/jenkins.war"
+ # should be yes, but temporarily disabled to speed up testing
+ #   force: yes
+    force: no
+ 
+- name: update jenkins war
+  copy: 
+    remote_src: true
+    src: "{{ jenkins_root }}/tmp/jenkins.war"
+    dest: "{{ jenkins_root }}/usr/lib/jenkins"
+    owner: "{{ jenkins_user }}"
+    group: "{{ jenkins_group }}"
+    mode: 0644
+  register: jenkins_war_file
+  
+- name: Jenkins logrotation config
+  template:
+    src: logrotate.jenkins
+    dest: "{{ jenkins_root }}/etc/logrotate.d/jenkins"
+    owner: "{{ jenkins_user }}"
+    group: "{{ jenkins_group }}"
+    mode: 0644
+    
+- name: Jenkins Global config
+  template:
+    src: sysconfig.jenkins
+    dest: "{{ jenkins_root }}/etc/sysconfig/jenkins"
+    owner: "{{ jenkins_user }}"
+    group: "{{ jenkins_group }}"
+    mode: 0644    
+  register: jenkins_http_config
+    
+- name: Configure Jenkins Service Script
+  template:
+    src: service.jenkins
+    dest: "{{ jenkins_root }}/etc/init.d/jenkins"
+    owner: "{{ jenkins_user }}"
+    group: "{{ jenkins_group }}"
+    mode: 0755    
+    
+- name: Install Service script
+  copy: 
+    remote_src: True
+    src: "{{ jenkins_root }}/etc/init.d/jenkins"
+    dest: /etc/init.d/jenkins
+    owner: root
+    group: root
+    mode: 0755      
+
+- name: Immediately restart Jenkins on http or user changes.
+  service: name=jenkins state=restarted
+  when: (jenkins_users_config is defined and jenkins_users_config.changed) or
+        (jenkins_http_config is defined and jenkins_http_config.changed) or
+        (jenkins_war_file is defined and jenkins_war_file.changed) or
+        (jenkins_home_config is defined and jenkins_home_config.changed)

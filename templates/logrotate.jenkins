@@ -1,0 +1,11 @@
+{{ jenkins_root }}/var/log/jenkins/jenkins.log {{ jenkins_root }}/var/log/jenkins/access_log {
+    compress
+    dateext
+    maxage 365
+    rotate 99
+    size=+4096k
+    notifempty
+    missingok
+    create 644
+    copytruncate
+}

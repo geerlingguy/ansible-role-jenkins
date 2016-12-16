@@ -1,0 +1,10 @@
+---
+
+- name: Remove Jenkins security auth configure scripts after first startup.
+  file:
+    path: "{{ jenkins_home }}/init.groovy.d/{{ item }}" 
+    state: absent
+  with_items:
+  - 30-configure_roles.groovy
+  - 35-configure_users.groovy
+  - 40-configure_slaves.groovy

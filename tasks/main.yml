@@ -3,56 +3,40 @@
 - name: Include OS-Specific variables
   include_vars: "{{ ansible_os_family }}.yml"
 
-- name: Define jenkins_repo_url
+- name: Define jenkins_nexus_url
   set_fact:
-    jenkins_repo_url: "{{ __jenkins_repo_url }}"
-  when: jenkins_repo_url is not defined
+    jenkins_nexus_url: "{{ __jenkins_nexus_url }}"
+  when: jenkins_nexus_url is not defined
 
-- name: Define jenkins_repo_key_url
-  set_fact:
-    jenkins_repo_key_url: "{{ __jenkins_repo_key_url }}"
-  when: jenkins_repo_key_url is not defined
-
-- name: Define jenkins_pkg_url
-  set_fact:
-    jenkins_pkg_url: "{{ __jenkins_pkg_url }}"
-  when: jenkins_pkg_url is not defined
+# fail if not redhat
+- fail:
+    msg: "Non RedHat installations not supported yet" 
+  when: ansible_os_family != 'RedHat'
 
 # Setup/install tasks.
-- include: setup-RedHat.yml
+- include: setup-RedHat-Offline.yml
   when: ansible_os_family == 'RedHat'
+  
+# FLush any handlers
+- include: flush.yml
 
-- include: setup-Debian.yml
-  when: ansible_os_family == 'Debian'
+# Base jenkins configuration
+- include: pre_configure.yml
 
-# Configure Jenkins init settings.
-- include: settings.yml
-
-# Make sure Jenkins starts, then configure Jenkins.
-- name: Ensure Jenkins is started and runs on startup.
-  service: name=jenkins state=started enabled=yes
-
-- name: Wait for Jenkins to start up before proceeding.
-  shell: "curl -D - --silent --max-time 5 http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}/cli/"
-  register: result
-  until: (result.stdout.find("403 Forbidden") != -1) or (result.stdout.find("200 OK") != -1) and (result.stdout.find("Please wait while") == -1)
-  retries: "{{ jenkins_connection_retries }}"
-  delay: "{{ jenkins_connection_delay }}"
-  changed_when: false
-
-- name: Get the jenkins-cli jarfile from the Jenkins server.
-  get_url:
-    url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}/jnlpJars/jenkins-cli.jar"
-    dest: "{{ jenkins_jar_location }}"
-  register: jarfile_get
-  until: "'OK' in jarfile_get.msg or 'file already exists' in jarfile_get.msg"
-  retries: 5
-  delay: 10
-
-- name: Remove Jenkins security init scripts after first startup.
-  file:
-    path: "{{ jenkins_home }}/init.groovy.d/basic-security.groovy"
-    state: absent
+# FLush any handlers
+- include: flush.yml
 
 # Update Jenkins and install configured plugins.
 - include: plugins.yml
+
+# FLush any handlers
+- include: flush.yml
+
+# Any post configuration typically involving plugins
+- include: post_configure.yml
+
+# FLush any handlers
+- include: flush.yml
+
+# Cleanup
+- include: cleanup.yml
