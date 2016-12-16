@@ -92,7 +92,7 @@ if(authStrategy instanceof RoleBasedAuthorizationStrategy){
   assignRoleMethod.setAccessible(true);
   
 ////////////////////////////////////////   
-  def journeys = "{{ jenkins_role_auth.journeys | join(',') | trim }}"
+  def journeys = "{{ jenkins_plugin_role_strategy.journeys | join(',') | trim }}"
 
  
   for (String journey: journeys.split(',')){
