@@ -1,0 +1,9 @@
+---
+- hosts: all
+
+  vars:
+    jenkins_user: testuser
+
+  roles:
+    - geerlingguy.java
+    - role_under_test

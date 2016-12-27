@@ -74,6 +74,14 @@ env:
     prefix: ''
     http_port: 8080
 
+  # tests/test-system-user.yml
+  - distro: ubuntu1404
+    init: /sbin/init
+    run_opts: ""
+    site: test-system-user.yml
+    prefix: ''
+    http_port: 8080
+
 before_install:
   # Pull container
   - 'docker pull geerlingguy/docker-${distro}-ansible:latest'

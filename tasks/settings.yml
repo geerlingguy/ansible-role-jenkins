@@ -17,6 +17,14 @@
     line: 'JENKINS_HOME={{ jenkins_home }}'
   register: jenkins_home_config
 
+- name: Set the Jenkins system user
+  lineinfile:
+    dest: "{{ jenkins_init_file }}"
+    regexp: '^JENKINS_USER=.*'
+    line: 'JENKINS_USER={{ jenkins_user }}'
+    state: present
+  register: jenkins_user_config
+
 - name: Immediately restart Jenkins on init config changes.
   service: name=jenkins state=restarted
   when: jenkins_init_prefix.changed
@@ -33,8 +41,8 @@
   file:
     path: "{{ jenkins_home }}/init.groovy.d"
     state: directory
-    owner: jenkins
-    group: jenkins
+    owner: "{{ jenkins_user }}"
+    group: "{{ jenkins_group }}"
     mode: 0775
 
 - name: Trigger handlers immediately in case Jenkins was installed
@@ -44,4 +52,5 @@
   service: name=jenkins state=restarted
   when: (jenkins_users_config is defined and jenkins_users_config.changed) or
         (jenkins_http_config is defined and jenkins_http_config.changed) or
-        (jenkins_home_config is defined and jenkins_home_config.changed)
+        (jenkins_home_config is defined and jenkins_home_config.changed) or
+        (jenkins_user_config is defined and jenkins_user_config.changed)

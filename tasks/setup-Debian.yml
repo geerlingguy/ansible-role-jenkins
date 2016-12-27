@@ -1,4 +1,15 @@
 ---
+- name: Create jenkins group
+  group:
+    state: present
+    name: "{{ jenkins_group }}"
+
+- name: Create jenkins user
+  user:
+    state: present
+    name: "{{ jenkins_user }}"
+    group: "{{ jenkins_group }}"
+
 - name: Ensure dependencies are installed.
   apt:
     pkg: curl
@@ -44,3 +55,27 @@
     name: jenkins
     state: installed
   when: jenkins_version is undefined
+
+- name: Ensure jenkins home belongs to the jenkins user
+  file:
+    path: "{{ jenkins_home }}"
+    owner: "{{ jenkins_user }}"
+    group: "{{ jenkins_group }}"
+    state: directory
+    recurse: yes
+
+- name: Ensure log directory belongs to the jenkins user
+  file:
+    path: /var/log/jenkins
+    owner: "{{ jenkins_user }}"
+    group: "{{ jenkins_group }}"
+    state: directory
+    recurse: yes
+
+- name: Ensure cache directory belongs to the jenkins user
+  file:
+    path: /var/cache/jenkins
+    owner: "{{ jenkins_user }}"
+    group: "{{ jenkins_group }}"
+    state: directory
+    recurse: yes
