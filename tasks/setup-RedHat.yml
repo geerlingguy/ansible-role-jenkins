@@ -3,12 +3,14 @@
   set_fact:
     jenkins_download: "{{ jenkins_download|default(true) }}"
 
+- name: Ensure dependencies are installed.
+  package:
+    name: 
+      - curl
+      - libselinux-python
+    state: installed
+
 - block:
-    - name: Ensure dependencies are installed.
-      yum:
-        pkg: curl
-        state: installed
-    
     - name: Ensure Jenkins repo is installed.
       get_url:
         url: "{{ jenkins_repo_url }}"
@@ -33,21 +35,21 @@
   register: specific_version
 
 - name: Install our specific version of Jenkins.
-  yum:
+  package:
     name: "/tmp/jenkins.rpm"
     state: installed
   when: specific_version.stat.exists
   notify: configure default users
 
 - name: Validate Jenkins is installed and register package name.
-  yum:
+  package:
     name: jenkins
     state: present
   when: not specific_version.stat.exists
   notify: configure default users
 
 - name: Install Jenkins from repository.
-  yum:
+  package:
     name: jenkins
     state: installed
   when: jenkins_version is undefined
