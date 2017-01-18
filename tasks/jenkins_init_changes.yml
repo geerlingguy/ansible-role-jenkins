@@ -1,0 +1,23 @@
+---
+- name: Modify variables in init file (append)
+  lineinfile:
+    dest: "{{ jenkins_init_file }}"
+    insertafter: '^{{ item.option }}='
+    regexp: '^{{ item.option}}=\"\${{ item.option }} '
+    line: '{{ item.option }}="${{ item.option }} {{ item.value }}"'
+    state: present
+  when: not item.reset | default(False)
+  register: jenkins_init_prefix_append
+
+- name: Modify variables in init file (reset)
+  lineinfile:
+    dest: "{{ jenkins_init_file }}"
+    insertafter: '^{{ item.option }}='
+    regexp: '^{{ item.option}}='
+    line: '{{ item.option }}="{{ item.value }}"'
+    state: present
+  when: item.reset | default(False)
+  register: jenkins_init_prefix_modify
+
+- name: update jenkins_init_prefix
+  set_fact: { jenkins_init_prefix: "{{ hostvars[inventory_hostname]['jenkins_init_prefix'] | default(False) or jenkins_init_prefix_modify.changed or jenkins_init_prefix_append.changed }}" }

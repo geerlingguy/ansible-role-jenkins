@@ -1,14 +1,7 @@
 ---
-- name: Modify variables in init file
-  lineinfile:
-    dest: "{{ jenkins_init_file }}"
-    insertafter: '^{{ item.option }}='
-    regexp: '^{{ item.option}}=\"\${{ item.option }} '
-    line: '{{ item.option }}="${{ item.option }} {{ item.value }}"'
-    state: present
+- include: jenkins_init_changes.yml
   with_items:
-      "{{ jenkins_init_changes }}"
-  register: jenkins_init_prefix
+    "{{ jenkins_init_changes }}"
 
 - name: Set the Jenkins home directory
   lineinfile:
@@ -19,7 +12,7 @@
 
 - name: Immediately restart Jenkins on init config changes.
   service: name=jenkins state=restarted
-  when: jenkins_init_prefix.changed
+  when: jenkins_init_prefix
 
 - name: Set HTTP port in Jenkins config.
   lineinfile:
