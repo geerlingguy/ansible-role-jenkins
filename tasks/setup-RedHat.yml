@@ -1,7 +1,7 @@
 ---
 - name: Ensure dependencies are installed.
   package:
-    name: 
+    name:
       - curl
       - libselinux-python
     state: installed

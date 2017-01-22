@@ -1,7 +1,7 @@
 ---
 - name: Ensure dependencies are installed.
   apt:
-    pkg: curl
+    name: curl
     state: installed
 
 - name: Add Jenkins apt repository key.
