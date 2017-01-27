@@ -1,6 +1,10 @@
 ---
 - name: Ensure dependencies are installed.
-  apt: pkg=curl state=installed
+  apt:
+    name:
+      - curl
+      - apt-transport-https
+    state: installed
 
 - name: Add Jenkins apt repository key.
   apt_key:
@@ -15,15 +19,32 @@
     update_cache: yes
   when: jenkins_version == 'latest'
 
-- name: Construct deb file name
-  set_fact:
-    jenkins_deb_file_name:  "jenkins_{{ jenkins_version }}.1_all.deb"
+- name: Download specific Jenkins version.
+  get_url:
+    url: "{{ jenkins_pkg_url }}/jenkins_{{ jenkins_version }}_all.deb"
+    dest: "/tmp/jenkins.deb"
+  when: jenkins_version is defined
 
-- name: Install from deb file
+- name: Check if we downloaded a specific version of Jenkins.
+  stat:
+    path: "/tmp/jenkins.deb"
+  register: specific_version
+
+- name: Install our specific version of Jenkins.
   apt:
-    deb: "{{ jenkins_deb_baseurl }}/{{ jenkins_deb_file_name }}"
-  when: jenkins_version != 'latest'
+    deb: "/tmp/jenkins.deb"
+    state: installed
+  when: specific_version.stat.exists
+  notify: configure default users
 
-- name: Ensure Jenkins is installed.
-  apt: name=jenkins state=installed
-  when: jenkins_version == 'latest'
+- name: Validate Jenkins is installed and register package name.
+  apt:
+    name: jenkins
+    state: present
+  notify: configure default users
+
+- name: Install Jenkins from repository.
+  apt:
+    name: jenkins
+    state: installed
+  when: jenkins_version is undefined
