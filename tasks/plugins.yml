@@ -28,6 +28,23 @@
     path: "{{ jenkins_admin_password_file }}"
   register: adminpasswordfile
 
+- set_fact:
+    jenkins_admin_password_param: "--password {{ jenkins_admin_password|default('') }}"
+  when: jenkins_admin_password is defined
+
+- set_fact:
+    jenkins_admin_password_param: "--password-file {{ jenkins_admin_password_file|default('') }}"
+  when: (adminpasswordfile.stat.exists) and
+        (jenkins_admin_password_file is defined)
+
+- set_fact:
+    jenkins_port: ":{{ jenkins_http_port }}"
+  when: jenkins_http_port != -1
+
+- set_fact:
+    jenkins_port: ":{{ jenkins_https_port }}"
+  when: jenkins_http_port == -1
+
 - name: Install Jenkins plugins using password.
   command: >
     java
@@ -35,8 +52,7 @@
     -s {{ (jenkins_http_port == -1) | ternary("https","http") }}://{{ jenkins_hostname }}{{ jenkins_port|default('') }}{{ jenkins_url_prefix | default("") }}/
     install-plugin {{ item }}
     --username {{ jenkins_admin_username }}
-    {{ (jenkins_admin_password != "") | ternary("--password {{ jenkins_admin_password }}","") }}
-    {{ (adminpasswordfile.stat.exists == True) | ternary("--password-file {{ jenkins_admin_password_file }}","") }}
+    {{ jenkins_admin_password_param }}
     creates="{{ jenkins_home }}/plugins/{{ item }}.jpi"
   with_items: "{{ jenkins_plugins }}"
   when: jenkins_admin_password != ""
