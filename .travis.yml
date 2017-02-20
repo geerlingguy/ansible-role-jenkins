@@ -1,92 +1,113 @@
 ---
-sudo: required
+services: docker
 
 env:
-  - distribution: centos
-    version: 6
-    init: /sbin/init
-    run_opts: ""
+  # tests/test.yml
+  - distro: centos7
+    init: /usr/lib/systemd/systemd
+    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
     site: test.yml
     prefix: ''
     http_port: 8080
-  # - distribution: centos
-  #   version: 7
+  # - distro: fedora24
   #   init: /usr/lib/systemd/systemd
   #   run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
   #   site: test.yml
   #   prefix: ''
   #   http_port: 8080
-  - distribution: ubuntu
-    version: 14.04
+  - distro: ubuntu1404
     init: /sbin/init
     run_opts: ""
     site: test.yml
     prefix: ''
     http_port: 8080
-  - distribution: ubuntu
-    version: 12.04
+  - distro: ubuntu1204
     init: /sbin/init
     run_opts: ""
     site: test.yml
     prefix: ''
     http_port: 8080
 
-  - distribution: ubuntu
-    version: 14.04
+  # tests/test-http-port.yml
+  - distro: ubuntu1404
     init: /sbin/init
     run_opts: ""
     site: test-http-port.yml
     prefix: ''
     http_port: 8081
-  - distribution: ubuntu
-    version: 14.04
+
+  # tests/test-prefix.yml
+  - distro: ubuntu1404
     init: /sbin/init
     run_opts: ""
     site: test-prefix.yml
     prefix: jenkins
     http_port: 8080
 
-services:
-  - docker
+  # tests/test-jenkins-version.yml
+  - distro: centos7
+    init: /usr/lib/systemd/systemd
+    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    site: test-jenkins-version.yml
+    prefix: ''
+    http_port: 8080
+  - distro: ubuntu1404
+    init: /sbin/init
+    run_opts: ""
+    site: test-jenkins-version.yml
+    prefix: ''
+    http_port: 8080
+
+  # tests/test-plugins.yml
+  - distro: ubuntu1404
+    init: /sbin/init
+    run_opts: ""
+    site: test-plugins.yml
+    prefix: ''
+    http_port: 8080
+
+  # tests/test-plugins-with-pinning.yml
+  - distro: ubuntu1404
+    init: /sbin/init
+    run_opts: ""
+    site: test-plugins-with-pinning.yml
+    prefix: ''
+    http_port: 8080
 
 before_install:
-  # - sudo apt-get update
   # Pull container
-  - 'sudo docker pull ${distribution}:${version}'
-  # Customize container
-  - 'sudo docker build --rm=true --file=tests/Dockerfile.${distribution}-${version} --tag=${distribution}-${version}:ansible tests'
+  - 'docker pull geerlingguy/docker-${distro}-ansible:latest'
 
 script:
   - container_id=$(mktemp)
-  # Run container in detached state
-  - 'sudo docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} ${distribution}-${version}:ansible "${init}" > "${container_id}"'
+  # Run container in detached state.
+  - 'docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} geerlingguy/docker-${distro}-ansible:latest "${init}" > "${container_id}"'
 
   # Install dependencies.
-  - 'sudo docker exec "$(cat ${container_id})" ansible-galaxy install -r /etc/ansible/roles/role_under_test/tests/requirements.yml'
+  - 'docker exec "$(cat ${container_id})" ansible-galaxy install -r /etc/ansible/roles/role_under_test/tests/requirements.yml'
 
   # Ansible syntax check.
-  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/$site --syntax-check'
+  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/$site --syntax-check'
 
   # Test role.
-  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/$site'
+  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/$site'
 
   # Test role idempotence.
+  - idempotence=$(mktemp)
+  - docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/$site | tee -a ${idempotence}
   - >
-    sudo docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/$site
+    tail ${idempotence}
     | grep -q 'changed=0.*failed=0'
     && (echo 'Idempotence test: pass' && exit 0)
     || (echo 'Idempotence test: fail' && exit 1)
 
   # Make sure Jenkins is running.
-  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm curl http://localhost:$http_port/$prefix'
+  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm curl http://localhost:$http_port/$prefix'
 
 after_failure:
-  # Check what happened via journalctl
-  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm journalctl -xe'
-
-after_success:
-  # Clean up
-  - 'sudo docker stop "$(cat ${container_id})"'
+  # Check what happened on systemd systems.
+  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm systemctl -l status jenkins.service'
+  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm journalctl -xe --no-pager'
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/

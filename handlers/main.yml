@@ -3,10 +3,16 @@
   service: name=jenkins state=restarted
 
 - name: share ssh public key
-  shell: cat "{{ jenkins_home }}/.ssh/id_rsa.pub"
+  shell: "cat {{ jenkins_home }}/.ssh/id_rsa.pub"
   register: ssh_public_key
   notify: print key
 
 - name: print key
   debug:
     msg: Generated Jenkins SSH public key.Please share this with Infrastructure team - {{ ssh_public_key.stdout }}
+
+- name: configure default users
+  template:
+    src: basic-security.groovy
+    dest: "{{ jenkins_home }}/init.groovy.d/basic-security.groovy"
+  register: jenkins_users_config

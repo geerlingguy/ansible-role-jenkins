@@ -1,0 +1,18 @@
+---
+
+
+- name: Download packer executable
+  get_url:
+    url: "https://releases.hashicorp.com/packer/0.12.2/packer_0.12.2_linux_amd64.zip"
+    dest: "/opt/packer"
+  tags:
+    - packer
+
+
+- name: Place packer executable on /usr/bin
+  unarchive:
+    src: "/opt/packer"
+    dest: "/usr/bin"
+    remote_src: True
+  tags:
+    - packer

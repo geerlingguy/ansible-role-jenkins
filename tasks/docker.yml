@@ -1,0 +1,64 @@
+---
+
+- name: add apt-key for docker-engine
+  apt_key:
+    id: 58118E89F3A912897C070ADBF76221572C52609D
+    keyserver: hkp://p80.pool.sks-keyservers.net:80
+    state: present
+
+
+- name: add docker-repository in docker.list and map with sources.list
+  apt_repository:
+    repo: "deb https://apt.dockerproject.org/repo ubuntu-trusty main"
+    filename: "docker"
+    state: present
+    update_cache: yes
+
+
+- name: Read kernel version
+  shell: uname -r
+  register: host_kernel_version
+
+
+- name: Install system packages
+  apt:
+    name: "{{ item }}"
+    update_cache: true
+    state: installed
+  with_items:
+    - build-essential
+    - python-dev
+    - python-pip
+    - apt-transport-https
+    - ca-certificates
+    - linux-image-extra-{{ host_kernel_version.stdout }}
+    - linux-image-extra-virtual
+    - docker-engine
+
+
+- name: Install pip packages
+  pip:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - docker-py
+
+
+- name: Add required user(s) to docker group
+  user: 
+    name: "{{ item }}"
+    groups: "docker"
+    append: "yes"
+  with_items:
+    - "{{ docker_users }}"
+
+
+- name: Login to docker-hub
+  docker_login:
+    registry: "https://docker-hub.grofer.io"
+    username: "{{ docker_hub_username }}"
+    password: "{{ docker_hub_password }}"
+  become: yes
+  become_user: "{{ jenkins_user }}"
+  tags:
+    - docker_login
