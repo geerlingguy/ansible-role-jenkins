@@ -2,7 +2,7 @@
 # Optional method of pinning a specific version of Jenkins and/or overriding the
 # default Jenkins packaging URL.
 # jenkins_version: "1.644"
-# jenkins_pkg_url: "https://www.example.com/"
+# jenkins_pkg_url: "https://www.example.com"
 
 jenkins_connection_delay: 5
 jenkins_connection_retries: 60
