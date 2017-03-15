@@ -42,7 +42,7 @@ The location at which the `jenkins-cli.jar` jarfile will be kept. This is used f
 Jenkins plugins to be installed automatically during provisioning. (_Note_: This feature is currently undergoing some changes due to the `jenkins-cli` authentication changes in Jenkins 2.0, and may not work as expected.)
 
     jenkins_version: "1.644"
-    jenkins_pkg_url: "http://www.example.com/"
+    jenkins_pkg_url: "http://www.example.com"
 
 (Optional) Then Jenkins version can be pinned to any version available on `http://pkg.jenkins-ci.org/debian/` (Debian/Ubuntu) or `http://pkg.jenkins-ci.org/redhat/` (RHEL/CentOS). If the Jenkins version you need is not available in the default package URLs, you can override the URL with your own; set `jenkins_pkg_url` (_Note_: the role depends on the same naming convention that `http://pkg.jenkins-ci.org/` uses).
 

@@ -1,7 +1,7 @@
 ---
 __jenkins_repo_url: deb https://pkg.jenkins.io/debian binary/
 __jenkins_repo_key_url: https://pkg.jenkins.io/debian/jenkins.io.key
-__jenkins_pkg_url: https://pkg.jenkins.io/debian/binary/
+__jenkins_pkg_url: https://pkg.jenkins.io/debian/binary
 jenkins_init_file: /etc/default/jenkins
 jenkins_http_port_param: HTTP_PORT
 jenkins_java_options_env_var: JAVA_ARGS
