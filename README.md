@@ -39,7 +39,11 @@ The location at which the `jenkins-cli.jar` jarfile will be kept. This is used f
 
     jenkins_plugins: []
 
-Jenkins plugins to be installed automatically during provisioning. (_Note_: This feature is currently undergoing some changes due to the `jenkins-cli` authentication changes in Jenkins 2.0, and may not work as expected.)
+Jenkins plugins to be installed automatically during provisioning.
+
+    jenkins_plugin_updates_expiration: 86400
+    
+Number of seconds after which a new copy of the update-center.json file is downloaded. Set it to 0 if no cache file should be used.
 
     jenkins_version: "1.644"
     jenkins_pkg_url: "http://www.example.com"
