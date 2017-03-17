@@ -8,9 +8,8 @@
 
 - name: Set Jenkins admin password fact.
   set_fact:
-    jenkins_admin_password: "{{ adminpasswordfile['stdout'] }}"
+    jenkins_admin_password: "{{ adminpasswordfile['stdout'] | default(jenkins_admin_password) }}"
   no_log: True
-  when: jenkins_admin_password_file != ""
 
 - name: Install Jenkins plugins.
   jenkins_plugin:
