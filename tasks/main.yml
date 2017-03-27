@@ -69,7 +69,7 @@
 - include: plugins.yml
 
 - include: docker.yml
-  when: setup_docker == true
+  when: jenkins_setup_docker == true
 
 - include: packer.yml
-  when: setup_packer == true
+  when: jenkins_setup_packer == true
