@@ -31,8 +31,8 @@ jenkins_init_changes:
     value: "{{ jenkins_java_options }}"
 
 
-setup_docker: false
-setup_packer: false
+jenkins_setup_docker: false
+jenkins_setup_packer: false
 docker_users: "{{ jenkins_user }}"
 docker_hub_username: "infra.docker"
 docker_hub_password: "{{ lookup('hashicorp_vault', 'infra/docker_build/docker_infra_password').value }}"
