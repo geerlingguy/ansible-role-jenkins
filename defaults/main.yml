@@ -1,6 +1,6 @@
 ---
 
-jenkins_version: 2.45 # latest
+jenkins_version: 2.52 # latest
 
 # Optional method of pinning a specific version of Jenkins and/or overriding the
 # default Jenkins packaging URL.
@@ -14,6 +14,7 @@ jenkins_connection_retries: 60
 jenkins_home: "/var/lib/jenkins"
 jenkins_hostname: "infra-jenkins-test.grofer.io"
 jenkins_http_port: 8080
+jenkins_plugin_updates_expiration: 86400
 jenkins_jar_location: "/opt/jenkins-cli.jar"
 jenkins_plugins: []
 jenkins_url_prefix: ""
@@ -34,5 +35,5 @@ jenkins_init_changes:
 jenkins_setup_docker: false
 jenkins_setup_packer: false
 docker_users: "{{ jenkins_user }}"
-docker_hub_username: "infra.docker"
-docker_hub_password: "{{ lookup('hashicorp_vault', 'infra/docker_build/docker_infra_password').value }}"
+docker_hub_username: ""
+docker_hub_password: ""

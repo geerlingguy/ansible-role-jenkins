@@ -8,6 +8,13 @@ Installs Jenkins CI on RHEL/CentOS and Debian/Ubuntu servers.
 
 Requires `curl` to be installed on the server.
 
+## Roles required to be present in roles.yml
+    - src: git+git@github.com:grofers/ansible-role-nginx.git
+      name: ansible-role-nginx
+
+    - src: git+git@github.com:grofers/ansible-role-jenkins.git
+      name: jenkins
+
 ## Role Variables
 
 Available variables are listed below, along with default values (see `defaults/main.yml`):
@@ -16,6 +23,16 @@ Available variables are listed below, along with default values (see `defaults/m
 
 The system hostname; usually `localhost` works fine. This will be used during setup to communicate with the running Jenkins instance via HTTP requests.
 
+    jenkins_setup_docker: false
+    jenkins_setup_packer: false
+
+Set these vars to true if you want to setup docker and packer on your machine with jenkins.
+
+    docker_hub_username: "your.docker.hub.username"
+    docker_hub_password: "your.docker.hub.password"
+
+Override above vars to supply your teams jenkins username:password for https://docker-hub.grofer.io, get these credentials from infra team if you don't have already.
+
     jenkins_home: /var/lib/jenkins
 
 The Jenkins home directory which, amongst others, is being used for storing artifacts, workspaces and plugins. This variable allows you to override the default `/var/lib/jenkins` location.
@@ -23,6 +40,7 @@ The Jenkins home directory which, amongst others, is being used for storing arti
     jenkins_http_port: 8080
 
 The HTTP port for Jenkins' web interface.
+
 
     jenkins_admin_username: admin
     jenkins_admin_password: admin
@@ -39,10 +57,11 @@ The location at which the `jenkins-cli.jar` jarfile will be kept. This is used f
 
     jenkins_plugins: []
 
-Jenkins plugins to be installed automatically during provisioning. (_Note_: This feature is currently undergoing some changes due to the `jenkins-cli` authentication changes in Jenkins 2.0, and may not work as expected.)
+Jenkins plugins to be installed automatically during provisioning.
 
-    jenkins_version: "2.45"
-    jenkins_pkg_url: "http://www.example.com/"
+    jenkins_plugin_updates_expiration: 86400
+
+Number of seconds after which a new copy of the update-center.json file is downloaded. Set it to 0 if no cache file should be used.
 
 (Optional) Then Jenkins version can be pinned to any version available on `http://pkg.jenkins-ci.org/debian/` (Debian/Ubuntu) or `http://pkg.jenkins-ci.org/redhat/` (RHEL/CentOS). If the Jenkins version you need is not available in the default package URLs, you can override the URL with your own; set `jenkins_pkg_url` (_Note_: the role depends on the same naming convention that `http://pkg.jenkins-ci.org/` uses).
 
@@ -86,14 +105,16 @@ Changes made to the Jenkins init script; the default set of changes set the conf
 ## Dependencies
 
   - geerlingguy.java
+  - ansible-role-nginx
 
 ## Example Playbook
 
-    - hosts: ci-server
+    - hosts: infra_ci
       vars:
-        jenkins_hostname: jenkins.example.com
+        jenkins_hostname: internal-test-ci.grofer.io
       roles:
-        - geerlingguy.jenkins
+        - ansible-role-nginx
+        - jenkins
 
 ## License
 
