@@ -1,6 +1,11 @@
 ---
 dependencies:
-  - geerlingguy.java
+  - role: geerlingguy.java
+
+  - role: ansible-role-nginx
+    nginx_ubuntu_pkg:
+      - python-selinux
+      - nginx-full
 
 galaxy_info:
   author: geerlingguy
@@ -15,7 +20,7 @@ galaxy_info:
     - 7
   - name: Fedora
     versions:
-    - all    
+    - all
   - name: Debian
     versions:
     - all
