@@ -6,7 +6,6 @@
     keyserver: hkp://p80.pool.sks-keyservers.net:80
     state: present
 
-
 - name: add docker-repository in docker.list and map with sources.list
   apt_repository:
     repo: "deb https://apt.dockerproject.org/repo ubuntu-trusty main"
@@ -14,27 +13,22 @@
     state: present
     update_cache: yes
 
-
 - name: Read kernel version
   shell: uname -r
   register: host_kernel_version
 
+- name: Install system package based on kernal version
+  apt:
+    name: linux-image-extra-{{ host_kernel_version.stdout }}
+    update_cache: true
+    state: installed
 
-- name: Install system packages
+- name: Install system packages for docker setup
   apt:
     name: "{{ item }}"
     update_cache: true
     state: installed
-  with_items:
-    - build-essential
-    - python-dev
-    - python-pip
-    - apt-transport-https
-    - ca-certificates
-    - linux-image-extra-{{ host_kernel_version.stdout }}
-    - linux-image-extra-virtual
-    - docker-engine
-
+  with_items: "{{ jenkins_docker_setup_packages }}"
 
 - name: Install pip packages
   pip:
@@ -43,21 +37,19 @@
   with_items:
     - docker-py
 
-
 - name: Add required user(s) to docker group
   user: 
     name: "{{ item }}"
     groups: "docker"
     append: "yes"
   with_items:
-    - "{{ docker_users }}"
-
+    - "{{ jenkins_docker_users }}"
 
 - name: Login to docker-hub
   docker_login:
     registry: "https://docker-hub.grofer.io"
-    username: "{{ docker_hub_username }}"
-    password: "{{ docker_hub_password }}"
+    username: "{{ jenkins_docker_hub_username }}"
+    password: "{{ jenkins_docker_hub_password }}"
   become: yes
   become_user: "{{ jenkins_user }}"
   when: docker_hub_password != ''
