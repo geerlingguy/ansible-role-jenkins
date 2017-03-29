@@ -60,5 +60,6 @@
     password: "{{ docker_hub_password }}"
   become: yes
   become_user: "{{ jenkins_user }}"
+  when: docker_hub_password != ''
   tags:
     - docker_login

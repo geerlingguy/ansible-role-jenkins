@@ -1,51 +1,24 @@
 ---
-# Jenkins doesn't allow updates via CLI, though that is required before plugins
-# can be installed via CLI. See: https://gist.github.com/rowan-m/1026918
-- name: Create Jenkins updates folder.
-  file:
-    path: "{{ jenkins_home }}/updates"
-    owner: jenkins
-    group: jenkins
-    mode: 0755
-    state: directory
-  register: jenkins_plugins_folder_create
+# jenkins_plugin module doesn't support password files.
 
-- name: Update Jenkins plugin data.
-  shell: curl -L https://updates.jenkins-ci.org/update-center.json | sed '1d;$d' > "{{ jenkins_home }}/updates/default.json"
-  args:
-    creates: "{{ jenkins_home }}/updates/default.json"
-
-- name: Permissions for default.json updates info.
-  file:
-    path: "{{ jenkins_home }}/updates/default.json"
-    owner: jenkins
-    group: jenkins
-    mode: 0755
-  when: jenkins_plugins_folder_create.changed
-
-- name: Check if we're using a password file for authentication
-  stat:
-    path: "{{ jenkins_admin_password_file }}"
+- name: Get Jenkins admin password from file.
+  command: "cat {{ jenkins_admin_password_file }}"
   register: adminpasswordfile
+  no_log: True
+  when: jenkins_admin_password_file != ""
 
-- name: Install Jenkins plugins using password.
-  command: >
-    java -jar {{ jenkins_jar_location }} -s https://{{ jenkins_hostname }}{{ jenkins_url_prefix | default('') }}/
-    install-plugin {{ item }}
-    --username {{ jenkins_admin_username }}
-    --password {{ jenkins_admin_password }}
-    creates="{{ jenkins_home }}/plugins/{{ item }}.jpi"
-  with_items: "{{ jenkins_plugins }}"
-  when: jenkins_admin_password != ""
-  notify: restart jenkins
+- name: Set Jenkins admin password fact.
+  set_fact:
+    jenkins_admin_password: "{{ adminpasswordfile['stdout'] | default(jenkins_admin_password) }}"
+  no_log: True
 
-- name: Install Jenkins plugins using password-file.
-  command: >
-    java -jar {{ jenkins_jar_location }} -s https://{{ jenkins_hostname }}{{ jenkins_url_prefix | default('') }}/
-    install-plugin {{ item }}
-    --username {{ jenkins_admin_username }}
-    --password-file {{ jenkins_admin_password_file }}
-    creates={{ jenkins_home }}/plugins/{{ item }}.jpi
+- name: Install Jenkins plugins.
+  jenkins_plugin:
+    name: "{{ item }}"
+    params:
+      url_username: "{{ jenkins_admin_username }}"
+      url_password: "{{ jenkins_admin_password }}"
+    updates_expiration: "{{ jenkins_plugin_updates_expiration }}"
+    url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}"
   with_items: "{{ jenkins_plugins }}"
-  when: adminpasswordfile.stat.exists == True
   notify: restart jenkins

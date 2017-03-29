@@ -2,17 +2,12 @@
 dependencies:
   - role: geerlingguy.java
 
-  - role: ansible-role-nginx
-    nginx_ubuntu_pkg:
-      - python-selinux
-      - nginx-full
-
 galaxy_info:
   author: geerlingguy
   description: Jenkins CI
   company: "Midwestern Mac, LLC"
   license: "license (BSD, MIT)"
-  min_ansible_version: 2.0
+  min_ansible_version: 2.2
   platforms:
   - name: EL
     versions:
