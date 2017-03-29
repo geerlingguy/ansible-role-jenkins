@@ -107,6 +107,9 @@ Changes made to the Jenkins init script; the default set of changes set the conf
   - geerlingguy.java
   - ansible-role-nginx
 
+## Dependent role variables
+  - [ansible-role-nginx](https://github.com/grofers/ansible-role-nginx#role-variables)
+
 ## Example Playbook
 
     - hosts: infra_ci
