@@ -39,6 +39,7 @@
   retries: "{{ jenkins_connection_retries }}"
   delay: "{{ jenkins_connection_delay }}"
   changed_when: false
+  always_run: yes
 
 - name: Get the jenkins-cli jarfile from the Jenkins server.
   get_url:
@@ -48,6 +49,7 @@
   until: "'OK' in jarfile_get.msg or 'file already exists' in jarfile_get.msg"
   retries: 5
   delay: 10
+  always_run: yes
 
 - name: Remove Jenkins security init scripts after first startup.
   file:
