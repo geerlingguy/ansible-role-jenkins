@@ -28,8 +28,8 @@ The system hostname; usually `localhost` works fine. This will be used during se
 
 Set these vars to true if you want to setup docker and packer on your machine with jenkins.
 
-    docker_hub_username: "your.docker.hub.username"
-    docker_hub_password: "your.docker.hub.password"
+    jenkins_docker_hub_username: "your.docker.hub.username"
+    jenkins_docker_hub_password: "your.docker.hub.password"
 
 Override above vars to supply your teams jenkins username:password for https://docker-hub.grofer.io, get these credentials from infra team if you don't have already.
 

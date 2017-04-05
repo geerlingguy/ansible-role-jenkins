@@ -31,9 +31,17 @@ jenkins_init_changes:
   - option: "{{ jenkins_java_options_env_var }}"
     value: "{{ jenkins_java_options }}"
 
+jenkins_docker_setup_packages:
+    - build-essential
+    - python-dev
+    - python-pip
+    - apt-transport-https
+    - ca-certificates
+    - linux-image-extra-virtual
+    - docker-engine
 
 jenkins_setup_docker: false
 jenkins_setup_packer: false
-docker_users: "{{ jenkins_user }}"
-docker_hub_username: ""
-docker_hub_password: ""
+jenkins_docker_users: "{{ jenkins_user }}"
+jenkins_docker_hub_username: ""
+jenkins_docker_hub_password: ""
