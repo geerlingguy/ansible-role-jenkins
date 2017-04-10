@@ -1,5 +1,10 @@
 ---
 # Variable setup.
+- name: Fail if jenkins ssh key is not provided and static key use is enabled
+  fail:
+    msg: "Static ssh key usage has been enabled but either private or public ssh key variable is not defined/empty"
+  when: jenkins_use_static_ssh_key and (jenkins_user_private_ssh_key == "" or jenkins_user_public_ssh_key == "")
+
 - name: Include OS-Specific variables
   include_vars: "{{ ansible_os_family }}.yml"
 
@@ -20,6 +25,20 @@
     shell: /bin/bash
     generate_ssh_key: yes
   notify: share ssh public key
+
+- name: Add private ssh key for jenkins user if static usage enabled
+  copy:
+    content: "{{ jenkins_user_private_ssh_key }}"
+    dest: "/home/jenkins/.ssh/id_rsa"
+    mode: 0600
+  when: jenkins_use_static_ssh_key and jenkins_user_private_ssh_key != ""
+
+- name: Add public ssh key for jenkins user if static usage enabled
+  copy:
+    content: "{{ jenkins_user_public_ssh_key }}"
+    dest: "/home/jenkins/.ssh/id_rsa.pub"
+    mode: 0644
+  when: jenkins_use_static_ssh_key and jenkins_user_public_ssh_key != ""
 
 - name: Set mode on id_rsa key 0400
   shell: "chmod 400 {{ jenkins_home }}/.ssh/id_rsa"

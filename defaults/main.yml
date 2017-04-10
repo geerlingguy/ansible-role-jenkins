@@ -9,6 +9,12 @@ jenkins_version: 2.52 # latest
 
 jenkins_volume: "/dev/xvdb"
 
+jenkins_use_static_ssh_key: false
+
+jenkins_user_private_ssh_key: ""
+
+jenkins_user_public_ssh_key: ""
+
 jenkins_connection_delay: 5
 jenkins_connection_retries: 60
 jenkins_home: "/var/lib/jenkins"
