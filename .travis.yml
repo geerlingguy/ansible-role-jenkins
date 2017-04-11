@@ -4,110 +4,75 @@ services: docker
 env:
   # tests/test.yml
   - distro: centos7
-    init: /usr/lib/systemd/systemd
-    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
-    site: test.yml
+    playbook: test.yml
     prefix: ''
     http_port: 8080
   # - distro: fedora24
-  #   init: /usr/lib/systemd/systemd
-  #   run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
   #   site: test.yml
   #   prefix: ''
   #   http_port: 8080
   - distro: ubuntu1404
-    init: /sbin/init
-    run_opts: ""
-    site: test.yml
+    playbook: test.yml
     prefix: ''
     http_port: 8080
   - distro: ubuntu1204
-    init: /sbin/init
-    run_opts: ""
-    site: test.yml
+    playbook: test.yml
     prefix: ''
     http_port: 8080
 
   # tests/test-http-port.yml
   - distro: ubuntu1404
-    init: /sbin/init
-    run_opts: ""
-    site: test-http-port.yml
+    playbook: test-http-port.yml
     prefix: ''
     http_port: 8081
 
   # tests/test-prefix.yml
   - distro: ubuntu1404
-    init: /sbin/init
-    run_opts: ""
-    site: test-prefix.yml
+    playbook: test-prefix.yml
     prefix: jenkins
     http_port: 8080
 
   # tests/test-jenkins-version.yml
   - distro: centos7
-    init: /usr/lib/systemd/systemd
-    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
-    site: test-jenkins-version.yml
+    playbook: test-jenkins-version.yml
     prefix: ''
     http_port: 8080
   - distro: ubuntu1404
-    init: /sbin/init
-    run_opts: ""
-    site: test-jenkins-version.yml
+    playbook: test-jenkins-version.yml
     prefix: ''
     http_port: 8080
 
   # tests/test-plugins.yml
   - distro: ubuntu1404
-    init: /sbin/init
-    run_opts: ""
-    site: test-plugins.yml
+    playbook: test-plugins.yml
     prefix: ''
     http_port: 8080
 
   # tests/test-plugins-with-pinning.yml
   - distro: ubuntu1404
-    init: /sbin/init
-    run_opts: ""
-    site: test-plugins-with-pinning.yml
+    playbook: test-plugins-with-pinning.yml
     prefix: ''
     http_port: 8080
 
-before_install:
-  # Pull container
-  - 'docker pull geerlingguy/docker-${distro}-ansible:latest'
-
 script:
-  - container_id=$(mktemp)
-  # Run container in detached state.
-  - 'docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} geerlingguy/docker-${distro}-ansible:latest "${init}" > "${container_id}"'
+  # Configure test script so we can run extra tests after playbook is run.
+  - export container_id=$(date +%s)
+  - export cleanup=false
 
-  # Install dependencies.
-  - 'docker exec "$(cat ${container_id})" ansible-galaxy install -r /etc/ansible/roles/role_under_test/tests/requirements.yml'
+  # Download test shim.
+  - wget -O ${PWD}/tests/test.sh https://gist.githubusercontent.com/geerlingguy/73ef1e5ee45d8694570f334be385e181/raw/
+  - chmod +x ${PWD}/tests/test.sh
 
-  # Ansible syntax check.
-  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/$site --syntax-check'
-
-  # Test role.
-  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/$site'
-
-  # Test role idempotence.
-  - idempotence=$(mktemp)
-  - docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/$site | tee -a ${idempotence}
-  - >
-    tail ${idempotence}
-    | grep -q 'changed=0.*failed=0'
-    && (echo 'Idempotence test: pass' && exit 0)
-    || (echo 'Idempotence test: fail' && exit 1)
+  # Run tests.
+  - ${PWD}/tests/test.sh
 
   # Make sure Jenkins is running.
-  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm curl http://localhost:$http_port/$prefix'
+  - 'docker exec --tty ${container_id} env TERM=xterm curl http://localhost:$http_port/$prefix'
 
 after_failure:
   # Check what happened on systemd systems.
-  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm systemctl -l status jenkins.service'
-  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm journalctl -xe --no-pager'
+  - 'docker exec --tty ${container_id} env TERM=xterm systemctl -l status jenkins.service'
+  - 'docker exec --tty ${container_id} env TERM=xterm journalctl -xe --no-pager'
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
