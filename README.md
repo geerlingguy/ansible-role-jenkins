@@ -6,7 +6,7 @@ Installs Jenkins CI on RHEL/CentOS and Debian/Ubuntu servers.
 
 ## Requirements
 
-Requires `curl` to be installed on the server.
+Requires `curl` to be installed on the server. Also, newer versions of Jenkins require Java 8+ (see the test playbooks inside the `tests/` directory for an example of how to use newer versions of Java for your OS).
 
 ## Role Variables
 
