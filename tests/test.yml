@@ -7,6 +7,8 @@
       when: ansible_os_family == 'Debian'
       changed_when: false
 
+    - include: java-8.yml
+
   roles:
     - geerlingguy.java
     - role_under_test

@@ -11,23 +11,23 @@ env:
   #   site: test.yml
   #   prefix: ''
   #   http_port: 8080
-  - distro: ubuntu1404
+  - distro: ubuntu1604
     playbook: test.yml
     prefix: ''
     http_port: 8080
-  - distro: ubuntu1204
+  - distro: ubuntu1404
     playbook: test.yml
     prefix: ''
     http_port: 8080
 
   # tests/test-http-port.yml
-  - distro: ubuntu1404
+  - distro: ubuntu1604
     playbook: test-http-port.yml
     prefix: ''
     http_port: 8081
 
   # tests/test-prefix.yml
-  - distro: ubuntu1404
+  - distro: ubuntu1604
     playbook: test-prefix.yml
     prefix: jenkins
     http_port: 8080
@@ -37,19 +37,19 @@ env:
     playbook: test-jenkins-version.yml
     prefix: ''
     http_port: 8080
-  - distro: ubuntu1404
+  - distro: ubuntu1604
     playbook: test-jenkins-version.yml
     prefix: ''
     http_port: 8080
 
   # tests/test-plugins.yml
-  - distro: ubuntu1404
+  - distro: ubuntu1604
     playbook: test-plugins.yml
     prefix: ''
     http_port: 8080
 
   # tests/test-plugins-with-pinning.yml
-  - distro: ubuntu1404
+  - distro: ubuntu1604
     playbook: test-plugins-with-pinning.yml
     prefix: ''
     http_port: 8080
