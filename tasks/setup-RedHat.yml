@@ -4,6 +4,7 @@
     name:
       - curl
       - libselinux-python
+      - initscripts
     state: installed
 
 - name: Ensure Jenkins repo is installed.
