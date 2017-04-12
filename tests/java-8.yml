@@ -21,8 +21,15 @@
       - java-1.8.0-openjdk
   when: ansible_os_family == 'RedHat'
 
-- name: Set the java_packages variable (RedHat).
+- name: Set the java_packages variable (Ubuntu).
   set_fact:
     java_packages:
       - openjdk-8-jdk
-  when: ansible_os_family == 'Debian'
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Set the java_packages variable (Debian).
+  set_fact:
+    java_packages:
+      - openjdk-8-jdk
+      - ca-certificates-java
+  when: ansible_distribution == 'Debian'
