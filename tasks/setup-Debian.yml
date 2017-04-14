@@ -20,17 +20,17 @@
 - name: Download specific Jenkins version.
   get_url:
     url: "{{ jenkins_pkg_url }}/jenkins_{{ jenkins_version }}_all.deb"
-    dest: "/tmp/jenkins.deb"
+    dest: "/tmp/jenkins_{{ jenkins_version }}_all.deb"
   when: jenkins_version is defined
 
 - name: Check if we downloaded a specific version of Jenkins.
   stat:
-    path: "/tmp/jenkins.deb"
+    path: "/tmp/jenkins_{{ jenkins_version }}_all.deb"
   register: specific_version
 
 - name: Install our specific version of Jenkins.
   apt:
-    deb: "/tmp/jenkins.deb"
+    deb: "/tmp/jenkins_{{ jenkins_version }}_all.deb"
     state: installed
   when: specific_version.stat.exists
   notify: configure default users
