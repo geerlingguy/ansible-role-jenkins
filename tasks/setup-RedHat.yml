@@ -27,12 +27,13 @@
   stat:
     path: "/tmp/jenkins-{{ jenkins_version }}-1.1.noarch.rpm"
   register: specific_version
+  when: jenkins_version is defined
 
 - name: Install our specific version of Jenkins.
   package:
     name: "/tmp/jenkins-{{ jenkins_version }}-1.1.noarch.rpm"
     state: installed
-  when: specific_version.stat.exists
+  when: jenkins_version is defined and specific_version.stat.exists
   notify: configure default users
 
 - name: Validate Jenkins is installed and register package name.
