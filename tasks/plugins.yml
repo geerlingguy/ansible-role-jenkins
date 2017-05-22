@@ -1,7 +1,8 @@
 ---
 # jenkins_plugin module doesn't support password files.
 - name: Get Jenkins admin password from file.
-  command: "cat {{ jenkins_admin_password_file }}"
+  slurp:
+    src: "{{ jenkins_admin_password_file }}"
   register: adminpasswordfile
   no_log: True
   when: jenkins_admin_password_file != ""
