@@ -12,6 +12,18 @@
     jenkins_admin_password: "{{ adminpasswordfile['stdout'] | default(jenkins_admin_password) }}"
   no_log: True
 
+- name: Get Jenkins admin token from file.
+  slurp:
+    src: "{{ jenkins_admin_token_file }}"
+  register: admintokenfile
+  no_log: True
+  when: jenkins_admin_token_file != ""
+
+- name: Set Jenkins admin token fact.
+  set_fact:
+    jenkins_admin_token: "{{ admintokenfile['stdout'] | default(jenkins_admin_token) }}"
+  no_log: True
+
 - name: Install Jenkins plugins using password.
   jenkins_plugin:
     name: "{{ item }}"
