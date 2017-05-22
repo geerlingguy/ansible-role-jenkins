@@ -19,6 +19,7 @@ jenkins_plugin_timeout: 30
 jenkins_admin_username: admin
 jenkins_admin_password: admin
 jenkins_admin_password_file: ""
+jenkins_admin_token: ""
 
 jenkins_process_user: jenkins
 jenkins_process_group: "{{ jenkins_process_user }}"

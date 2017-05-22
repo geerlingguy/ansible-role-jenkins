@@ -33,6 +33,10 @@ Default admin account credentials which will be created the first time Jenkins i
 
 Default admin password file which will be created the first time Jenkins is installed as /var/lib/jenkins/secrets/initialAdminPassword
 
+    jenkins_admin_token: ""
+
+Default admin token which will be generated after installation. It's helpfull to update plugins using an admin account absent of the LDAP.
+
     jenkins_jar_location: /opt/jenkins-cli.jar
 
 The location at which the `jenkins-cli.jar` jarfile will be kept. This is used for communicating with Jenkins via the CLI.
