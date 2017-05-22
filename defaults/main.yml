@@ -18,6 +18,7 @@ jenkins_plugin_updates_expiration: 86400
 jenkins_admin_username: admin
 jenkins_admin_password: admin
 jenkins_admin_password_file: ""
+jenkins_admin_token: ""
 
 jenkins_init_changes:
   - option: "JENKINS_ARGS"
