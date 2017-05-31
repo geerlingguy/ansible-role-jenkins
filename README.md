@@ -51,7 +51,7 @@ The location at which the `jenkins-cli.jar` jarfile will be kept. This is used f
 
     jenkins_jnlp_port_param: 0
 
-In order to use the jenkins-cli you need to setup a jnlp port. When Jenkins is installed, this value is -1 which means _disabled_. By default, this role set it to 0 which means _random_. You can set it to another regular port value.
+The TCP port for JNLP agents. -1 means _disabled_, 0 means _random_. You can set it to another regular port value.
 
     jenkins_plugins: []
 

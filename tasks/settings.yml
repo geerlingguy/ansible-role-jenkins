@@ -62,14 +62,14 @@
   retries: 20
   delay: 3
 
-- name: set TCP port for JNLP
+- name: Set TCP port for JNLP agents in Jenkins config.
   lineinfile:
-     dest="{{ jenkins_home }}/config.xml"
-     regexp='<slaveAgentPort>'
-     line='  <slaveAgentPort>{{ jenkins_jnlp_port_param }}</slaveAgentPort>'
+     dest: "{{ jenkins_home }}/config.xml"
+     regexp: '<slaveAgentPort>'
+     line: '  <slaveAgentPort>{{ jenkins_jnlp_port_param }}</slaveAgentPort>'
   register: jenkins_jnlp_port
 
-- name: Immediately restart Jenkins on http or user changes.
+- name: Immediately restart Jenkins on TCP port for JNLP agents changes.
   service: name=jenkins state=restarted
   when: (jenkins_jnlp_port is defined and jenkins_jnlp_port.changed)
 
