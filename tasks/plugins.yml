@@ -17,7 +17,7 @@
     params:
       url_username: "{{ jenkins_admin_username }}"
       url_password: "{{ jenkins_admin_password }}"
-    timeout: "{{ jenkins_plugins_timeout }}"
+    timeout: "{{ jenkins_plugin_timeout }}"
     updates_expiration: "{{ jenkins_plugin_updates_expiration }}"
     url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}"
   with_items: "{{ jenkins_plugins }}"

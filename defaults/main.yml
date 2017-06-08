@@ -14,7 +14,7 @@ jenkins_plugins: []
 jenkins_url_prefix: ""
 jenkins_java_options: "-Djenkins.install.runSetupWizard=false"
 jenkins_plugin_updates_expiration: 86400
-jenkins_plugins_timeout: 30
+jenkins_plugin_timeout: 30
 
 jenkins_admin_username: admin
 jenkins_admin_password: admin
