@@ -12,6 +12,10 @@ Requires `curl` to be installed on the server. Also, newer versions of Jenkins r
 
 Available variables are listed below, along with default values (see `defaults/main.yml`):
 
+    jenkins_package_state: present
+
+The state of the `jenkins` package install. By default this role installs Jenkins but will not upgrade Jenkins (when using package-based installs). If you want to always update to the latest version, change this to `latest`.
+
     jenkins_hostname: localhost
 
 The system hostname; usually `localhost` works fine. This will be used during setup to communicate with the running Jenkins instance via HTTP requests.
