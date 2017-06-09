@@ -29,6 +29,14 @@
     line: '{{ jenkins_http_port_param }}={{ jenkins_http_port }}'
   register: jenkins_http_config
 
+- name: Set Listen Address in Jenkins config.
+  lineinfile:
+    backrefs: yes
+    dest: "{{ jenkins_init_file }}"
+    regexp: '^{{ jenkins_http_listen_address_param }}='
+    line: '{{ jenkins_http_listen_address_param }}="{{ jenkins_http_listen_address }}"'
+  register: jenkins_http_listen_address_config
+
 - name: Create custom init scripts directory.
   file:
     path: "{{ jenkins_home }}/init.groovy.d"
@@ -44,4 +52,5 @@
   service: name=jenkins state=restarted
   when: (jenkins_users_config is defined and jenkins_users_config.changed) or
         (jenkins_http_config is defined and jenkins_http_config.changed) or
-        (jenkins_home_config is defined and jenkins_home_config.changed)
+        (jenkins_home_config is defined and jenkins_home_config.changed) or
+        (jenkins_http_listen_address_config is defined and jenkins_http_listen_address_config.changed)
