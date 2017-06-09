@@ -45,6 +45,10 @@ Jenkins plugins to be installed automatically during provisioning.
     
 Number of seconds after which a new copy of the update-center.json file is downloaded. Set it to 0 if no cache file should be used.
 
+    jenkins_plugin_timeout: 30
+
+The server connection timeout, in seconds, when installing Jenkins plugins.
+
     jenkins_version: "1.644"
     jenkins_pkg_url: "http://www.example.com"
 
