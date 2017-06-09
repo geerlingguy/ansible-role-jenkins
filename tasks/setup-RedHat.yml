@@ -36,15 +36,8 @@
   when: jenkins_version is defined and specific_version.stat.exists
   notify: configure default users
 
-- name: Validate Jenkins is installed.
+- name: Ensure Jenkins is installed.
   package:
     name: jenkins
-    state: present
-  when: jenkins_version is defined and not specific_version.stat.exists
+    state: "{{ jenkins_package_state }}"
   notify: configure default users
-
-- name: Install Jenkins from repository.
-  package:
-    name: jenkins
-    state: installed
-  when: jenkins_version is undefined
