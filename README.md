@@ -35,11 +35,11 @@ Default admin password file which will be created the first time Jenkins is inst
 
     jenkins_admin_token: ""
 
-Default admin token which will be generated after installation. It's helpfull to update plugins using an admin account absent of the LDAP.
+A Jenkins API token (generated after installation) for [authenticated scripted clients](https://wiki.jenkins-ci.org/display/JENKINS/Authenticating+scripted+clients). You can use the admin token instead of a username and password for more convenient scripted access to Jenkins (e.g. for plugin management through this role).
 
     jenkins_admin_token_file: ""
 
-Default admin token file which you have to creates after the installation with the generated token. It's helpfull to update plugins using an admin account absent of the LDAP.
+A file (with full path) on the Jenkins server containing the admin token. If this variable is set in addition to the `jenkins_admin_token`, the contents of this file will overwrite the value of `jenkins_admin_token`.
 
     jenkins_jar_location: /opt/jenkins-cli.jar
 
@@ -50,7 +50,7 @@ The location at which the `jenkins-cli.jar` jarfile will be kept. This is used f
 Jenkins plugins to be installed automatically during provisioning.
 
     jenkins_plugin_updates_expiration: 86400
-    
+
 Number of seconds after which a new copy of the update-center.json file is downloaded. Set it to 0 if no cache file should be used.
 
     jenkins_plugin_timeout: 30
