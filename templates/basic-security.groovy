@@ -1,6 +1,8 @@
 #!groovy
 import hudson.security.*
 import jenkins.model.*
+import hudson.model.*
+import org.jenkinsci.main.modules.cli.auth.ssh.UserPropertyImpl
 
 def instance = Jenkins.getInstance()
 def hudsonRealm = new HudsonPrivateSecurityRealm(false)
@@ -25,4 +27,7 @@ else {
     def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
     instance.setAuthorizationStrategy(strategy)
     instance.save()
+
+    def admin = User.get('{{ jenkins_admin_username }}')
+    admin.addProperty(new UserPropertyImpl('{{ jenkins_admin_pubkey }}'))
 }
