@@ -52,6 +52,12 @@ env:
     prefix: ''
     http_port: 8080
 
+ # tests/test-plugins-with-home.yml
+  - distro: ubuntu1604
+    playbook: test-plugins-with-home.yml
+    prefix: ''
+    http_port: 8080
+
   # tests/test-plugins-with-pinning.yml
   - distro: ubuntu1604
     playbook: test-plugins-with-pinning.yml
