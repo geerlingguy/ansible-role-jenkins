@@ -27,6 +27,7 @@
 - name: Install Jenkins plugins using password.
   jenkins_plugin:
     name: "{{ item }}"
+    jenkins_home: "{{ jenkins_home }}"
     params:
       url_username: "{{ jenkins_admin_username }}"
       url_password: "{{ jenkins_admin_password }}"
