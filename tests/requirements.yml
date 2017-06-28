@@ -1,4 +1,4 @@
 ---
 - src: geerlingguy.java
-- src: FGtatsuro.python-requirements
+- src: andrewrothstein.python
 - src: novafloss.jenkins-api

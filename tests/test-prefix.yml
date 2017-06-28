@@ -9,6 +9,6 @@
 
   roles:
     - geerlingguy.java
-    - FGtatsuro.python-requirements
+    - andrewrothstein.python
     - novafloss.jenkins-api
     - role_under_test
