@@ -58,3 +58,6 @@
 
 # Update Jenkins and install configured plugins.
 - include: plugins.yml
+
+# Create any jobs that are neccessary
+- include: jobs.yml

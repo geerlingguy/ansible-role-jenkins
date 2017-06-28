@@ -1,0 +1,45 @@
+---
+# jenkins_job module doesn't support password files.
+- name: Get Jenkins admin password from file.
+  slurp:
+    src: "{{ jenkins_admin_password_file }}"
+  register: adminpasswordfile
+  no_log: True
+  when: jenkins_admin_password_file != ""
+
+- name: Set Jenkins admin password fact.
+  set_fact:
+    jenkins_admin_password: "{{ adminpasswordfile['stdout'] | default(jenkins_admin_password) }}"
+  no_log: True
+
+- name: Get Jenkins admin token from file.
+  slurp:
+    src: "{{ jenkins_admin_token_file }}"
+  register: admintokenfile
+  no_log: True
+  when: jenkins_admin_token_file != ""
+
+- name: Set Jenkins admin token fact.
+  set_fact:
+    jenkins_admin_token: "{{ admintokenfile['stdout'] | default(jenkins_admin_token) }}"
+  no_log: True
+
+- name: Create Jenkins Jobs using password.
+  jenkins_job:
+    name: "{{ item.name }}"
+    config: "{{ item.config }}"
+    user: "{{ jenkins_admin_username }}"
+    password: "{{ jenkins_admin_password }}"
+    url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}"
+  with_items: "{{ jenkins_jobs }}"
+  when: jenkins_admin_password != ""
+
+- name: Create Jenkins Jobs using token.
+  jenkins_job:
+    name: "{{ item.name }}"
+    config: "{{ item.config }}"
+    user: "{{ jenkins_admin_username }}"
+    token: "{{ jenkins_admin_token }}"
+    url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}"
+  with_items: "{{ jenkins_jobs }}"
+  when: jenkins_admin_token != ""

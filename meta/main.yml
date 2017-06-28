@@ -1,6 +1,8 @@
 ---
 dependencies:
   - geerlingguy.java
+  - FGtatsuro.python-requirements
+  - novafloss.jenkins-api
 
 galaxy_info:
   author: geerlingguy
