@@ -3,7 +3,7 @@
 
   vars:
     jenkins_jobs:
-      - {name: 'testing', config: '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<project>\n  <description></description>\n  <keepDependencies>false</keepDependencies>\n  <properties/>\n  <scm class="hudson.scm.NullSCM"/>\n  <canRoam>true</canRoam>\n  <disabled>false</disabled>\n  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>\n  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>\n  <triggers/>\n  <concurrentBuild>false</concurrentBuild>\n  <builders/>\n  <publishers/>\n  <buildWrappers/>\n</project>'}
+      - {name: 'testing', config: "{{ lookup('file', './test-job.xml') }}"}
 
   pre_tasks:
     - include: java-8.yml
