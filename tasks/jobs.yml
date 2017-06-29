@@ -24,6 +24,13 @@
     jenkins_admin_token: "{{ admintokenfile['stdout'] | default(jenkins_admin_token) }}"
   no_log: True
 
+# lxml is needed for xml processing
+- name: Install python lxml
+  pip:
+    executable: pip2
+    name: lxml
+    state: latest
+
 - name: Create Jenkins Jobs using password.
   jenkins_job:
     name: "{{ item.name }}"
