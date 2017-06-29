@@ -5,8 +5,7 @@
       - curl
       - libselinux-python
       - initscripts
-      - libxml2
-      - libxslt
+      - python-lxml
     state: installed
 
 - name: Ensure Jenkins repo is installed.
