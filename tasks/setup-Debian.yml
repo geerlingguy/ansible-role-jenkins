@@ -4,6 +4,7 @@
     name:
       - curl
       - apt-transport-https
+      - libxml2
     state: installed
 
 - name: Add Jenkins apt repository key.
