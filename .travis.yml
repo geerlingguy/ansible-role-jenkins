@@ -63,10 +63,28 @@ env:
     playbook: test-plugins-with-pinning.yml
     prefix: ''
     http_port: 8080
-    
+
   # tests/test-jobs.yml
   - distro: ubuntu1604
     playbook: test-jobs.yml
+    prefix: ''
+    http_port: 8080
+
+  # tests/test-jobs.yml
+  - distro: ubuntu1604
+    playbook: test-jobs-with-home.yml
+    prefix: ''
+    http_port: 8080
+
+  # tests/test-jobs.yml
+  - distro: ubuntu1604
+    playbook: test-jobs-with-plugins-and-home.yml
+    prefix: ''
+    http_port: 8080
+
+  # tests/test-jobs.yml
+  - distro: ubuntu1604
+    playbook: test-jobs-with-plugins.yml
     prefix: ''
     http_port: 8080
 

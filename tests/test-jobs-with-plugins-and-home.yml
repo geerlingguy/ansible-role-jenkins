@@ -1,0 +1,19 @@
+---
+- hosts: all
+
+  vars:
+    jenkins_home: /tmp/jenkins
+    jenkins_plugins:
+      - greenballs
+    jenkins_plugin_timeout: 120
+    jenkins_jobs:
+      - {name: 'testing', config: "{{ lookup('file', './test-job.xml') }}"}
+
+  pre_tasks:
+    - include: java-8.yml
+
+  roles:
+    - geerlingguy.java
+    - andrewrothstein.python
+    - novafloss.jenkins-api
+    - role_under_test
