@@ -61,6 +61,11 @@ Number of seconds after which a new copy of the update-center.json file is downl
 
 The server connection timeout, in seconds, when installing Jenkins plugins.
 
+    jenkins_jobs: []
+    Example: [{name: 'testing', config: "{{ lookup('file', './test-job.xml') }}"}]
+
+Jenkins jobs to be created automatically during provisioning.
+
     jenkins_version: "1.644"
     jenkins_pkg_url: "http://www.example.com"
 
