@@ -26,7 +26,8 @@
 
 - name: Install Jenkins plugins using password.
   jenkins_plugin:
-    name: "{{ item }}"
+    name: "{{ item.name | default(item) }}"
+    version: "{{ item.version | default('latest') }}"
     jenkins_home: "{{ jenkins_home }}"
     params:
       url_username: "{{ jenkins_admin_username }}"
@@ -34,8 +35,10 @@
     timeout: "{{ jenkins_plugin_timeout }}"
     updates_expiration: "{{ jenkins_plugin_updates_expiration }}"
     url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}"
+    updates_url: 'http://updates.jenkins-ci.org'
   with_items: "{{ jenkins_plugins }}"
-  when: jenkins_admin_password != ""
+  when:
+    - jenkins_admin_password != ""
   notify: restart jenkins
 
 - name: Install Jenkins plugins using token.
