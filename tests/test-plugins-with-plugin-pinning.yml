@@ -1,0 +1,23 @@
+---
+- hosts: all
+
+  vars:
+    jenkins_version: '2.67'
+    jenkins_plugins:
+      - name: 'scm-api'
+        version: '2.1.1'
+      - name: 'ssh-credentials'
+        version: '1.13'
+      - name: 'credentials'
+        version: '2.1.14'
+      - name: 'structs'
+        version: '1.9'
+
+    jenkins_plugin_timeout: 120
+
+  pre_tasks:
+    - include: java-8.yml
+
+  roles:
+    - geerlingguy.java
+    - role_under_test
