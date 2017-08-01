@@ -1,6 +1,5 @@
 ---
 - hosts: all
-  name: Install Jenkins With Some Plugins
 
   vars:
     jenkins_plugins:
