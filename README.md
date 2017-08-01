@@ -109,11 +109,15 @@ Changes made to the Jenkins init script; the default set of changes set the conf
 
 ## Example Playbook
 
-    - hosts: ci-server
-      vars:
-        jenkins_hostname: jenkins.example.com
-      roles:
-        - geerlingguy.jenkins
+```yaml
+- hosts: jenkins
+  vars:
+    jenkins_hostname: jenkins.example.com
+  roles:
+    - role: geerlingguy.java
+    - role: geerlingguy.jenkins
+      become: true
+```
 
 ## License
 
