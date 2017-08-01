@@ -18,7 +18,6 @@
     update_cache: yes
   when: jenkins_repo_url != ''
 
-
 - name: Download specific Jenkins version.
   get_url:
     url: "{{ jenkins_pkg_url }}/jenkins_{{ jenkins_version }}_all.deb"
