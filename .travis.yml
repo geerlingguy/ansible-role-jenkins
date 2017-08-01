@@ -64,6 +64,12 @@ env:
     prefix: ''
     http_port: 8080
 
+  # tests/test-plugins-with-plugin-pinning.yml
+  - distro: ubuntu1604
+    playbook: test-plugins-with-plugin-pinning.yml
+    prefix: ''
+    http_port: 8080
+
 script:
   # Configure test script so we can run extra tests after playbook is run.
   - export container_id=$(date +%s)
