@@ -55,7 +55,7 @@ Jenkins plugins to be installed automatically during provisioning.
 
     jenkins_plugins_state: present
 
-State for all plugins. Use `latest`, if you wish the update all the plugins in the `jenkins_plugins` list.
+Use `latest` to ensure all plugins are running the most up-to-date version.
 
     jenkins_plugin_updates_expiration: 86400
 
