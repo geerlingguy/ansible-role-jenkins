@@ -1,7 +1,7 @@
 ---
 - hosts: all
   name: Install Jenkins With Some Plugins
-  become: true # FixMe: ez csak nekünk kell a vagrant miatt!!!!
+
   vars:
     jenkins_plugins:
       - blueocean
@@ -15,4 +15,4 @@
 
   roles:
     - geerlingguy.java
-    - ansible-role-jenkins
+    - role_under_test
