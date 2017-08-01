@@ -53,6 +53,10 @@ The location at which the `jenkins-cli.jar` jarfile will be kept. This is used f
 
 Jenkins plugins to be installed automatically during provisioning.
 
+    jenkins_plugins_state: present
+
+State for all plugins. Use `latest`, if you wish the update all the plugins in the `jenkins_plugins` list.
+
     jenkins_plugin_updates_expiration: 86400
 
 Number of seconds after which a new copy of the update-center.json file is downloaded. Set it to 0 if no cache file should be used.
