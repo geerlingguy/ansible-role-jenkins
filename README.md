@@ -65,6 +65,10 @@ We can use the latest and specified version of jenkins_plugins at the same time.
 
 Jenkins plugins to be installed automatically during provisioning.
 
+    jenkins_plugins_state: present
+
+Use `latest` to ensure all plugins are running the most up-to-date version.
+
     jenkins_plugin_updates_expiration: 86400
 
 Number of seconds after which a new copy of the update-center.json file is downloaded. Set it to 0 if no cache file should be used.
@@ -103,6 +107,8 @@ This role will install the latest version of Jenkins by default (using the offic
     jenkins_repo_url: deb http://pkg.jenkins-ci.org/debian-stable binary/
     jenkins_repo_key_url: http://pkg.jenkins-ci.org/debian-stable/jenkins-ci.org.key
 
+It is also possible stop the repo file being added by setting  `jenkins_repo_url = ''`. This is useful if, for example, you sign your own packages or run internal package management (e.g. Spacewalk).
+
     jenkins_java_options: "-Djenkins.install.runSetupWizard=false"
 
 Extra Java options for the Jenkins launch command configured in the init file can be set with the var `jenkins_java_options`. By default the option to disable the Jenkins 2.0 setup wizard is added.
@@ -121,11 +127,15 @@ Changes made to the Jenkins init script; the default set of changes set the conf
 
 ## Example Playbook
 
-    - hosts: ci-server
-      vars:
-        jenkins_hostname: jenkins.example.com
-      roles:
-        - geerlingguy.jenkins
+```yaml
+- hosts: jenkins
+  vars:
+    jenkins_hostname: jenkins.example.com
+  roles:
+    - role: geerlingguy.java
+    - role: geerlingguy.jenkins
+      become: true
+```
 
 ## License
 
