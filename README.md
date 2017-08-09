@@ -109,6 +109,10 @@ Extra Java options for the Jenkins launch command configured in the init file ca
 
 Changes made to the Jenkins init script; the default set of changes set the configured URL prefix and add in configured Java options for Jenkins' startup. You can add other option/value pairs if you need to set other options for the Jenkins init file.
 
+    jenkins_initd_files: []
+
+List of files that will be copied to [Jenkins' `init.d` directory](https://wiki.jenkins.io/display/JENKINS/Post-initialization+script) to configure Jenkins during startup.
+
 ## Dependencies
 
   - geerlingguy.java

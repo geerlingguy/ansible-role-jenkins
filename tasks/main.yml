@@ -28,6 +28,15 @@
 # Configure Jenkins init settings.
 - include: settings.yml
 
+- name: Copy init.d scripts
+  copy:
+    src: "{{ item }}"
+    dest: "{{ jenkins_home }}/init.groovy.d/"
+    owner: "{{ jenkins_process_user }}"
+    group: "{{ jenkins_process_group }}"
+    mode: 0664
+  with_items: "{{ jenkins_initd_files }}"
+
 # Make sure Jenkins starts, then configure Jenkins.
 - name: Ensure Jenkins is started and runs on startup.
   service: name=jenkins state=started enabled=yes

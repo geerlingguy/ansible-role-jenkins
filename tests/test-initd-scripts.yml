@@ -1,0 +1,13 @@
+---
+- hosts: all
+
+  vars:
+    jenkins_initd_files:
+      - "{{ role_path }}/tests/initd_test.groovy"
+
+  pre_tasks:
+    - include: java-8.yml
+
+  roles:
+    - geerlingguy.java
+    - role_under_test
