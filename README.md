@@ -61,6 +61,19 @@ We can use the latest and specified version of jenkins_plugins at the same time.
           - name: 'credentials'
             version: '2.1.14'
           - name: 'structs'
+          
+        jenkins_plugins:
+          - name: 'scm-api'
+            version: '2.1.1'
+          - name: 'ssh-credentials'
+          - name: 'credentials'
+          - name: 'structs'
+        
+        jenkins_plugins:
+          - name: 'scm-api'
+            version: '2.1.1'
+          - name: 'ssh-credentials'
+          - 'credentials'
 
 
 Jenkins plugins to be installed automatically during provisioning.
