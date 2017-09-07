@@ -1,6 +1,7 @@
 #!groovy
 import hudson.security.*
 import jenkins.model.*
+import jenkins.security.*
 
 def instance = Jenkins.getInstance()
 def hudsonRealm = new HudsonPrivateSecurityRealm(false)
@@ -25,4 +26,15 @@ else {
     def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
     instance.setAuthorizationStrategy(strategy)
     instance.save()
+}
+
+def tokenFilePath = '{{ jenkins_admin_token_file }}'
+def tokenFile = new File(tokenFilePath)
+
+if (tokenFilePath && !tokenFile.exists()) {
+    def user = hudson.model.User.get('admin')
+    ApiTokenProperty t = user.getProperty(ApiTokenProperty.class)
+    def token = t.getApiToken()
+    tokenFile.write(token)
+    println "--> wrote admin api token to ${tokenFilePath}"
 }
