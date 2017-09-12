@@ -99,7 +99,7 @@ It is also possible stop the repo file being added by setting  `jenkins_repo_url
 
     jenkins_java_options: "-Djenkins.install.runSetupWizard=false"
 
-Extra Java options for the Jenkins launch command configured in the init file can be set with the var `jenkins_java_options`. By default the option to disable the Jenkins 2.0 setup wizard is added.
+Extra Java options for the Jenkins launch command configured in the init file can be set with the var `jenkins_java_options`. For example, if you want to configure the timezone Jenkins uses, add `-Dorg.apache.commons.jelly.tags.fmt.timeZone=America/New_York`. By default, the option to disable the Jenkins 2.0 setup wizard is added.
 
     jenkins_init_changes:
       - option: "JENKINS_ARGS"
