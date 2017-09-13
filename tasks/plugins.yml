@@ -6,10 +6,16 @@
   register: adminpasswordfile
   no_log: True
   when: jenkins_admin_password_file != ""
+  
+- name: Get decrypted Jenkins password from passwordfile
+  shell: echo {{ adminpasswordfile.content | b64decode }}
+  register: passwordfromfile
+  always_run: yes
+  when:  jenkins_admin_password_file != ""
 
 - name: Set Jenkins admin password fact.
   set_fact:
-    jenkins_admin_password: "{{ adminpasswordfile['stdout'] | default(jenkins_admin_password) }}"
+    jenkins_admin_password: "{{ passwordfromfile['stdout'] | default(jenkins_admin_password) }}"
   no_log: True
 
 - name: Get Jenkins admin token from file.
