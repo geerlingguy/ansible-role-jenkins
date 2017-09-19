@@ -64,6 +64,13 @@ env:
     prefix: ''
     http_port: 8080
 
+  # tests/test-handler.yml
+  - distro: ubuntu1604
+    playbook: test-handler.yml
+    test_idempotence: false
+    prefix: ''
+    http_port: 8080
+
 script:
   # Configure test script so we can run extra tests after playbook is run.
   - export container_id=$(date +%s)

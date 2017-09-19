@@ -1,6 +1,6 @@
 ---
 - name: restart jenkins
-  service: name=jenkins state=restarted
+  include: restart_jenkins.yml
 
 - name: configure default users
   template:

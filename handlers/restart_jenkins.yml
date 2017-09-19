@@ -1,0 +1,5 @@
+---
+- name: ensure jenkins is restarted
+  service: name=jenkins state=restarted
+
+- include: ../tasks/wait_for_jenkins.yml

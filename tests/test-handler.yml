@@ -1,0 +1,24 @@
+---
+- hosts: all
+
+  pre_tasks:
+    - include: java-8.yml
+
+  roles:
+    - geerlingguy.java
+    - role_under_test
+
+  tasks:
+    - name: this task notifies handler to restart jenkins
+      debug:
+          msg: 'trigger jenkins restart'
+      notify: restart jenkins
+      changed_when: true
+
+    - name: force all notified handlers to run at this point, not waiting for normal sync points
+      meta: flush_handlers
+
+    - name: ensure jenkins is ready
+      uri:
+          url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}"
+          status_code: 200
