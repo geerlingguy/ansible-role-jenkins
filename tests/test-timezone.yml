@@ -1,0 +1,15 @@
+---
+- hosts: localhost
+
+  vars:
+    jenkins_version: 1.644
+
+  pre_tasks:
+    - name: Update timezone.
+      become: yes
+      timezone:
+        name: "America/Los_Angeles"
+
+  roles:
+    - geerlingguy.java
+    - role_under_test
