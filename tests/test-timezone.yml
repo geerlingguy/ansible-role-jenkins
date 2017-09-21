@@ -5,6 +5,9 @@
     jenkins_version: 1.644
 
   pre_tasks:
+    - name: "Install dbus"
+      become: yes
+      apt: "name=dbus state=latest update_cache=true"
     - name: "List timezones"
       become: yes
       command: "timedatectl list-timezones"
