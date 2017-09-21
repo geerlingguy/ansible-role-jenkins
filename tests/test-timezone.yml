@@ -5,6 +5,12 @@
     jenkins_version: 1.644
 
   pre_tasks:
+    - name: "List timezones"
+      become: yes
+      command: "timedatectl list-timezones"
+      register: timezones
+    - name: "Debug"
+      debug: msg="{{ timezones.stdout }}"
     - name: Update timezone.
       become: yes
       timezone:
