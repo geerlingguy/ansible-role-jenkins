@@ -49,3 +49,6 @@
   with_items: "{{ jenkins_plugins }}"
   when: jenkins_admin_token != ""
   notify: restart jenkins
+
+- name: Restart jenkins to be able to use jenkins-cli
+  meta: flush_handlers
