@@ -35,14 +35,14 @@
 - name: Download current plugin updates from Jenkins update site
   get_url:
     url: http://updates.jenkins-ci.org/update-center.json
-    dest: /var/lib/jenkins/updates/default.json
+    dest: "{{ jenkins_home}}/updates/default.json"
     owner: jenkins
     group: jenkins
     mode: 0440
 
 - name: Remove first and last line from json file
   replace: 
-    path: /var/lib/jenkins/updates/default.json
+    path: "{{ jenkins_home }}/updates/default.json"
     regexp: "1d;$d"
 
 - name: Install Jenkins plugins using password.
