@@ -24,6 +24,27 @@
     jenkins_admin_token: "{{ admintokenfile['stdout'] | default(jenkins_admin_token) }}"
   no_log: True
 
+# Update Jenkins so that plugin updates don't fail
+- name: Create update directory
+  file: 
+    path: "{{ jenkins_home }}/updates"
+    state: directory
+    owner: jenkins
+    group: jenkins
+
+- name: Download current plugin updates from Jenkins update site
+  get_url:
+    url: http://updates.jenkins-ci.org/update-center.json
+    dest: "{{ jenkins_home}}/updates/default.json"
+    owner: jenkins
+    group: jenkins
+    mode: 0440
+
+- name: Remove first and last line from json file
+  replace: 
+    path: "{{ jenkins_home }}/updates/default.json"
+    regexp: "1d;$d"
+
 - name: Install Jenkins plugins using password.
   jenkins_plugin:
     name: "{{ item }}"
