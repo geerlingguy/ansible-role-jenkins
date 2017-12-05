@@ -24,9 +24,9 @@
     jenkins_admin_token: "{{ admintokenfile['stdout'] | default(jenkins_admin_token) }}"
   no_log: True
 
-# Update Jenkins so that plugin updates don't fail
+# Update Jenkins so that plugin updates don't fail.
 - name: Create update directory
-  file: 
+  file:
     path: "{{ jenkins_home }}/updates"
     state: directory
     owner: jenkins
@@ -41,7 +41,7 @@
     mode: 0440
 
 - name: Remove first and last line from json file
-  replace: 
+  replace:
     path: "{{ jenkins_home }}/updates/default.json"
     regexp: "1d;$d"
 
