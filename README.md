@@ -53,6 +53,12 @@ The location at which the `jenkins-cli.jar` jarfile will be kept. This is used f
 
 Jenkins plugins to be installed automatically during provisioning.
 
+    jenkins_plugins_update_url: "https://updates.jenkins-ci.org"
+
+URL of the Update Centre.
+Used as the base URL to download the plugins and the `update-center.json` JSON file. [ref `jenkins_plugin` / `update_url`](http://docs.ansible.com/ansible/latest/jenkins_plugin_module.html)
+This should be set to `"https://updates.jenkins-ci.org/stable"`, if using the Jenkins stable release.
+
     jenkins_plugins_state: present
 
 Use `latest` to ensure all plugins are running the most up-to-date version.

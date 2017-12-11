@@ -34,7 +34,7 @@
 
 - name: Download current plugin updates from Jenkins update site
   get_url:
-    url: http://updates.jenkins-ci.org/update-center.json
+    url: "{{ jenkins_plugins_update_url }}/update-center.json"
     dest: "{{ jenkins_home}}/updates/default.json"
     owner: jenkins
     group: jenkins
@@ -55,6 +55,7 @@
     state: "{{ jenkins_plugins_state }}"
     timeout: "{{ jenkins_plugin_timeout }}"
     updates_expiration: "{{ jenkins_plugin_updates_expiration }}"
+    updates_url: "{{ jenkins_plugins_update_url }}"
     url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}"
   with_items: "{{ jenkins_plugins }}"
   when: jenkins_admin_password != ""
@@ -66,6 +67,7 @@
     params:
       url_token: "{{ jenkins_admin_token }}"
     updates_expiration: "{{ jenkins_plugin_updates_expiration }}"
+    updates_url: "{{ jenkins_plugins_update_url }}"
     url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}"
   with_items: "{{ jenkins_plugins }}"
   when: jenkins_admin_token != ""
