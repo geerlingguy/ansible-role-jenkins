@@ -10,6 +10,7 @@
   apt_key:
     url: "{{ jenkins_repo_key_url }}"
     state: present
+  when: jenkins_repo_key_url != ''
 
 - name: Add Jenkins apt repository.
   apt_repository:
