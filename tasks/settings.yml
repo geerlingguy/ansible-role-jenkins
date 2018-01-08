@@ -36,6 +36,7 @@
     owner: jenkins
     group: jenkins
     mode: u+rwx
+    recurse: "{{ jenkins_home_recurse_chown }}"
 
 - name: Create custom init scripts directory.
   file:
