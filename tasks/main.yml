@@ -44,6 +44,8 @@
     and (result.stdout.find("Please wait while") == -1)
   retries: "{{ jenkins_connection_retries }}"
   delay: "{{ jenkins_connection_delay }}"
+  args:
+    warn: no
   changed_when: false
   check_mode: false
 
