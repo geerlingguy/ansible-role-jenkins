@@ -36,6 +36,7 @@
     owner: jenkins
     group: jenkins
     mode: u+rwx
+    follow: true
 
 - name: Create custom init scripts directory.
   file:
