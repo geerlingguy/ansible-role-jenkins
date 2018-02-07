@@ -29,15 +29,15 @@
   file:
     path: "{{ jenkins_home }}/updates"
     state: directory
-    owner: jenkins
-    group: jenkins
+    owner: '{{ jenkins_process_user }}'
+    group: '{{ jenkins_process_group }}'
 
 - name: Download current plugin updates from Jenkins update site
   get_url:
     url: http://updates.jenkins-ci.org/update-center.json
     dest: "{{ jenkins_home}}/updates/default.json"
-    owner: jenkins
-    group: jenkins
+    owner:  '{{ jenkins_process_user }}'
+    group: '{{ jenkins_process_group }}'
     mode: 0440
 
 - name: Remove first and last line from json file
@@ -49,6 +49,7 @@
   jenkins_plugin:
     name: "{{ item }}"
     jenkins_home: "{{ jenkins_home }}"
+    owner: "{{ jenkins_process_user }}"
     params:
       url_username: "{{ jenkins_admin_username }}"
     url_password: "{{ jenkins_admin_password }}"
@@ -56,6 +57,7 @@
     timeout: "{{ jenkins_plugin_timeout }}"
     updates_expiration: "{{ jenkins_plugin_updates_expiration }}"
     url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}"
+    with_dependencies: yes
   with_items: "{{ jenkins_plugins }}"
   when: jenkins_admin_password != ""
   notify: restart jenkins
