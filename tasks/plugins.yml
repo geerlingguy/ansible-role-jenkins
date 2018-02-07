@@ -18,16 +18,16 @@
   file:
     path: "{{ jenkins_home }}/updates"
     state: directory
-    owner: jenkins
-    group: jenkins
+    owner: '{{ jenkins_process_user }}'
+    group: '{{ jenkins_process_group }}'
     mode: 0755
 
 - name: Download current plugin updates from Jenkins update site.
   get_url:
     url: "{{ jenkins_updates_url }}/update-center.json"
     dest: "{{ jenkins_home }}/updates/default.json"
-    owner: jenkins
-    group: jenkins
+    owner: '{{ jenkins_process_user }}'
+    group: '{{ jenkins_process_group }}'
     mode: 0440
   changed_when: false
   register: get_result
@@ -45,6 +45,7 @@
     name: "{{ item.name | default(item) }}"
     version: "{{ item.version | default(omit) }}"
     jenkins_home: "{{ jenkins_home }}"
+    owner: "{{ jenkins_process_user }}"
     url_username: "{{ jenkins_admin_username }}"
     url_password: "{{ jenkins_admin_password }}"
     state: "{{ 'present' if item.version is defined else jenkins_plugins_state }}"

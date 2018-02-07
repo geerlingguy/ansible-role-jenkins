@@ -24,6 +24,11 @@ The system hostname; usually `localhost` works fine. This will be used during se
 
 The Jenkins home directory which, amongst others, is being used for storing artifacts, workspaces and plugins. This variable allows you to override the default `/var/lib/jenkins` location.
 
+    jenkins_process_user
+    jenkins_process_group
+
+The OS username and group which should be used to own the jenkins home directory and to run the jenkins daemon (both default to `jenkins`)
+
     jenkins_http_port: 8080
 
 The HTTP port for Jenkins' web interface.
