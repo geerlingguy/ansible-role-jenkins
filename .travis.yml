@@ -7,7 +7,7 @@ env:
     playbook: test.yml
     prefix: ''
     http_port: 8080
-  - distro: fedora24
+  - distro: fedora27
     site: test.yml
     prefix: ''
     http_port: 8080
