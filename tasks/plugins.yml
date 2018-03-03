@@ -45,14 +45,20 @@
     path: "{{ jenkins_home }}/updates/default.json"
     regexp: "1d;$d"
 
+# Added ability to specify version of a plugin.
+# jenkins_plugins:
+#   - blueocean
+#   - { name: "influxdb", version: "1.12.1" }
+
 - name: Install Jenkins plugins using password.
   jenkins_plugin:
-    name: "{{ item }}"
+    name: "{{ item.name | default(item) }}"
+    version: "{{ item.version | default('latest') }}"
     jenkins_home: "{{ jenkins_home }}"
     params:
       url_username: "{{ jenkins_admin_username }}"
     url_password: "{{ jenkins_admin_password }}"
-    state: "{{ jenkins_plugins_state }}"
+    state: "{{ 'present' if item.version is defined else jenkins_plugins_state }}"
     timeout: "{{ jenkins_plugin_timeout }}"
     updates_expiration: "{{ jenkins_plugin_updates_expiration }}"
     url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}"
@@ -62,7 +68,8 @@
 
 - name: Install Jenkins plugins using token.
   jenkins_plugin:
-    name: "{{ item }}"
+    name: "{{ item.name | default(item) }}"
+    version: "{{ item.version | default('latest') }}"
     params:
       url_token: "{{ jenkins_admin_token }}"
     updates_expiration: "{{ jenkins_plugin_updates_expiration }}"
