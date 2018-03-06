@@ -35,3 +35,5 @@ jenkins_init_changes:
     value: "--prefix={{ jenkins_url_prefix }}"
   - option: "{{ jenkins_java_options_env_var }}"
     value: "{{ jenkins_java_options }}"
+
+jenkins_use_proxy: yes

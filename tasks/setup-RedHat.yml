@@ -11,6 +11,7 @@
   get_url:
     url: "{{ jenkins_repo_url }}"
     dest: /etc/yum.repos.d/jenkins.repo
+    use_proxy: "{{ jenkins_use_proxy }}"
   when: jenkins_repo_url != ''
 
 - name: Add Jenkins repo GPG key.
@@ -22,6 +23,7 @@
   get_url:
     url: "{{ jenkins_pkg_url }}/jenkins-{{ jenkins_version }}-1.1.noarch.rpm"
     dest: "/tmp/jenkins-{{ jenkins_version }}-1.1.noarch.rpm"
+    use_proxy: "{{ jenkins_use_proxy }}"
   when: jenkins_version is defined
 
 - name: Check if we downloaded a specific version of Jenkins.

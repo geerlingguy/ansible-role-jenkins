@@ -39,6 +39,7 @@
     owner: jenkins
     group: jenkins
     mode: 0440
+    use_proxy: "{{ jenkins_use_proxy }}"
 
 - name: Remove first and last line from json file
   replace:
