@@ -42,7 +42,7 @@
 
 - name: Remove first and last line from json file
   replace:
-    path: "{{ jenkins_home }}/updates/default.json"
+    dest: "{{ jenkins_home }}/updates/default.json"
     regexp: "1d;$d"
 
 - name: Install Jenkins plugins using password.
