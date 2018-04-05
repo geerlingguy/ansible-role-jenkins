@@ -36,4 +36,4 @@ jenkins_init_changes:
   - option: "{{ jenkins_java_options_env_var }}"
     value: "{{ jenkins_java_options }}"
 
-jenkins_use_proxy: yes
+jenkins_use_proxy: no
