@@ -46,6 +46,18 @@
     group: "{{ jenkins_process_group }}"
     mode: 0775
 
+- name: Configure proxy config for Jenkins
+  template:
+    src: proxy.xml
+    dest: "{{ jenkins_home }}/proxy.xml"
+    owner: "{{ jenkins_process_user }}"
+    group: "{{ jenkins_process_group }}"
+    mode: 0664
+  register: jenkins_proxy_config
+  when:
+    - jenkins_proxy_host | length > 0
+    - jenkins_proxy_port | length > 0
+
 - name: Trigger handlers immediately in case Jenkins was installed
   meta: flush_handlers
 
@@ -53,4 +65,5 @@
   service: name=jenkins state=restarted
   when: (jenkins_users_config is defined and jenkins_users_config.changed) or
         (jenkins_http_config is defined and jenkins_http_config.changed) or
-        (jenkins_home_config is defined and jenkins_home_config.changed)
+        (jenkins_home_config is defined and jenkins_home_config.changed) or
+        (jenkins_proxy_config is defined and jenkins_proxy_config.changed)

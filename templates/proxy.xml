@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<proxy>
+  <name>{{ jenkins_proxy_host }}</name>
+  <port>{{ jenkins_proxy_port}}</port>
+  <noProxyHost>{{ jenkins_proxy_noproxy | join(',') }}</noProxyHost>
+  <secretPassword></secretPassword>
+</proxy>
