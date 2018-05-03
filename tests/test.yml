@@ -2,7 +2,7 @@
 - hosts: all
 
   pre_tasks:
-    - include: java-8.yml
+    - include_tasks: java-8.yml
 
   roles:
     - geerlingguy.java

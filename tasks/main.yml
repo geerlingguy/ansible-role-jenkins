@@ -19,14 +19,14 @@
   when: jenkins_pkg_url is not defined
 
 # Setup/install tasks.
-- include: setup-RedHat.yml
+- include_tasks: setup-RedHat.yml
   when: ansible_os_family == 'RedHat'
 
-- include: setup-Debian.yml
+- include_tasks: setup-Debian.yml
   when: ansible_os_family == 'Debian'
 
 # Configure Jenkins init settings.
-- include: settings.yml
+- include_tasks: settings.yml
 
 # Make sure Jenkins starts, then configure Jenkins.
 - name: Ensure Jenkins is started and runs on startup.
@@ -57,4 +57,4 @@
     state: absent
 
 # Update Jenkins and install configured plugins.
-- include: plugins.yml
+- include_tasks: plugins.yml
