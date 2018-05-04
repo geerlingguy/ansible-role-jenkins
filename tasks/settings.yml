@@ -83,4 +83,6 @@
   service: name=jenkins state=restarted
   when: (jenkins_users_config is defined and jenkins_users_config.changed) or
         (jenkins_http_config is defined and jenkins_http_config.changed) or
-        (jenkins_home_config is defined and jenkins_home_config.changed)
+        (jenkins_home_config is defined and jenkins_home_config.changed) or
+        (jenkins_process_user_config is defined and jenkins_process_user_config.changed) or
+        (jenkins_process_group_config is defined and jenkins_process_group_config.changed)
