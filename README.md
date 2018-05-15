@@ -49,17 +49,22 @@ A file (with full path) on the Jenkins server containing the admin token. If thi
 
 The location at which the `jenkins-cli.jar` jarfile will be kept. This is used for communicating with Jenkins via the CLI.
 
-    jenkins_plugins: []
+```yaml
+    default: my_jenkins_plugins: []
+```
 
-Jenkins plugins to be installed automatically during provisioning.
+    For example:
 
-    jenkins_plugins_install_dependencies: yes
+```yaml
+    my_jenkins_plugins:
+        token-macro:              # name of the plugin (mandatory)
+            dependencies: yes       # install plugin with dependencies (mandatory)
+        build-pipeline-plugin:    # name of the next plugin (mandatory)
+            version: "1.4.9"        # install specific version of the plugin
+            dependencies: yes       # install plugin with dependencies (mandatory)
+```
 
-Whether Jenkins plugins to be installed should also install any plugin dependencies.
-
-    jenkins_plugins_state: present
-
-Use `latest` to ensure all plugins are running the most up-to-date version.
+Jenkins plugins to be installed automatically during provisioning. Mandarory element is "dependencies" for every plugin. Optionally is the "version" element. See example above.
 
     jenkins_plugin_updates_expiration: 86400
 

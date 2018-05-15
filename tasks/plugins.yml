@@ -45,28 +45,81 @@
     path: "{{ jenkins_home }}/updates/default.json"
     regexp: "1d;$d"
 
-- name: Install Jenkins plugins using password.
+- name: Install plugins without a specific version
   jenkins_plugin:
-    name: "{{ item }}"
     jenkins_home: "{{ jenkins_home }}"
     url_username: "{{ jenkins_admin_username }}"
     url_password: "{{ jenkins_admin_password }}"
-    state: "{{ jenkins_plugins_state }}"
     timeout: "{{ jenkins_plugin_timeout }}"
     updates_expiration: "{{ jenkins_plugin_updates_expiration }}"
     url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}"
-    with_dependencies: "{{ jenkins_plugins_install_dependencies }}"
-  with_items: "{{ jenkins_plugins }}"
-  when: jenkins_admin_password != ""
-  notify: restart jenkins
+    name: "{{ item.key }}"
+    state: "{{ item.value.state }}"
+    with_dependencies: "{{ item.value.dependencies }}"
+  register: my_jenkins_plugin_unversioned
+  when: >
+    'version' not in item.value
+  with_dict: "{{ my_jenkins_plugins }}"
+
+- name: Install plugins with a specific version
+  jenkins_plugin:
+    jenkins_home: "{{ jenkins_home }}"
+    url_username: "{{ jenkins_admin_username }}"
+    url_password: "{{ jenkins_admin_password }}"
+    timeout: "{{ jenkins_plugin_timeout }}"
+    updates_expiration: "{{ jenkins_plugin_updates_expiration }}"
+    url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}"
+    name: "{{ item.key }}"
+    version: "{{ item.value.version }}"
+    state: "{{ item.value.state }}"
+    with_dependencies: "{{ item.value.dependencies }}"
+  register: my_jenkins_plugin_versioned
+  when: >
+    'version' in item.value
+  with_dict: "{{ my_jenkins_plugins }}"
+
+- name: Initiate the fact
+  set_fact:
+    jenkins_restart_required: no
+
+- name: Check if restart is required by any of the versioned plugins
+  set_fact:
+    jenkins_restart_required: yes
+  when: item.changed
+  with_items: "{{ my_jenkins_plugin_versioned.results }}"
+
+- name: Check if restart is required by any of the unversioned plugins
+  set_fact:
+    jenkins_restart_required: yes
+  when: item.changed
+  with_items: "{{ my_jenkins_plugin_unversioned.results }}"
+
+- name: Restart Jenkins if required
+  service:
+    name: jenkins
+    state: restarted
+  when: jenkins_restart_required
+
+- name: Wait for Jenkins to start up
+  uri:
+    url: http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}
+    status_code: 200
+    timeout: 5
+  register: jenkins_service_status
+  retries: "{{ jenkins_connection_retries }}"
+  delay: "{{ jenkins_connection_delay }}"
+  until: >
+      'status' in jenkins_service_status and
+      jenkins_service_status['status'] == 200
+  when: jenkins_restart_required
 
 - name: Install Jenkins plugins using token.
   jenkins_plugin:
-    name: "{{ item }}"
+    name: "{{ item.key }}"
     url_token: "{{ jenkins_admin_token }}"
     updates_expiration: "{{ jenkins_plugin_updates_expiration }}"
     url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}"
-    with_dependencies: "{{ jenkins_plugins_install_dependencies }}"
-  with_items: "{{ jenkins_plugins }}"
+    with_dependencies: "{{ item.value.dependencies }}"
+  with_items: "{{ my_jenkins_plugins }}"
   when: jenkins_admin_token != ""
   notify: restart jenkins
