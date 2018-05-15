@@ -16,7 +16,7 @@ jenkins_jar_location: /opt/jenkins-cli.jar
 jenkins_url_prefix: ""
 jenkins_java_options: "-Djenkins.install.runSetupWizard=false"
 
-my_jenkins_plugins: []
+my_jenkins_plugins: {}
 
 jenkins_plugin_updates_expiration: 86400
 jenkins_plugin_timeout: 30
