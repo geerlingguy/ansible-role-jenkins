@@ -58,6 +58,7 @@
     with_dependencies: "{{ jenkins_plugins_install_dependencies }}"
   with_items: "{{ jenkins_plugins }}"
   when: jenkins_admin_password != ""
+  register: jenkins_plugins_installation
   notify: restart jenkins
 
 - name: Install Jenkins plugins using token.
@@ -69,4 +70,5 @@
     with_dependencies: "{{ jenkins_plugins_install_dependencies }}"
   with_items: "{{ jenkins_plugins }}"
   when: jenkins_admin_token != ""
+  register: jenkins_plugins_installation
   notify: restart jenkins
