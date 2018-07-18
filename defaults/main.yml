@@ -11,7 +11,9 @@ jenkins_connection_delay: 5
 jenkins_connection_retries: 60
 jenkins_home: /var/lib/jenkins
 jenkins_hostname: localhost
+jenkins_protocol: http
 jenkins_http_port: 8080
+jenkins_reverse_proxy_port: "{{ jenkins_http_port }}"
 jenkins_jar_location: /opt/jenkins-cli.jar
 jenkins_url_prefix: ""
 jenkins_java_options: "-Djenkins.install.runSetupWizard=false"
