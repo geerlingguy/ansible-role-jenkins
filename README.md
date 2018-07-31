@@ -125,8 +125,9 @@ Changes made to the Jenkins init script; the default set of changes set the conf
     jenkins_hostname: jenkins.example.com
   roles:
     - role: geerlingguy.java
+      become: yes
     - role: geerlingguy.jenkins
-      become: true
+      become: yes
 ```
 
 ## License
