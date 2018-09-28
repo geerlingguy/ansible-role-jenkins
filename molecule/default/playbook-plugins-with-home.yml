@@ -27,6 +27,13 @@
       fail:
       when: not jenkins_home_config.stat.exists
 
+    - name: List plugins directory contents.
+      command: "ls {{ jenkins_home }}/plugins"
+      register: plugins_contents
+
+    - name: Print plugins directory contents.
+      debug: var=plugins_contents.stdout
+
     - name: Verify greenballs plugin exists.
       stat:
         path: "{{ jenkins_home }}/plugins/greenballs"
