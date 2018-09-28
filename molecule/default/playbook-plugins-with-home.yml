@@ -18,10 +18,6 @@
     - geerlingguy.jenkins
 
   post_tasks:
-    - name: Check if Jenkins is running.
-      uri:
-        url: "http://localhost:8080/"
-
     - name: Verify JENKINS_HOME is correct.
       stat:
         path: "{{ jenkins_home }}/config.xml"
@@ -39,3 +35,7 @@
     - name: Fail if greenballs plugin file doesn't exist.
       fail:
       when: not greenballs_plugin.stat.exists
+
+    - name: Check if Jenkins is running.
+      uri:
+        url: "http://localhost:8080/"
