@@ -14,6 +14,11 @@
     - geerlingguy.jenkins
 
   post_tasks:
-    - name: Check if Jenkins is running on the specified port.
+    - name: Ensure Jenkins is running with the specified prefix.
       uri:
         url: "http://127.0.0.1:8080{{ jenkins_url_prefix }}"
+        status_code: 200
+      register: result
+      until: result.status == 200
+      retries: 60
+      delay: 1

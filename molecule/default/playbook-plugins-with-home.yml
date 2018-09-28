@@ -32,9 +32,6 @@
       register: plugins_contents
       tags: ['skip_ansible_lint']
 
-    - name: Print plugins directory contents.
-      debug: var=plugins_contents.stdout
-
     - name: Verify greenballs plugin exists.
       stat:
         path: "{{ jenkins_home }}/plugins/greenballs.jpi"
