@@ -13,4 +13,4 @@
   post_tasks:
     - name: Check if Jenkins is running.
       uri:
-        url: "http://localhost:8080/"
+        url: "http://127.0.0.1:8080/"

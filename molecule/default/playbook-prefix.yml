@@ -16,4 +16,4 @@
   post_tasks:
     - name: Check if Jenkins is running on the specified port.
       uri:
-        url: "http://localhost:8080{{ jenkins_url_prefix }}"
+        url: "http://127.0.0.1:8080{{ jenkins_url_prefix }}"
