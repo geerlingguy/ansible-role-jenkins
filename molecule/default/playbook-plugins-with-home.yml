@@ -30,6 +30,7 @@
     - name: List plugins directory contents.
       command: "ls {{ jenkins_home }}/plugins"
       register: plugins_contents
+      tags: ['skip_ansible_lint']
 
     - name: Print plugins directory contents.
       debug: var=plugins_contents.stdout
