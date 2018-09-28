@@ -39,6 +39,7 @@
     owner: jenkins
     group: jenkins
     mode: 0440
+  changed_when: false
 
 - name: Remove first and last line from json file
   replace:
