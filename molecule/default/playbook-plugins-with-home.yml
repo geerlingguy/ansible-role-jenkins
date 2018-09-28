@@ -30,6 +30,7 @@
     - name: List plugins directory contents.
       command: "ls {{ jenkins_home }}/plugins"
       register: plugins_contents
+      changed_when: false
       tags: ['skip_ansible_lint']
 
     - name: Verify greenballs plugin exists.
