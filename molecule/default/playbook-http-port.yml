@@ -1,0 +1,19 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+
+  vars:
+    jenkins_http_port: 8081
+
+  pre_tasks:
+    - include_tasks: java-8.yml
+
+  roles:
+    - geerlingguy.java
+    - geerlingguy.jenkins
+
+  post_tasks:
+    - name: Check if Jenkins is running on the specified port.
+      uri:
+        url: "http://localhost:{{ jenkins_http_port }}"

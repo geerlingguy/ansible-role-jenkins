@@ -20,7 +20,7 @@ jenkins_plugins: []
 jenkins_plugins_state: present
 jenkins_plugin_updates_expiration: 86400
 jenkins_plugin_timeout: 30
-jenkins_plugins_install_dependencies: yes
+jenkins_plugins_install_dependencies: true
 
 jenkins_admin_username: admin
 jenkins_admin_password: admin

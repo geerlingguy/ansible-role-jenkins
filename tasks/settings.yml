@@ -6,8 +6,7 @@
     regexp: '^{{ item.option}}=\"\${{ item.option }} '
     line: '{{ item.option }}="${{ item.option }} {{ item.value }}"'
     state: present
-  with_items:
-      "{{ jenkins_init_changes }}"
+  with_items: "{{ jenkins_init_changes }}"
   register: jenkins_init_prefix
 
 - name: Set the Jenkins home directory
@@ -23,7 +22,7 @@
 
 - name: Set HTTP port in Jenkins config.
   lineinfile:
-    backrefs: yes
+    backrefs: true
     dest: "{{ jenkins_init_file }}"
     regexp: '^{{ jenkins_http_port_param }}='
     line: '{{ jenkins_http_port_param }}={{ jenkins_http_port }}'
