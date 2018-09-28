@@ -37,7 +37,7 @@
 
     - name: Verify greenballs plugin exists.
       stat:
-        path: "{{ jenkins_home }}/plugins/greenballs"
+        path: "{{ jenkins_home }}/plugins/greenballs.jpi"
       register: greenballs_plugin
 
     - name: Fail if greenballs plugin file doesn't exist.

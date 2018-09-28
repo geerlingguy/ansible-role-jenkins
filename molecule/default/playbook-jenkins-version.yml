@@ -15,6 +15,7 @@
       command: rpm -q jenkins
       args:
         warn: false
+      changed_when: false
       register: jenkins_rpm_version
       tags: ['skip_ansible_lint']
 
