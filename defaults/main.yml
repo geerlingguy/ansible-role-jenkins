@@ -12,6 +12,7 @@ jenkins_connection_retries: 60
 jenkins_home: /var/lib/jenkins
 jenkins_hostname: localhost
 jenkins_http_port: 8080
+jenkins_plugins_update_url: http://updates.jenkins-ci.org/current/update-center.json
 jenkins_jar_location: /opt/jenkins-cli.jar
 jenkins_url_prefix: ""
 jenkins_java_options: "-Djenkins.install.runSetupWizard=false"
