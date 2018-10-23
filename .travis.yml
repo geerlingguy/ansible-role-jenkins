@@ -8,20 +8,21 @@ env:
   matrix:
     # Test defaults.
     - MOLECULE_DISTRO: centos7
+    - MOLECULE_DISTRO: ubuntu1804
     - MOLECULE_DISTRO: ubuntu1604
     - MOLECULE_DISTRO: debian9
 
     # Test other role features.
-    - MOLECULE_DISTRO: ubuntu1604
+    - MOLECULE_DISTRO: ubuntu1804
       MOLECULE_PLAYBOOK: playbook-http-port.yml
 
-    - MOLECULE_DISTRO: ubuntu1604
+    - MOLECULE_DISTRO: ubuntu1804
       MOLECULE_PLAYBOOK: playbook-prefix.yml
 
     - MOLECULE_DISTRO: centos7
       MOLECULE_PLAYBOOK: playbook-jenkins-version.yml
 
-    - MOLECULE_DISTRO: ubuntu1604
+    - MOLECULE_DISTRO: ubuntu1804
       MOLECULE_PLAYBOOK: playbook-plugins-with-home.yml
 
 install:
