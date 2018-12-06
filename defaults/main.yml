@@ -29,6 +29,8 @@ jenkins_admin_password_file: ""
 jenkins_process_user: jenkins
 jenkins_process_group: "{{ jenkins_process_user }}"
 
+jenkins_disable_usage_statistics: true
+
 jenkins_init_changes:
   - option: "JENKINS_ARGS"
     value: "--prefix={{ jenkins_url_prefix }}"

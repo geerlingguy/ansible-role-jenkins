@@ -9,4 +9,15 @@
     owner: "{{ jenkins_process_user }}"
     group: "{{ jenkins_process_group }}"
     mode: 0775
+  listen: "configure jenkins settings"
   register: jenkins_users_config
+
+- name: configure base settings
+  template:
+    src: collect-statistics.groovy
+    dest: "{{ jenkins_home }}/init.groovy.d/collect-statistics.groovy"
+    owner: "{{ jenkins_process_user }}"
+    group: "{{ jenkins_process_group }}"
+    mode: 0775
+  when: "{{ jenkins_disable_usage_statistics }}"
+  listen: "configure jenkins settings"
