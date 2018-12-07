@@ -5,7 +5,8 @@
     src: "{{ jenkins_admin_password_file }}"
   register: adminpasswordfile
   no_log: true
-  when: jenkins_admin_password_file
+  when: jenkins_admin_password_file != ""
+  tags: ['skip_ansible_lint']
 
 - name: Set Jenkins admin password fact.
   set_fact:
@@ -46,5 +47,6 @@
     url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}"
     with_dependencies: "{{ jenkins_plugins_install_dependencies }}"
   with_items: "{{ jenkins_plugins }}"
-  when: jenkins_admin_password
+  when: jenkins_admin_password != ""
   notify: restart jenkins
+  tags: ['skip_ansible_lint']
