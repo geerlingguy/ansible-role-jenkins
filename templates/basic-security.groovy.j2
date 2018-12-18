@@ -18,11 +18,48 @@ if ("{{ jenkins_admin_username }}" in users_s) {
 }
 else {
     println "--> creating local admin user"
-
+:se
     hudsonRealm.createAccount('{{ jenkins_admin_username }}', '{{ jenkins_admin_password }}')
     instance.setSecurityRealm(hudsonRealm)
 
     def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
     instance.setAuthorizationStrategy(strategy)
     instance.save()
+}
+
+{% if jenkins_proxy_host is defined %}
+final String name = "{{ jenkins_proxy_host }}";
+{% else %}
+final String name = null;
+{% endif %}
+
+{% if  jenkins_proxy_port is defined %}
+final int port = {{ jenkins_proxy_port }};
+{% else %}
+final String port =  null;
+{% endif %}
+
+{% if jenkins_proxy_user is defined %}
+final String userName = "{{ jenkins_proxy_user }}";
+{% else %}
+final String userName = null;
+{% endif %}
+
+{% if jenkins_proxy_pass is defined %}
+final String password = "{{ jenkins_proxy_pass }}";
+{% else %}
+final String password = null;
+{% endif %}
+
+{% if jenkins_proxy_exceptions is defined %}
+final String noProxyHost = "{{ jenkins_proxy_exceptions }}";
+{% else %}
+final String noProxyHost = null;
+{% endif %}
+
+if( name && name != ''){
+  final def pc = new hudson.ProxyConfiguration(name, port, userName, password, noProxyHost)
+  instance.proxy = pc
+  instance.save()
+  println "Proxy settings updated!"
 }
