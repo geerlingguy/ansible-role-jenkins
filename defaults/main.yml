@@ -21,8 +21,8 @@ jenkins_plugins_state: present
 jenkins_plugin_updates_expiration: 86400
 jenkins_plugin_timeout: 30
 jenkins_plugins_install_dependencies: true
-jenkins_plugin_use_proxy: no
-jenkins_validate_certs: yes
+jenkins_plugin_use_proxy: false
+jenkins_validate_certs: true
 jenkins_proxy_env: ""
 
 jenkins_admin_username: admin
