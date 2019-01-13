@@ -25,8 +25,6 @@ jenkins_plugin_use_proxy: no
 jenkins_validate_certs: yes
 jenkins_proxy_env: ""
 
-
-
 jenkins_admin_username: admin
 jenkins_admin_password: admin
 jenkins_admin_password_file: ""
