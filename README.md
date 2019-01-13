@@ -61,6 +61,11 @@ Number of seconds after which a new copy of the update-center.json file is downl
 
 The server connection timeout, in seconds, when installing Jenkins plugins.
 
+    jenkins_plugin_use_proxy: yes
+    jenkins_proxy_env: http://proxy.example.com:8080
+
+Used If you need to authenticate through a proxy to install plugins.  For more examples on how to use your proxy you can find them [here](https://docs.ansible.com/ansible/latest/user_guide/playbooks_environment.html).  If you use an https proxy and get the error message `Unsupported proxy scheme: https. Currently ansible only supports HTTP proxies` set the option `jenkins_validate_certs: no` and your plugins will be able to be downloaded.
+
     jenkins_version: "1.644"
     jenkins_pkg_url: "http://www.example.com"
 
