@@ -57,6 +57,10 @@ Use `latest` to ensure all plugins are running the most up-to-date version.
 
 Number of seconds after which a new copy of the update-center.json file is downloaded. Set it to 0 if no cache file should be used.
 
+   jenkins_updates_url: "https://updates.jenkins.io" 
+
+The URL where to find updates for plugins. 
+
     jenkins_plugin_timeout: 30
 
 The server connection timeout, in seconds, when installing Jenkins plugins.
