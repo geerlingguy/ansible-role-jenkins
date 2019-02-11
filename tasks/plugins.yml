@@ -29,6 +29,10 @@
     group: jenkins
     mode: 0440
   changed_when: false
+  register: get_result
+  until: get_result is success
+  retries: 3
+  delay: 2
 
 - name: Remove first and last line from json file
   replace:
@@ -51,3 +55,7 @@
   when: jenkins_admin_password != ""
   notify: restart jenkins
   tags: ['skip_ansible_lint']
+  register: plugin_result
+  until: plugin_result is success
+  retries: 3
+  delay: 2
