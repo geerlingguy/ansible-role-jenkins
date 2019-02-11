@@ -57,9 +57,9 @@ Use `latest` to ensure all plugins are running the most up-to-date version.
 
 Number of seconds after which a new copy of the update-center.json file is downloaded. Set it to 0 if no cache file should be used.
 
-    jenkins_updates_url: "https://updates.jenkins.io" 
+    jenkins_updates_url: "https://updates.jenkins.io"
 
-The URL where to find updates for plugins. The default URL from jenkins-plugin ansible module is outdated as f Feb 2019. 
+The URL to use for Jenkins plugin updates.
 
     jenkins_plugin_timeout: 30
 
