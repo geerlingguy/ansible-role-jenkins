@@ -59,7 +59,7 @@ Number of seconds after which a new copy of the update-center.json file is downl
 
     jenkins_updates_url: "https://updates.jenkins.io"
 
-The URL to use for Jenkins plugin updates.
+The URL to use for Jenkins plugin updates and update-center information.
 
     jenkins_plugin_timeout: 30
 

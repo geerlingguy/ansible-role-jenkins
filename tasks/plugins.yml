@@ -23,7 +23,7 @@
 
 - name: Download current plugin updates from Jenkins update site
   get_url:
-    url: "{{ jenkins_update_site }}"
+    url: "{{ jenkins_updates_url }}/update-center.json"
     dest: "{{ jenkins_home }}/updates/default.json"
     owner: jenkins
     group: jenkins
