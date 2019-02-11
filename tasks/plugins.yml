@@ -14,14 +14,14 @@
   no_log: true
 
 # Update Jenkins so that plugin updates don't fail.
-- name: Create update directory
+- name: Create Jenkins updates directory.
   file:
     path: "{{ jenkins_home }}/updates"
     state: directory
     owner: jenkins
     group: jenkins
 
-- name: Download current plugin updates from Jenkins update site
+- name: Download current plugin updates from Jenkins update site.
   get_url:
     url: "{{ jenkins_updates_url }}/update-center.json"
     dest: "{{ jenkins_home }}/updates/default.json"
@@ -34,7 +34,7 @@
   retries: 3
   delay: 2
 
-- name: Remove first and last line from json file
+- name: Remove first and last line from json file.
   replace:
     path: "{{ jenkins_home }}/updates/default.json"
     regexp: "1d;$d"
