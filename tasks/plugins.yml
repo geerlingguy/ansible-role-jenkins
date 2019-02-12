@@ -14,16 +14,16 @@
   no_log: true
 
 # Update Jenkins so that plugin updates don't fail.
-- name: Create update directory
+- name: Create Jenkins updates directory.
   file:
     path: "{{ jenkins_home }}/updates"
     state: directory
     owner: jenkins
     group: jenkins
 
-- name: Download current plugin updates from Jenkins update site
+- name: Download current plugin updates from Jenkins update site.
   get_url:
-    url: http://updates.jenkins-ci.org/update-center.json
+    url: "{{ jenkins_updates_url }}/update-center.json"
     dest: "{{ jenkins_home }}/updates/default.json"
     owner: jenkins
     group: jenkins
@@ -31,8 +31,12 @@
     use_proxy: "{{ jenkins_plugin_use_proxy }}"
   environment: "{{ jenkins_proxy_env }}"
   changed_when: false
+  register: get_result
+  until: get_result is success
+  retries: 3
+  delay: 2
 
-- name: Remove first and last line from json file
+- name: Remove first and last line from json file.
   replace:
     path: "{{ jenkins_home }}/updates/default.json"
     regexp: "1d;$d"
@@ -48,6 +52,7 @@
     state: "{{ jenkins_plugins_state }}"
     timeout: "{{ jenkins_plugin_timeout }}"
     updates_expiration: "{{ jenkins_plugin_updates_expiration }}"
+    updates_url: "{{ jenkins_updates_url }}"
     url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}"
     with_dependencies: "{{ jenkins_plugins_install_dependencies }}"
   with_items: "{{ jenkins_plugins }}"
@@ -55,3 +60,7 @@
   when: jenkins_admin_password != ""
   notify: restart jenkins
   tags: ['skip_ansible_lint']
+  register: plugin_result
+  until: plugin_result is success
+  retries: 3
+  delay: 2

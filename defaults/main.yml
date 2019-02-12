@@ -24,6 +24,7 @@ jenkins_plugins_install_dependencies: true
 jenkins_plugin_use_proxy: false
 jenkins_validate_certs: true
 jenkins_proxy_env: ""
+jenkins_updates_url: "https://updates.jenkins.io"
 
 jenkins_admin_username: admin
 jenkins_admin_password: admin
