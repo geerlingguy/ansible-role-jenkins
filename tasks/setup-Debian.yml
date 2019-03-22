@@ -10,6 +10,12 @@
   apt_key:
     url: "{{ jenkins_repo_key_url }}"
     state: present
+  when: "'HTTP_PROXY' not in ansible_env"
+
+- name: Add Jenkins apt repository key behind a proxy.
+  command: |
+    apt-key adv --keyserver-options http-proxy={{ ansible_env.HTTP_PROXY }}  --fetch-keys {{ jenkins_repo_key_url|quote }}
+  when: "'HTTP_PROXY' in ansible_env"
 
 - name: Add Jenkins apt repository.
   apt_repository:
