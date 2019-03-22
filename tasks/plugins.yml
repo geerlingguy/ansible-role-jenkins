@@ -34,6 +34,14 @@
   retries: 3
   delay: 2
 
+- name: Configure hudson.model.UpdateCenter.xml updates url.
+  template:
+    src: hudson.model.UpdateCenter.xml.j2
+    dest: "{{ jenkins_home }}/hudson.model.UpdateCenter.xml"
+    owner: "{{ jenkins_process_user }}"
+    group: "{{ jenkins_process_group }}"
+    mode: 0640
+
 - name: Remove first and last line from json file.
   replace:
     path: "{{ jenkins_home }}/updates/default.json"
