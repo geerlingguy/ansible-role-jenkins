@@ -17,6 +17,9 @@ jenkins_url_prefix: ""
 jenkins_java_options: "-Djenkins.install.runSetupWizard=false"
 
 jenkins_plugins: []
+#  - name: plugin1
+#  - name: plugin2
+#    version: 1.2.3
 jenkins_plugins_state: present
 jenkins_plugin_updates_expiration: 86400
 jenkins_plugin_timeout: 30
