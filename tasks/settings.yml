@@ -27,11 +27,6 @@
     line: 'JENKINS_HOME={{ jenkins_home }}'
   register: jenkins_home_config
 
-- name: Immediately restart Jenkins on init config changes.
-  service: name=jenkins state=restarted
-  when: jenkins_init_prefix.changed
-  tags: ['skip_ansible_lint']
-
 - name: Set HTTP port in Jenkins config.
   lineinfile:
     backrefs: true
@@ -39,6 +34,11 @@
     regexp: '^{{ jenkins_http_port_param }}='
     line: '{{ jenkins_http_port_param }}={{ jenkins_http_port }}'
   register: jenkins_http_config
+
+- name: Immediately restart Jenkins on init config changes.
+  service: name=jenkins state=restarted
+  when: jenkins_init_prefix.changed
+  tags: ['skip_ansible_lint']
 
 - name: Ensure jenkins_home {{ jenkins_home }} exists
   file:
