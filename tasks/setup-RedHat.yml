@@ -46,7 +46,7 @@
 
 - name: Configure firewalld
   firewalld:
-    port: "{{ jenkins_http_port }}"
+    port: "{{ jenkins_http_port }}/tcp"
     permanent: yes
     immediate: yes
     state: enabled
