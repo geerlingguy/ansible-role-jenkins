@@ -77,6 +77,10 @@ Used for setting a URL prefix for your Jenkins installation. The option is added
     jenkins_connection_delay: 5
     jenkins_connection_retries: 60
 
+(Optional) Default to false, if you need to configure the remote host firewall (like firewalld by default in CentOS) to open the `jenkins_http_port` so it's accesible from outside the host.
+	
+	jenkins_firewall_configure: true (default is false)
+
 Amount of time and number of times to wait when connecting to Jenkins after initial startup, to verify that Jenkins is running. Total time to wait = `delay` * `retries`, so by default this role will wait up to 300 seconds before timing out.
 
     # For RedHat/CentOS (role default):

@@ -43,3 +43,11 @@
     name: jenkins
     state: "{{ jenkins_package_state }}"
   notify: configure default users
+
+- name: Configure firewalld
+  firewalld:
+    port: "{{ jenkins_http_port }}"
+    permanent: yes
+    immediate: yes
+    state: enabled
+  when: jenkins_firewall_configure is defined and jenkins_firewall_configure
