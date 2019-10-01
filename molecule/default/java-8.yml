@@ -2,7 +2,9 @@
 # Ubuntu.
 - name: Add repository for OpenJDK 8 (Ubuntu 14).
   apt_repository: repo='ppa:openjdk-r/ppa'
-  when: ansible_distribution == "Ubuntu" and ansible_distribution_version == "14.04"
+  when:
+    - ansible_distribution == "Ubuntu"
+    - ansible_distribution_version == "14.04"
 
 # Debian.
 - name: Enable Backports repository (Debian 8).

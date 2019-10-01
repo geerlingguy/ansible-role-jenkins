@@ -1,0 +1,27 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+
+  vars:
+    jenkins_version: "1.644"
+
+  roles:
+    - geerlingguy.java
+    - geerlingguy.jenkins
+
+  post_tasks:
+    - name: Check installed version of Jenkins.
+      command: rpm -q jenkins
+      args:
+        warn: false
+      changed_when: false
+      register: jenkins_rpm_version
+      tags: ['skip_ansible_lint']
+
+    - name: Print installed Jenkins package information.
+      debug: var=jenkins_rpm_version
+
+    - name: Fail if version doesn't match what we wanted.
+      fail:
+      when: "jenkins_version not in jenkins_rpm_version.stdout"

@@ -1,23 +1,61 @@
 ---
 # jenkins_plugin module doesn't support password files.
 - name: Get Jenkins admin password from file.
-  command: "cat {{ jenkins_admin_password_file }}"
+  slurp:
+    src: "{{ jenkins_admin_password_file }}"
   register: adminpasswordfile
-  no_log: True
+  no_log: true
   when: jenkins_admin_password_file != ""
+  tags: ['skip_ansible_lint']
 
 - name: Set Jenkins admin password fact.
   set_fact:
     jenkins_admin_password: "{{ adminpasswordfile['stdout'] | default(jenkins_admin_password) }}"
-  no_log: True
+  no_log: true
 
-- name: Install Jenkins plugins.
+# Update Jenkins so that plugin updates don't fail.
+- name: Create Jenkins updates directory.
+  file:
+    path: "{{ jenkins_home }}/updates"
+    state: directory
+    owner: jenkins
+    group: jenkins
+
+- name: Download current plugin updates from Jenkins update site.
+  get_url:
+    url: "{{ jenkins_updates_url }}/update-center.json"
+    dest: "{{ jenkins_home }}/updates/default.json"
+    owner: jenkins
+    group: jenkins
+    mode: 0440
+  changed_when: false
+  register: get_result
+  until: get_result is success
+  retries: 3
+  delay: 2
+
+- name: Remove first and last line from json file.
+  replace:
+    path: "{{ jenkins_home }}/updates/default.json"
+    regexp: "1d;$d"
+
+- name: Install Jenkins plugins using password.
   jenkins_plugin:
     name: "{{ item }}"
-    params:
-      url_username: "{{ jenkins_admin_username }}"
-      url_password: "{{ jenkins_admin_password }}"
+    jenkins_home: "{{ jenkins_home }}"
+    url_username: "{{ jenkins_admin_username }}"
+    url_password: "{{ jenkins_admin_password }}"
+    state: "{{ jenkins_plugins_state }}"
+    timeout: "{{ jenkins_plugin_timeout }}"
     updates_expiration: "{{ jenkins_plugin_updates_expiration }}"
+    updates_url: "{{ jenkins_updates_url }}"
     url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}"
+    with_dependencies: "{{ jenkins_plugins_install_dependencies }}"
   with_items: "{{ jenkins_plugins }}"
+  when: jenkins_admin_password != ""
   notify: restart jenkins
+  tags: ['skip_ansible_lint']
+  register: plugin_result
+  until: plugin_result is success
+  retries: 3
+  delay: 2

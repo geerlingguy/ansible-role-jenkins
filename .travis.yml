@@ -1,82 +1,43 @@
 ---
+language: python
 services: docker
 
 env:
-  # tests/test.yml
-  - distro: centos7
-    playbook: test.yml
-    prefix: ''
-    http_port: 8080
-  - distro: fedora24
-    site: test.yml
-    prefix: ''
-    http_port: 8080
-  - distro: ubuntu1604
-    playbook: test.yml
-    prefix: ''
-    http_port: 8080
-  - distro: ubuntu1404
-    playbook: test.yml
-    prefix: ''
-    http_port: 8080
-  - distro: debian8
-    playbook: test.yml
-    prefix: ''
-    http_port: 8080
+  global:
+    - ROLE_NAME: jenkins
+  matrix:
+    # Test defaults.
+    - MOLECULE_DISTRO: centos7
+    - MOLECULE_DISTRO: ubuntu1804
+    - MOLECULE_DISTRO: ubuntu1604
+    - MOLECULE_DISTRO: debian9
 
-  # tests/test-http-port.yml
-  - distro: ubuntu1604
-    playbook: test-http-port.yml
-    prefix: ''
-    http_port: 8081
+    # Test other role features.
+    - MOLECULE_DISTRO: ubuntu1804
+      MOLECULE_PLAYBOOK: playbook-http-port.yml
 
-  # tests/test-prefix.yml
-  - distro: ubuntu1604
-    playbook: test-prefix.yml
-    prefix: jenkins
-    http_port: 8080
+    - MOLECULE_DISTRO: ubuntu1804
+      MOLECULE_PLAYBOOK: playbook-prefix.yml
 
-  # tests/test-jenkins-version.yml
-  - distro: centos7
-    playbook: test-jenkins-version.yml
-    prefix: ''
-    http_port: 8080
-  - distro: ubuntu1604
-    playbook: test-jenkins-version.yml
-    prefix: ''
-    http_port: 8080
+    - MOLECULE_DISTRO: centos7
+      MOLECULE_PLAYBOOK: playbook-jenkins-version.yml
 
-  # tests/test-plugins.yml
-  - distro: ubuntu1604
-    playbook: test-plugins.yml
-    prefix: ''
-    http_port: 8080
+    - MOLECULE_DISTRO: ubuntu1804
+      MOLECULE_PLAYBOOK: playbook-plugins-with-home.yml
 
-  # tests/test-plugins-with-pinning.yml
-  - distro: ubuntu1604
-    playbook: test-plugins-with-pinning.yml
-    prefix: ''
-    http_port: 8080
+install:
+  # Install test dependencies.
+  - pip install molecule docker
+
+before_script:
+  # Use actual Ansible Galaxy role name for the project directory.
+  - cd ../
+  - mv ansible-role-$ROLE_NAME geerlingguy.$ROLE_NAME
+  - cd geerlingguy.$ROLE_NAME
 
 script:
-  # Configure test script so we can run extra tests after playbook is run.
-  - export container_id=$(date +%s)
-  - export cleanup=false
-
-  # Download test shim.
-  - wget -O ${PWD}/tests/test.sh https://gist.githubusercontent.com/geerlingguy/73ef1e5ee45d8694570f334be385e181/raw/
-  - chmod +x ${PWD}/tests/test.sh
-
   # Run tests.
-  - ${PWD}/tests/test.sh
-
-  # Make sure Jenkins is running.
-  - 'docker exec --tty ${container_id} env TERM=xterm curl http://localhost:$http_port/$prefix'
-
-after_failure:
-  # Check what happened on systemd systems.
-  - 'docker exec --tty ${container_id} env TERM=xterm systemctl -l status jenkins.service'
-  - 'docker exec --tty ${container_id} env TERM=xterm journalctl -xe --no-pager'
+  - molecule test
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/

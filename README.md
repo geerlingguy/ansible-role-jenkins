@@ -6,11 +6,15 @@ Installs Jenkins CI on RHEL/CentOS and Debian/Ubuntu servers.
 
 ## Requirements
 
-Requires `curl` to be installed on the server. Also, newer versions of Jenkins require Java 8+ (see the test playbooks inside the `tests/` directory for an example of how to use newer versions of Java for your OS).
+Requires `curl` to be installed on the server. Also, newer versions of Jenkins require Java 8+ (see the test playbooks inside the `molecule/default` directory for an example of how to use newer versions of Java for your OS).
 
 ## Role Variables
 
 Available variables are listed below, along with default values (see `defaults/main.yml`):
+
+    jenkins_package_state: present
+
+The state of the `jenkins` package install. By default this role installs Jenkins but will not upgrade Jenkins (when using package-based installs). If you want to always update to the latest version, change this to `latest`.
 
     jenkins_hostname: localhost
 
@@ -41,9 +45,25 @@ The location at which the `jenkins-cli.jar` jarfile will be kept. This is used f
 
 Jenkins plugins to be installed automatically during provisioning.
 
+    jenkins_plugins_install_dependencies: true
+
+Whether Jenkins plugins to be installed should also install any plugin dependencies.
+
+    jenkins_plugins_state: present
+
+Use `latest` to ensure all plugins are running the most up-to-date version.
+
     jenkins_plugin_updates_expiration: 86400
-    
+
 Number of seconds after which a new copy of the update-center.json file is downloaded. Set it to 0 if no cache file should be used.
+
+    jenkins_updates_url: "https://updates.jenkins.io"
+
+The URL to use for Jenkins plugin updates and update-center information.
+
+    jenkins_plugin_timeout: 30
+
+The server connection timeout, in seconds, when installing Jenkins plugins.
 
     jenkins_version: "1.644"
     jenkins_pkg_url: "http://www.example.com"
@@ -75,9 +95,11 @@ This role will install the latest version of Jenkins by default (using the offic
     jenkins_repo_url: deb http://pkg.jenkins-ci.org/debian-stable binary/
     jenkins_repo_key_url: http://pkg.jenkins-ci.org/debian-stable/jenkins-ci.org.key
 
+It is also possible stop the repo file being added by setting  `jenkins_repo_url = ''`. This is useful if, for example, you sign your own packages or run internal package management (e.g. Spacewalk).
+
     jenkins_java_options: "-Djenkins.install.runSetupWizard=false"
 
-Extra Java options for the Jenkins launch command configured in the init file can be set with the var `jenkins_java_options`. By default the option to disable the Jenkins 2.0 setup wizard is added.
+Extra Java options for the Jenkins launch command configured in the init file can be set with the var `jenkins_java_options`. For example, if you want to configure the timezone Jenkins uses, add `-Dorg.apache.commons.jelly.tags.fmt.timeZone=America/New_York`. By default, the option to disable the Jenkins 2.0 setup wizard is added.
 
     jenkins_init_changes:
       - option: "JENKINS_ARGS"
@@ -93,11 +115,14 @@ Changes made to the Jenkins init script; the default set of changes set the conf
 
 ## Example Playbook
 
-    - hosts: ci-server
-      vars:
-        jenkins_hostname: jenkins.example.com
-      roles:
-        - geerlingguy.jenkins
+```yaml
+- hosts: jenkins
+  vars:
+    jenkins_hostname: jenkins.example.com
+  roles:
+    - role: geerlingguy.jenkins
+      become: yes
+```
 
 ## License
 
