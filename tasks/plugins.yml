@@ -4,44 +4,38 @@
   slurp:
     src: "{{ jenkins_admin_password_file }}"
   register: adminpasswordfile
-  no_log: True
+  no_log: true
   when: jenkins_admin_password_file != ""
+  tags: ['skip_ansible_lint']
 
 - name: Set Jenkins admin password fact.
   set_fact:
     jenkins_admin_password: "{{ adminpasswordfile['stdout'] | default(jenkins_admin_password) }}"
-  no_log: True
-
-- name: Get Jenkins admin token from file.
-  slurp:
-    src: "{{ jenkins_admin_token_file }}"
-  register: admintokenfile
-  no_log: True
-  when: jenkins_admin_token_file != ""
-
-- name: Set Jenkins admin token fact.
-  set_fact:
-    jenkins_admin_token: "{{ admintokenfile['stdout'] | default(jenkins_admin_token) }}"
-  no_log: True
+  no_log: true
 
 # Update Jenkins so that plugin updates don't fail.
-- name: Create update directory
+- name: Create Jenkins updates directory.
   file:
     path: "{{ jenkins_home }}/updates"
     state: directory
     owner: jenkins
     group: jenkins
 
-- name: Download current plugin updates from Jenkins update site
+- name: Download current plugin updates from Jenkins update site.
   get_url:
-    url: http://updates.jenkins-ci.org/update-center.json
-    dest: "{{ jenkins_home}}/updates/default.json"
+    url: "{{ jenkins_updates_url }}/update-center.json"
+    dest: "{{ jenkins_home }}/updates/default.json"
     owner: jenkins
     group: jenkins
     mode: 0440
     use_proxy: "{{ jenkins_use_proxy }}"
+  changed_when: false
+  register: get_result
+  until: get_result is success
+  retries: 3
+  delay: 2
 
-- name: Remove first and last line from json file
+- name: Remove first and last line from json file.
   replace:
     path: "{{ jenkins_home }}/updates/default.json"
     regexp: "1d;$d"
@@ -55,17 +49,14 @@
     state: "{{ jenkins_plugins_state }}"
     timeout: "{{ jenkins_plugin_timeout }}"
     updates_expiration: "{{ jenkins_plugin_updates_expiration }}"
+    updates_url: "{{ jenkins_updates_url }}"
     url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}"
+    with_dependencies: "{{ jenkins_plugins_install_dependencies }}"
   with_items: "{{ jenkins_plugins }}"
   when: jenkins_admin_password != ""
   notify: restart jenkins
-
-- name: Install Jenkins plugins using token.
-  jenkins_plugin:
-    name: "{{ item }}"
-    url_token: "{{ jenkins_admin_token }}"
-    updates_expiration: "{{ jenkins_plugin_updates_expiration }}"
-    url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}"
-  with_items: "{{ jenkins_plugins }}"
-  when: jenkins_admin_token != ""
-  notify: restart jenkins
+  tags: ['skip_ansible_lint']
+  register: plugin_result
+  until: plugin_result is success
+  retries: 3
+  delay: 2

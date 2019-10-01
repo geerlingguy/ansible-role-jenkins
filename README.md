@@ -6,7 +6,7 @@ Installs Jenkins CI on RHEL/CentOS and Debian/Ubuntu servers.
 
 ## Requirements
 
-Requires `curl` to be installed on the server. Also, newer versions of Jenkins require Java 8+ (see the test playbooks inside the `tests/` directory for an example of how to use newer versions of Java for your OS).
+Requires `curl` to be installed on the server. Also, newer versions of Jenkins require Java 8+ (see the test playbooks inside the `molecule/default` directory for an example of how to use newer versions of Java for your OS).
 
 ## Role Variables
 
@@ -37,14 +37,6 @@ Default admin account credentials which will be created the first time Jenkins i
 
 Default admin password file which will be created the first time Jenkins is installed as /var/lib/jenkins/secrets/initialAdminPassword
 
-    jenkins_admin_token: ""
-
-A Jenkins API token (generated after installation) for [authenticated scripted clients](https://wiki.jenkins-ci.org/display/JENKINS/Authenticating+scripted+clients). You can use the admin token instead of a username and password for more convenient scripted access to Jenkins (e.g. for plugin management through this role).
-
-    jenkins_admin_token_file: ""
-
-A file (with full path) on the Jenkins server containing the admin token. If this variable is set in addition to the `jenkins_admin_token`, the contents of this file will overwrite the value of `jenkins_admin_token`.
-
     jenkins_jar_location: /opt/jenkins-cli.jar
 
 The location at which the `jenkins-cli.jar` jarfile will be kept. This is used for communicating with Jenkins via the CLI.
@@ -53,6 +45,10 @@ The location at which the `jenkins-cli.jar` jarfile will be kept. This is used f
 
 Jenkins plugins to be installed automatically during provisioning.
 
+    jenkins_plugins_install_dependencies: true
+
+Whether Jenkins plugins to be installed should also install any plugin dependencies.
+
     jenkins_plugins_state: present
 
 Use `latest` to ensure all plugins are running the most up-to-date version.
@@ -60,6 +56,10 @@ Use `latest` to ensure all plugins are running the most up-to-date version.
     jenkins_plugin_updates_expiration: 86400
 
 Number of seconds after which a new copy of the update-center.json file is downloaded. Set it to 0 if no cache file should be used.
+
+    jenkins_updates_url: "https://updates.jenkins.io"
+
+The URL to use for Jenkins plugin updates and update-center information.
 
     jenkins_plugin_timeout: 30
 
@@ -124,9 +124,8 @@ Whether or not to use the system supplied proxy when fetching information via `g
   vars:
     jenkins_hostname: jenkins.example.com
   roles:
-    - role: geerlingguy.java
     - role: geerlingguy.jenkins
-      become: true
+      become: yes
 ```
 
 ## License
