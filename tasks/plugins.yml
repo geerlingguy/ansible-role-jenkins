@@ -28,6 +28,7 @@
     owner: jenkins
     group: jenkins
     mode: 0440
+    use_proxy: "{{ jenkins_use_proxy }}"
   changed_when: false
   register: get_result
   until: get_result is success
