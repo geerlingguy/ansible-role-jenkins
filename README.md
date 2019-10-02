@@ -109,6 +109,14 @@ Extra Java options for the Jenkins launch command configured in the init file ca
 
 Changes made to the Jenkins init script; the default set of changes set the configured URL prefix and add in configured Java options for Jenkins' startup. You can add other option/value pairs if you need to set other options for the Jenkins init file.
 
+    jenkins_proxy_host: ""
+    jenkins_proxy_port: ""
+    jenkins_proxy_noproxy:
+      - "127.0.0.1"
+      - "localhost"
+
+If you are running Jenkins behind a proxy server, configure these options appropriately. Otherwise Jenkins will be configured with a direct Internet connection.
+
 ## Dependencies
 
   - geerlingguy.java
