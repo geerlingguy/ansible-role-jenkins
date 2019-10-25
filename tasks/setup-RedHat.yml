@@ -22,6 +22,7 @@
   rpm_key:
     state: present
     key: "{{ jenkins_repo_key_url }}"
+  when: jenkins_repo_url != ''
   register: get_result
   until: get_result is success
   retries: 3
