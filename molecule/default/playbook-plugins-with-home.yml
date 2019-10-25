@@ -32,9 +32,6 @@
       register: plugins_contents
       changed_when: false
       tags: ['skip_ansible_lint']
-  
-    - debug:
-        msg: "{{ plugins_contents }}"
 
     - name: Verify greenballs plugin exists.
       stat:
