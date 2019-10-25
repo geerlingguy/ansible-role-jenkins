@@ -41,4 +41,3 @@
     java_packages:
       - openjdk-11-jdk
   when: ansible_distribution == 'Ubuntu'
-
