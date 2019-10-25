@@ -24,6 +24,12 @@ env:
 
     - MOLECULE_DISTRO: ubuntu1804
       MOLECULE_PLAYBOOK: playbook-plugins-with-home.yml
+    
+    - MOLECULE_DISTRO: ubuntu1804
+      MOLECULE_PLAYBOOK: playbook-java11.yml
+    
+    - MOLECULE_DISTRO: centos7
+      MOLECULE_PLAYBOOK: playbook-java11.yml
 
 install:
   # Install test dependencies.
