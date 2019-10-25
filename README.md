@@ -6,7 +6,7 @@ Installs Jenkins CI on RHEL/CentOS and Debian/Ubuntu servers.
 
 ## Requirements
 
-Requires `curl` to be installed on the server. Also, newer versions of Jenkins require Java 8+ (see the test playbooks inside the `tests/` directory for an example of how to use newer versions of Java for your OS).
+Requires `curl` to be installed on the server. Also, newer versions of Jenkins require Java 8+ (see the test playbooks inside the `molecule/default` directory for an example of how to use newer versions of Java for your OS).
 
 ## Role Variables
 
@@ -57,6 +57,10 @@ Use `latest` to ensure all plugins are running the most up-to-date version.
 
 Number of seconds after which a new copy of the update-center.json file is downloaded. Set it to 0 if no cache file should be used.
 
+    jenkins_updates_url: "https://updates.jenkins.io"
+
+The URL to use for Jenkins plugin updates and update-center information.
+
     jenkins_plugin_timeout: 30
 
 The server connection timeout, in seconds, when installing Jenkins plugins.
@@ -105,6 +109,14 @@ Extra Java options for the Jenkins launch command configured in the init file ca
 
 Changes made to the Jenkins init script; the default set of changes set the configured URL prefix and add in configured Java options for Jenkins' startup. You can add other option/value pairs if you need to set other options for the Jenkins init file.
 
+    jenkins_proxy_host: ""
+    jenkins_proxy_port: ""
+    jenkins_proxy_noproxy:
+      - "127.0.0.1"
+      - "localhost"
+
+If you are running Jenkins behind a proxy server, configure these options appropriately. Otherwise Jenkins will be configured with a direct Internet connection.
+
 ## Dependencies
 
   - geerlingguy.java
@@ -116,8 +128,6 @@ Changes made to the Jenkins init script; the default set of changes set the conf
   vars:
     jenkins_hostname: jenkins.example.com
   roles:
-    - role: geerlingguy.java
-      become: yes
     - role: geerlingguy.jenkins
       become: yes
 ```
