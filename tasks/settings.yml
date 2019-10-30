@@ -14,8 +14,14 @@
   lineinfile:
     dest: "{{ jenkins_init_file }}"
     insertafter: '^{{ item.option }}='
-    regexp: '^{{ item.option }}=\"\${{ item.option }} '
-    line: '{{ item.option }}="${{ item.option }} {{ item.value }}"'
+    regexp: '^{{ item.option }}="\${{ item.option }} '
+    line: >
+      {{ item.option }}="${{ item.option }}
+      {% if item.value is string %}
+      {{ item.value }}
+      {% else %}
+      {{ item.value | join(" ") }}
+      {% endif %}"
     state: present
   with_items: "{{ jenkins_init_changes }}"
   register: jenkins_init_prefix
