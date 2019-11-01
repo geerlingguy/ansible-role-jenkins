@@ -34,7 +34,7 @@
       register: plugins_contents
       changed_when: false
       tags: ['skip_ansible_lint']
-    
+
     - name: Print list of installed plugins
       debug:
         msg: "{{ plugins_contents }}"
