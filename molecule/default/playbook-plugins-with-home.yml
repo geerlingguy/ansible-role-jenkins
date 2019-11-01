@@ -5,8 +5,10 @@
 
   vars:
     jenkins_plugins:
-      - ghprb
-      - greenballs
+      - name: ghprb
+      - name: greenballs
+      - name: durable-task
+        version: 1.30
     jenkins_home: /tmp/jenkins
     jenkins_plugin_timeout: 120
 
@@ -32,6 +34,10 @@
       register: plugins_contents
       changed_when: false
       tags: ['skip_ansible_lint']
+    
+    - name: Print list of installed plugins
+      debug:
+        msg: "{{ plugins_contents }}"
 
     - name: Verify greenballs plugin exists.
       stat:
