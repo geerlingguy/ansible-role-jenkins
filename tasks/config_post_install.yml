@@ -1,0 +1,31 @@
+---
+- name: install requirements for xml
+  package:
+    name:
+      - libxml2-dev
+      - libxslt-dev
+      - python-dev
+    state: present
+
+- name: Install lxml python package
+  pip:
+    name: lxml
+
+- name: Add or modify the attribute , add element {{ item.name }} if needed
+  xml:
+    path: "{{ jenkins_home }}/config.xml"
+    xpath: "/hudson/{{ item.name }}"
+    attribute: "{{ attribute.key }}"
+    value: "{{ attribute.value }}"
+  loop: "{{ lookup('dict', item.attributes) }}"
+  loop_control:
+    loop_var: attribute
+  when: item.attributes is defined
+
+- name:  Add or modify element for {{ item.name }}
+  xml:
+    path: "{{ jenkins_home }}/config.xml"
+    xpath: "/hudson/{{ item.name }}"
+    set_children: "{{ item.children  }}"
+  when: item.children is defined
+

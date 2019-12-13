@@ -64,3 +64,9 @@
 
 # Update Jenkins and install configured plugins.
 - include_tasks: plugins.yml
+
+# Update the config.xml post install
+- include_tasks: config_post_install.yml
+  loop: "{{ jenkins_config_xml }}"
+  when: jenkins_config_xml is defined
+

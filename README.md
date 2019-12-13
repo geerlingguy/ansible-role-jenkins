@@ -117,6 +117,22 @@ Changes made to the Jenkins init script; the default set of changes set the conf
 
 If you are running Jenkins behind a proxy server, configure these options appropriately. Otherwise Jenkins will be configured with a direct Internet connection.
 
+    jenkins_config_xml:
+      - name: securityRealm
+        attributes:
+          class: "org.jenkinsci.plugins.googlelogin.GoogleOAuth2SecurityRealm"
+          plugin: "google-login@1.4"
+        children:
+          - clientid: "111111222222-rr3456c789.apps.googleusercontent.com"
+          - clientsecret: "AQAAABAAAA"
+
+If you want personalize the jenkins config.xml after installation, you can add, or modify, the element - attribute and children. This example is for configure the google auth login.
+The result is:
+    <securityRealm class="org.jenkinsci.plugins.googlelogin.GoogleOAuth2SecurityRealm" plugin="google-login@1.4">
+      <clientid>111111222222-rr3456c789.apps.googleusercontent.com</clientid>
+      <clientsecret>AQAAABAAAA</clientsecret>
+    </securityRealm>
+
 ## Dependencies
 
   - geerlingguy.java
