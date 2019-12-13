@@ -28,4 +28,3 @@
     xpath: "/hudson/{{ item.name }}"
     set_children: "{{ item.children }}"
   when: item.children is defined
-
