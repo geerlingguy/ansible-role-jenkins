@@ -22,10 +22,10 @@
     loop_var: attribute
   when: item.attributes is defined
 
-- name:  Add or modify element for {{ item.name }}
+- name: Add or modify element for {{ item.name }}
   xml:
     path: "{{ jenkins_home }}/config.xml"
     xpath: "/hudson/{{ item.name }}"
-    set_children: "{{ item.children  }}"
+    set_children: "{{ item.children }}"
   when: item.children is defined
 
