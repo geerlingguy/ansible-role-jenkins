@@ -11,7 +11,7 @@
   get_url:
     url: "{{ jenkins_repo_url }}"
     dest: /etc/yum.repos.d/jenkins.repo
-  when: jenkins_repo_url != ""
+  when: jenkins_repo_url | bool
   tags: ['skip_ansible_lint']
 
 - name: Add Jenkins repo GPG key.
