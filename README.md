@@ -95,7 +95,7 @@ This role will install the latest version of Jenkins by default (using the offic
     jenkins_repo_url: deb http://pkg.jenkins-ci.org/debian-stable binary/
     jenkins_repo_key_url: http://pkg.jenkins-ci.org/debian-stable/jenkins-ci.org.key
 
-It is also possible stop the repo file being added by setting  `jenkins_repo_url = ''`. This is useful if, for example, you sign your own packages or run internal package management (e.g. Spacewalk).
+It is also possible stop the repo file being added by setting  `jenkins_repo_url: ''`. This is useful if, for example, you sign your own packages or run internal package management (e.g. Spacewalk).
 
     jenkins_java_options: "-Djenkins.install.runSetupWizard=false"
 

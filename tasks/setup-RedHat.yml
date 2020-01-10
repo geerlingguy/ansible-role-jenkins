@@ -18,7 +18,7 @@
   rpm_key:
     state: present
     key: "{{ jenkins_repo_key_url }}"
-  when: jenkins_repo_url != ''
+  when: jenkins_repo_url | bool
 
 - name: Download specific Jenkins version.
   get_url:
