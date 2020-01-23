@@ -40,6 +40,14 @@
     line: '{{ jenkins_http_port_param }}={{ jenkins_http_port }}'
   register: jenkins_http_config
 
+- name: Set Jenkins Java Path
+  lineinfile:
+    backrefs: true
+    dest: "{{ jenkins_init_file }}"
+    regexp: '^{{ jenkins_java }}='
+    line: '{{ jenkins_java }}={{ jenkins_java_path }}'
+  register: jenkins_java_path
+
 - name: Ensure jenkins_home {{ jenkins_home }} exists
   file:
     path: "{{ jenkins_home }}"
