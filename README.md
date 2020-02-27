@@ -119,17 +119,18 @@ If you are running Jenkins behind a proxy server, configure these options approp
 
 ## Dependencies
 
-  - geerlingguy.java
+None.
 
 ## Example Playbook
 
 ```yaml
 - hosts: jenkins
+  become: true
   vars:
     jenkins_hostname: jenkins.example.com
   roles:
+    - role: geerlingguy.java
     - role: geerlingguy.jenkins
-      become: yes
 ```
 
 ## License
