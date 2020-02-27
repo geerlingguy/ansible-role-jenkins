@@ -7,6 +7,8 @@
 # Change this to `latest` to update Jenkins if a newer version is available.
 jenkins_package_state: present
 
+jenkins_prefer_lts: false
+
 jenkins_connection_delay: 5
 jenkins_connection_retries: 60
 jenkins_home: /var/lib/jenkins
