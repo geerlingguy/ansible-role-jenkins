@@ -53,6 +53,14 @@ The location at which the `jenkins-cli.jar` jarfile will be kept. This is used f
 
 Jenkins plugins to be installed automatically during provisioning.
 
+``` 
+jenkins_plugins:
+  - blueocean
+  - { name: "influxdb", version: "1.12.1" }
+```
+
+Plugins list can use name or dictionary with `name` and `version` keys to pin specific version of a plugin.
+
     jenkins_plugins_state: present
 
 Use `latest` to ensure all plugins are running the most up-to-date version.

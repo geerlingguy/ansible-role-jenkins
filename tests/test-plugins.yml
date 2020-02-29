@@ -8,7 +8,6 @@
       - greenballs
       - workflow-aggregator
       - { name: cloudbees-folder, version: 6.2.1 } # Validate specific version, latest is 6.3 as of this writing.
-
     jenkins_plugin_timeout: 120
 
   pre_tasks:

@@ -45,11 +45,6 @@
     path: "{{ jenkins_home }}/updates/default.json"
     regexp: "1d;$d"
 
-# Added ability to specify version of a plugin.
-# jenkins_plugins:
-#   - blueocean
-#   - { name: "influxdb", version: "1.12.1" }
-
 - name: Install Jenkins plugins using password.
   jenkins_plugin:
     name: "{{ item.name | default(item) }}"
