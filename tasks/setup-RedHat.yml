@@ -5,18 +5,19 @@
       - curl
       - libselinux-python
       - initscripts
-    state: installed
+    state: present
 
 - name: Ensure Jenkins repo is installed.
   get_url:
     url: "{{ jenkins_repo_url }}"
     dest: /etc/yum.repos.d/jenkins.repo
-  when: jenkins_repo_url != ''
+  when: jenkins_repo_url | default(false)
 
 - name: Add Jenkins repo GPG key.
   rpm_key:
     state: present
     key: "{{ jenkins_repo_key_url }}"
+  when: jenkins_repo_url | default(false)
 
 - name: Download specific Jenkins version.
   get_url:
@@ -33,7 +34,7 @@
 - name: Install our specific version of Jenkins.
   package:
     name: "/tmp/jenkins-{{ jenkins_version }}-1.1.noarch.rpm"
-    state: installed
+    state: present
   when: jenkins_version is defined and specific_version.stat.exists
   notify: configure default users
 
