@@ -43,9 +43,10 @@ The location at which the `jenkins-cli.jar` jarfile will be kept. This is used f
 
     jenkins_plugins:
       - blueocean
-      - { name: "influxdb", version: "1.12.1" }
+      - name: influxdb
+        version: "1.12.1"
 
-Jenkins plugins to be installed automatically during provisioning. Defaults to empty list ([]). Items can use name or dictionary with `name` and `version` keys to pin specific version of a plugin.
+Jenkins plugins to be installed automatically during provisioning. Defaults to empty list (`[]`). Items can use name or dictionary with `name` and `version` keys to pin specific version of a plugin.
 
     jenkins_plugins_install_dependencies: true
 
