@@ -83,20 +83,20 @@ Used for setting a URL prefix for your Jenkins installation. The option is added
 Amount of time and number of times to wait when connecting to Jenkins after initial startup, to verify that Jenkins is running. Total time to wait = `delay` * `retries`, so by default this role will wait up to 300 seconds before timing out.
 
     # For RedHat/CentOS (role default):
-    jenkins_repo_url: http://pkg.jenkins-ci.org/redhat/jenkins.repo
-    jenkins_repo_key_url: http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
+    jenkins_repo_url: https://pkg.jenkins.io/redhat/jenkins.repo
+    jenkins_repo_key_url: https://pkg.jenkins.io/redhat/jenkins.io.key
     # For Debian (role default):
-    jenkins_repo_url: deb http://pkg.jenkins-ci.org/debian binary/
-    jenkins_repo_key_url: http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key
+    jenkins_repo_url: deb https://pkg.jenkins.io/debian binary/
+    jenkins_repo_key_url: https://pkg.jenkins.io/debian/jenkins.io.key
 
 This role will install the latest version of Jenkins by default (using the official repositories as listed above). You can override these variables (use the correct set for your platform) to install the current LTS version instead:
 
     # For RedHat/CentOS LTS:
-    jenkins_repo_url: http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo
-    jenkins_repo_key_url: http://pkg.jenkins-ci.org/redhat-stable/jenkins-ci.org.key
+    jenkins_repo_url: https://pkg.jenkins.io/redhat-stable/jenkins.repo
+    jenkins_repo_key_url: https://pkg.jenkins.io/redhat-stable/jenkins.io.key
     # For Debian/Ubuntu LTS:
-    jenkins_repo_url: deb http://pkg.jenkins-ci.org/debian-stable binary/
-    jenkins_repo_key_url: http://pkg.jenkins-ci.org/debian-stable/jenkins-ci.org.key
+    jenkins_repo_url: deb https://pkg.jenkins.io/debian-stable binary/
+    jenkins_repo_key_url: https://pkg.jenkins.io/debian-stable/jenkins.io.key
 
 It is also possible stop the repo file being added by setting  `jenkins_repo_url: ''`. This is useful if, for example, you sign your own packages or run internal package management (e.g. Spacewalk).
 
