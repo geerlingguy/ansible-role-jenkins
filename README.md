@@ -41,9 +41,11 @@ Default admin password file which will be created the first time Jenkins is inst
 
 The location at which the `jenkins-cli.jar` jarfile will be kept. This is used for communicating with Jenkins via the CLI.
 
-    jenkins_plugins: []
+    jenkins_plugins:
+      - blueocean
+      - { name: "influxdb", version: "1.12.1" }
 
-Jenkins plugins to be installed automatically during provisioning.
+Jenkins plugins to be installed automatically during provisioning. Defaults to empty list ([]). Items can use name or dictionary with `name` and `version` keys to pin specific version of a plugin.
 
     jenkins_plugins_install_dependencies: true
 
@@ -51,7 +53,7 @@ Whether Jenkins plugins to be installed should also install any plugin dependenc
 
     jenkins_plugins_state: present
 
-Use `latest` to ensure all plugins are running the most up-to-date version.
+Use `latest` to ensure all plugins are running the most up-to-date version. For any plugin that has a specific version set in `jenkins_plugins` list, state `present` will be used instead of `jenkins_plugins_state` value.
 
     jenkins_plugin_updates_expiration: 86400
 

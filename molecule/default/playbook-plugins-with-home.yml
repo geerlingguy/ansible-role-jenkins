@@ -7,6 +7,7 @@
     jenkins_plugins:
       - ghprb
       - greenballs
+      - {name: cloudbees-folder, version: 6.11}
     jenkins_home: /tmp/jenkins
     jenkins_plugin_timeout: 120
 
@@ -41,6 +42,15 @@
     - name: Fail if greenballs plugin file doesn't exist.
       fail:
       when: not greenballs_plugin.stat.exists
+
+    - name: Verify cloudbees-folder plugin exists.
+      stat:
+        path: "{{ jenkins_home }}/plugins/cloudbees-folder.jpi"
+      register: folder_plugin
+
+    - name: Fail if cloudbees-folder plugin file doesn't exist.
+      fail:
+      when: not folder_plugin.stat.exists
 
     - name: Ensure Jenkins is running.
       uri:

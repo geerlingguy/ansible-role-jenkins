@@ -16,6 +16,10 @@ jenkins_jar_location: /opt/jenkins-cli.jar
 jenkins_url_prefix: ""
 jenkins_java_options: "-Djenkins.install.runSetupWizard=false"
 
+# Specify plugin names or name/version dictionary for plugins to be installed.
+# jenkins_plugins:
+#  - blueocean
+#  - { name: "influxdb", version: "1.12.1" }
 jenkins_plugins: []
 jenkins_plugins_state: present
 jenkins_plugin_updates_expiration: 86400
