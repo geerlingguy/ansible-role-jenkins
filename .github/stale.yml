@@ -32,25 +32,25 @@ staleLabel: stale
 limitPerRun: 30
 
 pulls:
-  markComment: |
+  markComment: |-
     This pull request has been marked 'stale' due to lack of recent activity. If there is no further activity, the PR will be closed in another 30 days. Thank you for your contribution!
 
     Please read [this blog post](https://www.jeffgeerling.com/blog/2020/enabling-stale-issue-bot-on-my-github-repositories) to see the reasons why I mark pull requests as stale.
 
-  unmarkComment: >
+  unmarkComment: >-
     This pull request is no longer marked for closure.
 
-  closeComment: >
+  closeComment: >-
     This pull request has been closed due to inactivity. If you feel this is in error, please reopen the pull request or file a new PR with the relevant details.
 
 issues:
-  markComment: |
+  markComment: |-
     This issue has been marked 'stale' due to lack of recent activity. If there is no further activity, the issue will be closed in another 30 days. Thank you for your contribution!
 
     Please read [this blog post](https://www.jeffgeerling.com/blog/2020/enabling-stale-issue-bot-on-my-github-repositories) to see the reasons why I mark issues as stale.
 
-  unmarkComment: >
+  unmarkComment: >-
     This issue is no longer marked for closure.
 
-  closeComment: >
+  closeComment: >-
     This issue has been closed due to inactivity. If you feel this is in error, please reopen the issue or file a new issue with the relevant details.
