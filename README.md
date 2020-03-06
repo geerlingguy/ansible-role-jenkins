@@ -127,8 +127,12 @@ None.
 ```yaml
 - hosts: jenkins
   become: true
+  
   vars:
     jenkins_hostname: jenkins.example.com
+    java_packages:
+      - openjdk-8-jdk
+
   roles:
     - role: geerlingguy.java
     - role: geerlingguy.jenkins
