@@ -82,36 +82,23 @@ Used for setting a URL prefix for your Jenkins installation. The option is added
 
 Amount of time and number of times to wait when connecting to Jenkins after initial startup, to verify that Jenkins is running. Total time to wait = `delay` * `retries`, so by default this role will wait up to 300 seconds before timing out.
 
-By default, this role will install the latest version of Jenkins using the official repositories according to the platform. You can install the current LTS version instead by setting `jenkins_prefer_lts: true`.
+    jenkins_prefer_lts: false
 
-The default repositories can be overridden as needed.
+By default, this role will install the latest version of Jenkins using the official repositories according to the platform. You can install the current LTS version instead by setting this to `false`.
 
-```yaml
-# For RedHat/CentOS (role default):
-jenkins_repo_url: >-
-  {{
-     'https://pkg.jenkins.io/redhat-stable/jenkins.repo' if jenkins_prefer_lts | bool else
-     'https://pkg.jenkins.io/redhat/jenkins.repo'
-  }}
-jenkins_repo_key_url: >-
-  {{
-     'https://pkg.jenkins.io/redhat-stable/jenkins.io.key' if jenkins_prefer_lts | bool else
-     'https://pkg.jenkins.io/redhat/jenkins.io.key'
-  }}
-# For Debian/Ubuntu (role default):
-jenkins_repo_url: >-
-  {{
-     'deb https://pkg.jenkins.io/debian-stable binary/' if jenkins_prefer_lts | bool else
-     'deb https://pkg.jenkins.io/debian binary/'
-  }}
-jenkins_repo_key_url: >-
-  {{
-     'https://pkg.jenkins.io/debian-stable/jenkins.io.key' if jenkins_prefer_lts | bool else
-     'https://pkg.jenkins.io/debian/jenkins.io.key'
-  }}
-```
+The default repositories (listed below) can be overridden as well.
 
-It is also possible stop the repo file being added by setting  `jenkins_repo_url: ''`. This is useful if, for example, you sign your own packages or run internal package management (e.g. Spacewalk).
+    ```yaml
+    # For RedHat/CentOS:
+    jenkins_repo_url: https://pkg.jenkins.io/redhat{{ '-stable' if (jenkins_prefer_lts | bool) else '' }}/jenkins.repo
+    jenkins_repo_key_url: https://pkg.jenkins.io/redhat{{ '-stable' if (jenkins_prefer_lts | bool) else '' }}/jenkins.io.key
+
+    # For Debian/Ubuntu:
+    jenkins_repo_url: deb https://pkg.jenkins.io/debian{{ '-stable' if (jenkins_prefer_lts | bool) else '' }} binary/
+    jenkins_repo_key_url: https://pkg.jenkins.io/debian{{ '-stable' if (jenkins_prefer_lts | bool) else '' }}/jenkins.io.key
+    ```
+
+It is also possible to prevent the repo file from being added by setting  `jenkins_repo_url: ''`. This is useful if, for example, you sign your own packages or run internal package management (e.g. Spacewalk).
 
     jenkins_java_options: "-Djenkins.install.runSetupWizard=false"
 
