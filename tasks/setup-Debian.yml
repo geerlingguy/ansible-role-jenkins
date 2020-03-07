@@ -4,6 +4,7 @@
     name:
       - curl
       - apt-transport-https
+      - gnupg
     state: present
 
 - name: Add Jenkins apt repository key.
@@ -15,8 +16,9 @@
   apt_repository:
     repo: "{{ jenkins_repo_url }}"
     state: present
-    update_cache: yes
-  when: jenkins_repo_url != ''
+    update_cache: true
+  when: jenkins_repo_url | default(false)
+  tags: ['skip_ansible_lint']
 
 - name: Download specific Jenkins version.
   get_url:

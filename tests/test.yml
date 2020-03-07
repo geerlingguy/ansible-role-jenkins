@@ -1,9 +1,0 @@
----
-- hosts: all
-
-  pre_tasks:
-    - include_tasks: java-8.yml
-
-  roles:
-    - geerlingguy.java
-    - role_under_test

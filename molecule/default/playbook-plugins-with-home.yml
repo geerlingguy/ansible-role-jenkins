@@ -1,0 +1,62 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+
+  vars:
+    jenkins_plugins:
+      - ghprb
+      - greenballs
+      - {name: cloudbees-folder, version: 6.11}
+    jenkins_home: /tmp/jenkins
+    jenkins_plugin_timeout: 120
+
+  pre_tasks:
+    - include_tasks: java-8.yml
+
+  roles:
+    - geerlingguy.java
+    - geerlingguy.jenkins
+
+  post_tasks:
+    - name: Verify JENKINS_HOME is correct.
+      stat:
+        path: "{{ jenkins_home }}/config.xml"
+      register: jenkins_home_config
+
+    - name: Fail if Jenkins config file doesn't exist.
+      fail:
+      when: not jenkins_home_config.stat.exists
+
+    - name: List plugins directory contents.
+      command: "ls {{ jenkins_home }}/plugins"
+      register: plugins_contents
+      changed_when: false
+      tags: ['skip_ansible_lint']
+
+    - name: Verify greenballs plugin exists.
+      stat:
+        path: "{{ jenkins_home }}/plugins/greenballs.jpi"
+      register: greenballs_plugin
+
+    - name: Fail if greenballs plugin file doesn't exist.
+      fail:
+      when: not greenballs_plugin.stat.exists
+
+    - name: Verify cloudbees-folder plugin exists.
+      stat:
+        path: "{{ jenkins_home }}/plugins/cloudbees-folder.jpi"
+      register: folder_plugin
+
+    - name: Fail if cloudbees-folder plugin file doesn't exist.
+      fail:
+      when: not folder_plugin.stat.exists
+
+    - name: Ensure Jenkins is running.
+      uri:
+        url: "http://127.0.0.1:8080/"
+        status_code: 200
+      register: result
+      until: result.status == 200
+      retries: 60
+      delay: 1
