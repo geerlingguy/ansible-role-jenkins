@@ -4,19 +4,8 @@
     name:
       - curl
       - initscripts
+      - "{{ 'libselinux-python' if ansible_python['version']['major'] < 3 else 'python3-libselinux' }}"
     state: present
-
-- name: Install appropriate selinux library (python 3)
-  package:
-    name: python3-libselinux
-    state: present
-  when: ansible_python['version']['major'] >= 3
-
-- name: Install appropriate selinux library (python 2)
-  package:
-    name: libselinux-python
-    state: present
-  when: ansible_python['version']['major'] < 3
 
 - name: Ensure Jenkins repo is installed.
   get_url:

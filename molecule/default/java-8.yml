@@ -5,7 +5,7 @@
   when: ansible_os_family == 'Debian'
   changed_when: false
 
-- name: Set the java_packages variable (Ubuntu).
+- name: Set the java_packages variable (Debian).
   set_fact:
     java_packages:
       - openjdk-8-jdk
