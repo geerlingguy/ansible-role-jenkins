@@ -20,6 +20,15 @@
   with_items: "{{ jenkins_init_changes }}"
   register: jenkins_init_prefix
 
+- name: Ensure jenkins_home {{ jenkins_home }} exists.
+  file:
+    path: "{{ jenkins_home }}"
+    state: directory
+    owner: jenkins
+    group: jenkins
+    mode: u+rwx
+    follow: true
+
 - name: Set the Jenkins home directory.
   lineinfile:
     dest: "{{ jenkins_init_file }}"
