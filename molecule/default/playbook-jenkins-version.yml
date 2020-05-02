@@ -20,7 +20,8 @@
       tags: ['skip_ansible_lint']
 
     - name: Print installed Jenkins package information.
-      debug: var=jenkins_rpm_version
+      debug:
+        var: jenkins_rpm_version
 
     - name: Fail if version doesn't match what we wanted.
       fail:
