@@ -31,7 +31,10 @@
 # Make sure Jenkins starts, then configure Jenkins.
 - name: Ensure Jenkins is started and runs on startup.
   become: True
-  service: name=jenkins state=started enabled=yes
+  service:
+    name: jenkins
+    state: started
+    enabled: yes
 
 - name: Wait for Jenkins to start up before proceeding.
   uri:

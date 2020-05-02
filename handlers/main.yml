@@ -1,7 +1,9 @@
 ---
 - name: restart jenkins
   become: True
-  service: name=jenkins state=restarted
+  service:
+    name: jenkins
+    state: restarted
 
 - name: configure default users
   become: True
