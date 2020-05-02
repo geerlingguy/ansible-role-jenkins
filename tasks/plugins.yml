@@ -15,6 +15,7 @@
 
 # Update Jenkins so that plugin updates don't fail.
 - name: Create Jenkins updates directory.
+  become: True
   file:
     path: "{{ jenkins_home }}/updates"
     state: directory
@@ -23,6 +24,7 @@
     mode: 0755
 
 - name: Download current plugin updates from Jenkins update site.
+  become: True
   get_url:
     url: "{{ jenkins_updates_url }}/update-center.json"
     dest: "{{ jenkins_home }}/updates/default.json"
@@ -36,6 +38,7 @@
   delay: 2
 
 - name: Remove first and last line from json file.
+  become: True
   replace:  # noqa 208
     path: "{{ jenkins_home }}/updates/default.json"
     regexp: "1d;$d"
