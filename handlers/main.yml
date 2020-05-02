@@ -1,8 +1,10 @@
 ---
 - name: restart jenkins
+  become: True
   service: name=jenkins state=restarted
 
 - name: configure default users
+  become: True
   template:
     src: basic-security.groovy.j2
     dest: "{{ jenkins_home }}/init.groovy.d/basic-security.groovy"

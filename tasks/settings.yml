@@ -11,6 +11,7 @@
   when: not jenkins_init_file_stat.stat.exists
 
 - name: Modify variables in init file.
+  become: True
   lineinfile:
     dest: "{{ jenkins_init_file }}"
     insertafter: '^{{ item.option }}='
@@ -21,6 +22,7 @@
   register: jenkins_init_prefix
 
 - name: Ensure jenkins_home {{ jenkins_home }} exists.
+  become: True
   file:
     path: "{{ jenkins_home }}"
     state: directory
@@ -30,6 +32,7 @@
     follow: true
 
 - name: Set the Jenkins home directory.
+  become: True
   lineinfile:
     dest: "{{ jenkins_init_file }}"
     regexp: '^JENKINS_HOME=.*'
@@ -37,11 +40,13 @@
   register: jenkins_home_config
 
 - name: Immediately restart Jenkins on init config changes.
+  become: True
   service: name=jenkins state=restarted
   when: jenkins_init_prefix.changed
   tags: ['skip_ansible_lint']
 
 - name: Set HTTP port in Jenkins config.
+  become: True
   lineinfile:
     backrefs: true
     dest: "{{ jenkins_init_file }}"
@@ -50,6 +55,7 @@
   register: jenkins_http_config
 
 - name: Create custom init scripts directory.
+  become: True
   file:
     path: "{{ jenkins_home }}/init.groovy.d"
     state: directory
@@ -58,6 +64,7 @@
     mode: 0775
 
 - name: Configure proxy config for Jenkins
+  become: True
   template:
     src: proxy.xml
     dest: "{{ jenkins_home }}/proxy.xml"
@@ -73,6 +80,7 @@
   meta: flush_handlers
 
 - name: Immediately restart Jenkins on http or user changes.
+  become: True
   service: name=jenkins state=restarted
   when: >
     (jenkins_users_config is defined and jenkins_users_config.changed)

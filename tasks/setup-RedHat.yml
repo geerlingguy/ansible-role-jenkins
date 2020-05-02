@@ -1,5 +1,6 @@
 ---
 - name: Ensure dependencies are installed.
+  become: True
   package:
     name:
       - curl
@@ -8,12 +9,14 @@
     state: present
 
 - name: Ensure Jenkins repo is installed.
+  become: True
   get_url:
     url: "{{ jenkins_repo_url }}"
     dest: /etc/yum.repos.d/jenkins.repo
   when: jenkins_repo_url | default(false)
 
 - name: Add Jenkins repo GPG key.
+  become: True
   rpm_key:
     state: present
     key: "{{ jenkins_repo_key_url }}"
@@ -32,6 +35,7 @@
   when: jenkins_version is defined
 
 - name: Install our specific version of Jenkins.
+  become: True
   package:
     name: "/tmp/jenkins-{{ jenkins_version }}-1.1.noarch.rpm"
     state: present
@@ -39,6 +43,7 @@
   notify: configure default users
 
 - name: Ensure Jenkins is installed.
+  become: True
   package:
     name: jenkins
     state: "{{ jenkins_package_state }}"
