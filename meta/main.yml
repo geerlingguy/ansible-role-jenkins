@@ -2,6 +2,7 @@
 dependencies: []
 
 galaxy_info:
+  role_name: jenkins
   author: geerlingguy
   description: Jenkins CI
   company: "Midwestern Mac, LLC"
