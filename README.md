@@ -127,6 +127,10 @@ None.
 ```yaml
 - hosts: jenkins
   become: true
+  pre_tasks:
+    - apt:
+        update_cache: yes
+      when: ansible_facts['os_family'] == "Debian"
   
   vars:
     jenkins_hostname: jenkins.example.com
