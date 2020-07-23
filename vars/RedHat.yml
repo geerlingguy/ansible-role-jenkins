@@ -1,7 +1,7 @@
 ---
 __jenkins_repo_url: https://pkg.jenkins.io/redhat{{ '-stable' if (jenkins_prefer_lts | bool) else '' }}/jenkins.repo
 __jenkins_repo_key_url: https://pkg.jenkins.io/redhat{{ '-stable' if (jenkins_prefer_lts | bool) else '' }}/jenkins.io.key
-__jenkins_pkg_url: https://pkg.jenkins.io/redhat
+__jenkins_pkg_url: https://pkg.jenkins.io/redhat{{ '-stable' if (jenkins_prefer_lts | bool) else '' }}
 jenkins_init_file: /etc/sysconfig/jenkins
 jenkins_http_port_param: JENKINS_PORT
 jenkins_java_options_env_var: JENKINS_JAVA_OPTIONS
