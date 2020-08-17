@@ -22,23 +22,28 @@
     group: jenkins
     mode: 0755
 
-- name: Download current plugin updates from Jenkins update site.
-  get_url:
-    url: "{{ jenkins_updates_url }}/update-center.json"
-    dest: "{{ jenkins_home }}/updates/default.json"
-    owner: jenkins
-    group: jenkins
-    mode: 0440
-  changed_when: false
-  register: get_result
-  until: get_result is success
-  retries: 3
-  delay: 2
+- name: Point jenkins at the given updates URL
+  jenkins_script:
+    script: |
+      import hudson.model.UpdateCenter
+      import hudson.model.UpdateSite
+      import hudson.util.PersistedList
+      import jenkins.model.Jenkins
 
-- name: Remove first and last line from json file.
-  replace:  # noqa 208
-    path: "{{ jenkins_home }}/updates/default.json"
-    regexp: "1d;$d"
+      url = "${site}"
+      PersistedList < UpdateSite > sites = Jenkins.getInstance().getUpdateCenter().getSites()
+      for (UpdateSite s: sites) {
+        if (s.getId().equals(UpdateCenter.ID_DEFAULT))
+          sites.remove(s)
+      }
+      UpdateSite site = new UpdateSite(UpdateCenter.ID_DEFAULT, url)
+      sites.add(site)
+      site.updateDirectlyNow(false)
+    args:
+      site: "{{ jenkins_updates_url }}/update-center.json"
+    url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}"
+    user: "{{ jenkins_admin_username }}"
+    password: "{{ jenkins_admin_password }}"
 
 - name: Install Jenkins plugins using password.
   jenkins_plugin:
