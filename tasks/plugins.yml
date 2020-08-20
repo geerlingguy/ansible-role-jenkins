@@ -20,6 +20,7 @@
     state: directory
     owner: jenkins
     group: jenkins
+    mode: 0755
 
 - name: Download current plugin updates from Jenkins update site.
   get_url:
@@ -38,6 +39,7 @@
   replace:
     path: "{{ jenkins_home }}/updates/default.json"
     regexp: "1d;$d"
+    # mode: 0644 TODO
 
 - name: Install Jenkins plugins using password.
   jenkins_plugin:

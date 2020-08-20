@@ -8,6 +8,7 @@
   file:
     path: "{{ jenkins_init_file }}"
     state: touch
+    mode: 0644
   when: not jenkins_init_file_stat.stat.exists
 
 - name: Modify variables in init file.
@@ -17,6 +18,7 @@
     regexp: '^{{ item.option }}=\"\${{ item.option }} '
     line: '{{ item.option }}="${{ item.option }} {{ item.value }}"'
     state: present
+    mode: 0644
   with_items: "{{ jenkins_init_changes }}"
   register: jenkins_init_prefix
 
@@ -34,6 +36,7 @@
     dest: "{{ jenkins_init_file }}"
     regexp: '^JENKINS_HOME=.*'
     line: 'JENKINS_HOME={{ jenkins_home }}'
+    mode: 0644
   register: jenkins_home_config
 
 - name: Immediately restart Jenkins on init config changes.
@@ -47,6 +50,7 @@
     dest: "{{ jenkins_init_file }}"
     regexp: '^{{ jenkins_http_port_param }}='
     line: '{{ jenkins_http_port_param }}={{ jenkins_http_port }}'
+    mode: 0644
   register: jenkins_http_config
 
 - name: Create custom init scripts directory.
