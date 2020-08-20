@@ -39,7 +39,7 @@
   replace:
     path: "{{ jenkins_home }}/updates/default.json"
     regexp: "1d;$d"
-    # mode: 0644 TODO
+    mode: 0644
 
 - name: Install Jenkins plugins using password.
   jenkins_plugin:
