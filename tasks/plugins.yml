@@ -36,10 +36,9 @@
   delay: 2
 
 - name: Remove first and last line from json file.
-  replace:
+  replace:  # noqa 208
     path: "{{ jenkins_home }}/updates/default.json"
     regexp: "1d;$d"
-    mode: 0644
 
 - name: Install Jenkins plugins using password.
   jenkins_plugin:
