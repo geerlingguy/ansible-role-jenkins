@@ -36,6 +36,7 @@ jenkins_admin_password_file: ""
 
 jenkins_process_user: jenkins
 jenkins_process_group: "{{ jenkins_process_user }}"
+jenkins_process_groups: []
 
 jenkins_init_changes:
   - option: "JENKINS_ARGS"

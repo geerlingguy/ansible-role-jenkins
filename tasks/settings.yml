@@ -53,6 +53,12 @@
     mode: 0644
   register: jenkins_http_config
 
+- name: Ensure Jenkins process user is created.
+  user:
+    name: "{{ jenkins_process_user }}"
+    group: "{{ jenkins_process_group }}"
+    groups: "{{ jenkins_process_groups }}"
+
 - name: Create custom init scripts directory.
   file:
     path: "{{ jenkins_home }}/init.groovy.d"
