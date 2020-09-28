@@ -26,8 +26,8 @@
   file:
     path: "{{ jenkins_home }}"
     state: directory
-    owner: jenkins
-    group: jenkins
+    owner: "{{ jenkins_user }}"
+    group: "{{ jenkins_group }}"
     mode: u+rwx
     follow: true
 

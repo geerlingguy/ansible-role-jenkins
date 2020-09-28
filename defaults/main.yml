@@ -34,7 +34,9 @@ jenkins_admin_username: admin
 jenkins_admin_password: admin
 jenkins_admin_password_file: ""
 
-jenkins_process_user: jenkins
+jenkins_user: jenkins
+jenkins_group: jenkins
+jenkins_process_user: "{{ jenkins_user }}"
 jenkins_process_group: "{{ jenkins_process_user }}"
 
 jenkins_init_changes:
