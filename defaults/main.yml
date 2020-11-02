@@ -49,3 +49,4 @@ jenkins_proxy_port: ""
 jenkins_proxy_noproxy:
   - "127.0.0.1"
   - "localhost"
+jenkins_proxy_compatibility: false

@@ -118,6 +118,10 @@ Changes made to the Jenkins init script; the default set of changes set the conf
 
 If you are running Jenkins behind a proxy server, configure these options appropriately. Otherwise Jenkins will be configured with a direct Internet connection.
 
+    jenkins_proxy_compatibility: false
+
+If you cannot control your client IP  and it is different that what is stored in your cookie (going through a 3rd party proxy that has multiple client IPs) you will have CSRF issues. To workaround that you might need to [enable proxy compatibility mode](https://www.jenkins.io/doc/book/managing/security/#cross-site-request-forgery) by setting the jenkins_proxy_compatibility option to true.
+
 ## Dependencies
 
 None.
