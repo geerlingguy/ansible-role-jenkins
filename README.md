@@ -1,6 +1,6 @@
 # Ansible Role: Jenkins CI
 
-[![Build Status](https://travis-ci.com/geerlingguy/ansible-role-jenkins.svg?branch=master)](https://travis-ci.com/geerlingguy/ansible-role-jenkins)
+[![CI](https://github.com/geerlingguy/ansible-role-jenkins/workflows/CI/badge.svg?event=push)](https://github.com/geerlingguy/ansible-role-jenkins/actions?query=workflow%3ACI)
 
 Installs Jenkins CI on RHEL/CentOS and Debian/Ubuntu servers.
 
