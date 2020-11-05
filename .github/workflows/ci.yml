@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        distro:
+        include:
           - distro: centos8
             playbook: converge.yml
           - distro: ubuntu1804
