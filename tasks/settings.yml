@@ -67,6 +67,7 @@
     state: directory
     owner: '{{ jenkins_process_user }}'
     group: '{{ jenkins_process_group }}'
+    recurse: true
     mode: u+rwx
 
 - name: Ensure jenkins_cache_dir {{ jenkins_cache_dir }} exists
@@ -75,6 +76,7 @@
     state: directory
     owner: '{{ jenkins_process_user }}'
     group: '{{ jenkins_process_group }}'
+    recurse: true
     mode: u+rwx
 
 - name: Create custom init scripts directory.
