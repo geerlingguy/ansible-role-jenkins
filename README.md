@@ -84,7 +84,7 @@ Amount of time and number of times to wait when connecting to Jenkins after init
 
     jenkins_prefer_lts: false
 
-By default, this role will install the latest version of Jenkins using the official repositories according to the platform. You can install the current LTS version instead by setting this to `false`.
+By default, this role will install the latest version of Jenkins using the official repositories according to the platform. You can install the current LTS version instead by setting this to `true`.
 
 The default repositories (listed below) can be overridden as well.
 
