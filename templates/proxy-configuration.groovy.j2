@@ -1,0 +1,21 @@
+/*
+ * Configure HTTP proxy settings available at http://your-jenkins-instance:port/pluginManager/advanced
+ * proxyUrl is your proxy address, equivalent to http.proxyHost parameter
+ * proxyPort is your proxy port, equivalent to http.proxyPort parameter
+ * userName and password are your proxy credentials
+ * Set the noProxyHost list to bypass the proxy for these URLs
+ */
+
+import jenkins.model.*
+
+def proxyUrl = "{{ jenkins_proxy_host }}"
+def proxyPort = {{ jenkins_proxy_port}}
+def userName = "{{ jenkins_proxy_user }}"
+def password = "{{ jenkins_proxy_pass }}"
+def noProxyHost = "{{ jenkins_proxy_noproxy | join(',') }}"
+def jenkins = Jenkins.getInstance()
+
+jenkins.proxy = new hudson.ProxyConfiguration(proxyUrl, proxyPort, userName, password, noProxyHost)
+jenkins.proxy.save()
+
+return

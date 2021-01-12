@@ -61,17 +61,13 @@
     group: "{{ jenkins_process_group }}"
     mode: 0775
 
-- name: Configure proxy config for Jenkins
+- name: Ensure proxy is configured on startup.
   template:
-    src: proxy.xml
-    dest: "{{ jenkins_home }}/proxy.xml"
+    src: proxy-configuration.groovy.j2
+    dest: "{{ jenkins_home }}/init.groovy.d/proxy-configuration.groovy"
     owner: "{{ jenkins_process_user }}"
     group: "{{ jenkins_process_group }}"
-    mode: 0664
-  register: jenkins_proxy_config
-  when:
-    - jenkins_proxy_host | length > 0
-    - jenkins_proxy_port | length > 0
+    mode: 0700
 
 - name: Trigger handlers immediately in case Jenkins was installed
   meta: flush_handlers

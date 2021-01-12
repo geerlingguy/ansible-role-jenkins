@@ -46,6 +46,8 @@ jenkins_init_changes:
 # If Jenkins is behind a proxy, configure this.
 jenkins_proxy_host: ""
 jenkins_proxy_port: ""
+jenkins_proxy_user: ""
+jenkins_proxy_pass: ""
 jenkins_proxy_noproxy:
   - "127.0.0.1"
   - "localhost"
