@@ -28,6 +28,15 @@ The Jenkins home directory which, amongst others, is being used for storing arti
 
 The HTTP port for Jenkins' web interface.
 
+    jenkins_https_port: 8443
+
+The HTTPS port for Jenkins' web interface over SSL. If specifying a port different than -1, then also ensure that a OpenSSL certificate and (vault-encrypted) key are also specified in the follow options.
+
+    jenkins_https_crt: path/to/openssl_certificate.crt
+    jenkins_https_key: path/to/openssl_certificate.key
+
+The OpenSSL signed certificate and (vault-encrypted) key pair for Jenkins to use with HTTPS.
+
     jenkins_admin_username: admin
     jenkins_admin_password: admin
 

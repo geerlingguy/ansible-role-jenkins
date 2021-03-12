@@ -4,4 +4,7 @@ __jenkins_repo_key_url: https://pkg.jenkins.io/redhat{{ '-stable' if (jenkins_pr
 __jenkins_pkg_url: https://pkg.jenkins.io/redhat
 jenkins_init_file: /etc/sysconfig/jenkins
 jenkins_http_port_param: JENKINS_PORT
+jenkins_https_port_param: JENKINS_HTTPS_PORT
+jenkins_https_crt_param: JENKINS_HTTPS_CRT
+jenkins_https_key_param: JENKINS_HTTPS_KEY
 jenkins_java_options_env_var: JENKINS_JAVA_OPTIONS
