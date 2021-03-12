@@ -39,11 +39,6 @@
     mode: 0644
   register: jenkins_home_config
 
-- name: Immediately restart Jenkins on init config changes.
-  service: name=jenkins state=restarted
-  when: jenkins_init_prefix.changed
-  tags: ['skip_ansible_lint']
-
 - name: Set HTTP port in Jenkins config.
   lineinfile:
     backrefs: true
@@ -80,6 +75,7 @@
   service: name=jenkins state=restarted
   when: >
     (jenkins_users_config is defined and jenkins_users_config.changed)
+    or (jenkins_init_prefix is defined and jenkins_init_prefix.changed)
     or (jenkins_http_config is defined and jenkins_http_config.changed)
     or (jenkins_home_config is defined and jenkins_home_config.changed)
     or (jenkins_proxy_config is defined and jenkins_proxy_config.changed)
