@@ -66,6 +66,30 @@
     mode: 0644
   register: jenkins_http_config
 
+- name: Set HTTPS port in Jenkins config.
+  lineinfile:
+    dest: "{{ jenkins_init_file }}"
+    regexp: '^{{ jenkins_https_port_param }}='
+    insertafter: "^{{ jenkins_http_port_param }}"
+    line: '{{ jenkins_https_port_param }}={{ jenkins_https_port }}'
+  register: jenkins_https_port_config
+
+- name: Set HTTPS certificate path in Jenkins config.
+  lineinfile:
+    dest: "{{ jenkins_init_file }}"
+    regexp: '^{{ jenkins_https_crt_param }}='
+    insertafter: "^{{ jenkins_https_port_param }}"
+    line: '{{ jenkins_https_crt_param }}=$JENKINS_HOME/secrets/{{ jenkins_https_crt | basename }}'
+  register: jenkins_https_crt_config
+
+- name: Set HTTPS private key path in Jenkins config.
+  lineinfile:
+    dest: "{{ jenkins_init_file }}"
+    regexp: '^{{ jenkins_https_key_param }}='
+    insertafter: "^{{ jenkins_https_crt_param }}"
+    line: '{{ jenkins_https_key_param }}=$JENKINS_HOME/secrets/{{ jenkins_https_key | basename }}'
+  register: jenkins_https_key_config
+
 - name: Create custom init scripts directory.
   file:
     path: "{{ jenkins_home }}/init.groovy.d"
@@ -86,6 +110,17 @@
     - jenkins_proxy_host | length > 0
     - jenkins_proxy_port | length > 0
 
+- name: Copy HTTPS files to Jenkins controller
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dst }}"
+    mode: "{{ item.mode }}"
+    decrypt: "{{ item.decrypt }}"
+    owner: "{{ jenkins_process_user }}"
+    group: "{{ jenkins_process_group }}"
+  with_items: "{{ jenkins_https_files }}"
+  when: jenkins_https_port != -1
+
 - name: Trigger handlers immediately in case Jenkins was installed
   meta: flush_handlers
 
@@ -95,6 +130,9 @@
     (jenkins_users_config is defined and jenkins_users_config.changed)
     or (jenkins_init_prefix is defined and jenkins_init_prefix.changed)
     or (jenkins_http_config is defined and jenkins_http_config.changed)
+    or (jenkins_https_port_config is defined and jenkins_https_port_config.changed)
+    or (jenkins_https_crt_config is defined and jenkins_https_crt_config.changed)
+    or (jenkins_https_key_config is defined and jenkins_https_key_config.changed)
     or (jenkins_home_config is defined and jenkins_home_config.changed)
     or (jenkins_proxy_config is defined and jenkins_proxy_config.changed)
   tags: ['skip_ansible_lint']

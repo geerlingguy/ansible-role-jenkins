@@ -14,11 +14,14 @@ jenkins_connection_retries: 60
 jenkins_home: /var/lib/jenkins
 jenkins_hostname: localhost
 jenkins_http_port: 8080
+jenkins_https_port: -1
+jenkins_https_crt: jenkins.crt
+jenkins_https_key: jenkins.key
 jenkins_jar_location: /opt/jenkins-cli.jar
 jenkins_url_prefix: ""
 jenkins_options: ""
 jenkins_java_options: "-Djenkins.install.runSetupWizard=false"
-jenkins_args: '--prefix={{ jenkins_url_prefix }}'
+jenkins_args: "--prefix={{ jenkins_url_prefix }} --httpsPort={{ jenkins_https_port }} --httpsCertificate=${{ jenkins_https_crt_param }} --httpsPrivateKey=${{ jenkins_https_key_param }}"
 
 # Plugin list can use the plugin name, or a name/version dict.
 jenkins_plugins: []
@@ -53,6 +56,16 @@ jenkins_init_changes:
   - option: "JENKINS_PORT"
     value: "{{ jenkins_http_port }}"
 
+
+jenkins_https_files:
+  - src: "{{ jenkins_https_crt }}"
+    dst: "{{ jenkins_home }}/secrets/{{ jenkins_https_crt | basename }}"
+    mode: '0444'
+    decrypt: no
+  - src: "{{ jenkins_https_key }}"
+    dst: "{{ jenkins_home }}/secrets/{{ jenkins_https_key | basename }}"
+    mode: '0400'
+    decrypt: yes
 
 # If Jenkins is behind a proxy, configure this.
 jenkins_proxy_host: ""
