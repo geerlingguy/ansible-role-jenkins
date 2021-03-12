@@ -18,6 +18,7 @@ jenkins_jar_location: /opt/jenkins-cli.jar
 jenkins_url_prefix: ""
 jenkins_options: ""
 jenkins_java_options: "-Djenkins.install.runSetupWizard=false"
+jenkins_args: '--prefix={{ jenkins_url_prefix }}'
 
 # Plugin list can use the plugin name, or a name/version dict.
 jenkins_plugins: []
@@ -41,7 +42,9 @@ jenkins_process_group: "{{ jenkins_process_user }}"
 jenkins_init_changes:
   - option: "JENKINS_OPTS"
     value: "{{ jenkins_options }}"
-  - option: "JAVA_OPTS"
+  - option: "JENKINS_ARGS"
+    value: "{{ jenkins_args }}"
+  - option: "{{ jenkins_java_options_env_var }}"
     value: "{{ jenkins_java_options }}"
   - option: "JENKINS_HOME"
     value: "{{ jenkins_home }}"
