@@ -49,13 +49,22 @@
     mode: u+rwx
     follow: true
 
-- name: Immediately restart Jenkins on init config changes.
-  systemd:
-    name: jenkins
-    state: restarted
-    daemon_reload: true
-  when: jenkins_init_prefix.changed
-  tags: ['skip_ansible_lint']
+- name: Set the Jenkins home directory.
+  lineinfile:
+    dest: "{{ jenkins_init_file }}"
+    regexp: '^JENKINS_HOME=.*'
+    line: 'JENKINS_HOME={{ jenkins_home }}'
+    mode: 0644
+  register: jenkins_home_config
+
+- name: Set HTTP port in Jenkins config.
+  lineinfile:
+    backrefs: true
+    dest: "{{ jenkins_init_file }}"
+    regexp: '^{{ jenkins_http_port_param }}='
+    line: '{{ jenkins_http_port_param }}={{ jenkins_http_port }}'
+    mode: 0644
+  register: jenkins_http_config
 
 - name: Create custom init scripts directory.
   file:
@@ -84,6 +93,7 @@
   service: name=jenkins state=restarted
   when: >
     (jenkins_users_config is defined and jenkins_users_config.changed)
+    or (jenkins_init_prefix is defined and jenkins_init_prefix.changed)
     or (jenkins_http_config is defined and jenkins_http_config.changed)
     or (jenkins_home_config is defined and jenkins_home_config.changed)
     or (jenkins_proxy_config is defined and jenkins_proxy_config.changed)
