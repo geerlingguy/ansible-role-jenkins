@@ -61,3 +61,4 @@
   until: plugin_result is success
   retries: 3
   delay: 2
+  tags: molecule-idempotence-notest
