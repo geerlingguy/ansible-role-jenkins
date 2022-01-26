@@ -23,6 +23,7 @@
     mode: 0755
 
 - name: Download current plugin updates from Jenkins update site.
+  become: True
   get_url:
     url: "{{ jenkins_updates_url }}/update-center.json"
     dest: "{{ jenkins_home }}/updates/default.json"
