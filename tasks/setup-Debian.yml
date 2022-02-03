@@ -16,9 +16,14 @@
   apt_repository:
     repo: "{{ jenkins_repo_url }}"
     state: present
-    update_cache: true
   when: jenkins_repo_url | default(false)
+  register: add_jenkins_apt
   tags: ['skip_ansible_lint']
+
+- name: Refresh Jenkins apt repository.
+  apt:
+    update_cache: yes
+  when: add_jenkins_apt.changed
 
 - name: Download specific Jenkins version.
   get_url:
