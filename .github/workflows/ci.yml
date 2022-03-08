@@ -41,7 +41,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - distro: centos8
+          - distro: rockylinux8
             playbook: converge.yml
           - distro: ubuntu1804
             playbook: converge.yml
