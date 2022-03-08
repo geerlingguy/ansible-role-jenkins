@@ -19,3 +19,6 @@
     - name: Check if Jenkins is running.
       uri:
         url: "http://127.0.0.1:8080/"
+        status_code:
+          - 200
+          - 403
