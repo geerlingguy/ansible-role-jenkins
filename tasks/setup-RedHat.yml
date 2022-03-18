@@ -4,9 +4,17 @@
     name:
       - curl
       - initscripts
-      - "{{ 'libselinux-python' if ansible_python['version']['major'] < 3 else 'python3-libselinux' }}"
     state: present
 
+- name: Ensure libselinux for python is installed.
+  package:
+    name:
+      - "{{ 'libselinux-python' if ansible_python['version']['major'] < 3 else 'python3-libselinux' }}"
+    state: present
+  when: (ansible_distribution == 'Amazon' and ansible_python['version']['major'] > 3) or
+        (ansible_distribution == 'Amazon' and ansible_distribution_major_version < 2) or
+        (ansible_distribution != 'Amazon')
+        
 - name: Ensure Jenkins repo is installed.
   get_url:
     url: "{{ jenkins_repo_url }}"
