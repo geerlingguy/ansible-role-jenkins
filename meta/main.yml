@@ -22,6 +22,9 @@ galaxy_info:
     - name: Ubuntu
       versions:
         - all
+    - name: Amazon
+      versions:
+        - 2
   galaxy_tags:
     - development
     - packaging
