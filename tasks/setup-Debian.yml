@@ -11,6 +11,10 @@
   apt_key:
     url: "{{ jenkins_repo_key_url }}"
     state: present
+  register: get_result
+  until: get_result is success
+  retries: 3
+  delay: 2
 
 - name: Add Jenkins apt repository.
   apt_repository:
@@ -18,12 +22,20 @@
     state: present
     update_cache: true
   when: jenkins_repo_url | default(false)
+  register: get_result
+  until: get_result is success
+  retries: 3
+  delay: 2
   tags: ['skip_ansible_lint']
 
 - name: Download specific Jenkins version.
   get_url:
     url: "{{ jenkins_pkg_url }}/jenkins_{{ jenkins_version }}_all.deb"
     dest: "/tmp/jenkins_{{ jenkins_version }}_all.deb"
+  register: get_result
+  until: get_result is success
+  retries: 3
+  delay: 2
   when: jenkins_version is defined
 
 - name: Check if we downloaded a specific version of Jenkins.
