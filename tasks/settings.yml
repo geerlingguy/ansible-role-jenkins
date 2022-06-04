@@ -1,4 +1,16 @@
 ---
+- name: Check if jenkins_init_folder exists.
+  stat:
+    path: "{{ jenkins_init_folder }}"
+  register: jenkins_init_folder_stat
+
+- name: Ensure jenkins_init_file folder exists.
+  file:
+    path: "{{ jenkins_init_folder }}"
+    state: directory
+    mode: 0644
+  when: not jenkins_init_folder_stat.stat.exists
+
 - name: Check if jenkins_init_file exists.
   stat:
     path: "{{ jenkins_init_file }}"
@@ -11,12 +23,18 @@
     mode: 0644
   when: not jenkins_init_file_stat.stat.exists
 
+- name: Populate jenkins_init_file with service tag.
+  copy:
+    dest: "{{ jenkins_init_file }}"
+    content: "[Service]"
+  when: not jenkins_init_file_stat.stat.exists
+
 - name: Modify variables in init file.
   lineinfile:
     dest: "{{ jenkins_init_file }}"
-    insertafter: '^{{ item.option }}='
-    regexp: '^{{ item.option }}=\"\${{ item.option }} '
-    line: '{{ item.option }}="${{ item.option }} {{ item.value }}"'
+    insertafter: '^Environment="{{ item.option }}='
+    regexp: '^Environment="{{ item.option }} '
+    line: 'Environment="{{ item.option }}={{ item.value }}"'
     state: present
     mode: 0644
   with_items: "{{ jenkins_init_changes }}"
@@ -31,27 +49,13 @@
     mode: u+rwx
     follow: true
 
-- name: Set the Jenkins home directory.
-  lineinfile:
-    dest: "{{ jenkins_init_file }}"
-    regexp: '^JENKINS_HOME=.*'
-    line: 'JENKINS_HOME={{ jenkins_home }}'
-    mode: 0644
-  register: jenkins_home_config
-
 - name: Immediately restart Jenkins on init config changes.
-  service: name=jenkins state=restarted
+  systemd:
+    name: jenkins
+    state: restarted
+    daemon_reload: true
   when: jenkins_init_prefix.changed
   tags: ['skip_ansible_lint']
-
-- name: Set HTTP port in Jenkins config.
-  lineinfile:
-    backrefs: true
-    dest: "{{ jenkins_init_file }}"
-    regexp: '^{{ jenkins_http_port_param }}='
-    line: '{{ jenkins_http_port_param }}={{ jenkins_http_port }}'
-    mode: 0644
-  register: jenkins_http_config
 
 - name: Create custom init scripts directory.
   file:
