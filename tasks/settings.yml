@@ -4,7 +4,7 @@
     path: "{{ jenkins_init_folder }}"
   register: jenkins_init_folder_stat
 
-- name: Ensure jenkins_init_file folder exists.
+- name: Ensure jenkins_init_folder exists.
   file:
     path: "{{ jenkins_init_folder }}"
     state: directory
