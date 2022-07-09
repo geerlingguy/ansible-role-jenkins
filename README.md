@@ -28,6 +28,10 @@ The Jenkins home directory which, amongst others, is being used for storing arti
 
 The HTTP port for Jenkins' web interface.
 
+    jenkins_listen_address: 0.0.0.0
+
+The IP address Jenkins listens on for HTTP requests. Default is all interfaces (0.0.0.0).
+
     jenkins_admin_username: admin
     jenkins_admin_password: admin
 

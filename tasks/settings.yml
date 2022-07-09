@@ -53,6 +53,15 @@
     mode: 0644
   register: jenkins_http_config
 
+- name: Set listen address in Jenkins config.
+  lineinfile:
+    backrefs: true
+    dest: "{{ jenkins_init_file }}"
+    regexp: '^{{ jenkins_listen_address_param }}='
+    line: '{{ jenkins_listen_address_param }}=\"{{ jenkins_listen_address | default("0.0.0.0") }}\"'
+    mode: 0644
+  register: jenkins_http_config
+
 - name: Create custom init scripts directory.
   file:
     path: "{{ jenkins_home }}/init.groovy.d"
