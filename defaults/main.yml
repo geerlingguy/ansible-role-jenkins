@@ -16,6 +16,7 @@ jenkins_hostname: localhost
 jenkins_http_port: 8080
 jenkins_jar_location: /opt/jenkins-cli.jar
 jenkins_url_prefix: ""
+jenkins_options: ""
 jenkins_java_options: "-Djenkins.install.runSetupWizard=false"
 
 # Plugin list can use the plugin name, or a name/version dict.
@@ -38,10 +39,17 @@ jenkins_process_user: jenkins
 jenkins_process_group: "{{ jenkins_process_user }}"
 
 jenkins_init_changes:
-  - option: "JENKINS_ARGS"
-    value: "--prefix={{ jenkins_url_prefix }}"
-  - option: "{{ jenkins_java_options_env_var }}"
+  - option: "JENKINS_OPTS"
+    value: "{{ jenkins_options }}"
+  - option: "JAVA_OPTS"
     value: "{{ jenkins_java_options }}"
+  - option: "JENKINS_HOME"
+    value: "{{ jenkins_home }}"
+  - option: "JENKINS_PREFIX"
+    value: "{{ jenkins_url_prefix }}"
+  - option: "JENKINS_PORT"
+    value: "{{ jenkins_http_port }}"
+
 
 # If Jenkins is behind a proxy, configure this.
 jenkins_proxy_host: ""
@@ -49,3 +57,6 @@ jenkins_proxy_port: ""
 jenkins_proxy_noproxy:
   - "127.0.0.1"
   - "localhost"
+
+jenkins_init_folder: "/etc/systemd/system/jenkins.service.d"
+jenkins_init_file: "{{ jenkins_init_folder }}/override.conf"
