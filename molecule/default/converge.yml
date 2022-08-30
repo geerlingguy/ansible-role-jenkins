@@ -10,10 +10,10 @@
       changed_when: false
 
     - name: Set the java_packages variable (Debian).
-       set_fact:
-         java_packages:
-           - openjdk-17-jdk
-       when: ansible_os_family == 'Debian'
+      set_fact:
+        java_packages:
+          - openjdk-17-jdk
+      when: ansible_os_family == 'Debian'
 
   roles:
     - role: geerlingguy.java
