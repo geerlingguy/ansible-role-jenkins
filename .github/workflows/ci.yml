@@ -43,19 +43,19 @@ jobs:
         include:
           - distro: rockylinux8
             playbook: converge.yml
-          - distro: ubuntu1804
+          - distro: ubuntu2204
             playbook: converge.yml
-          - distro: debian10
+          - distro: debian11
             playbook: converge.yml
 
           # Test other role features.
-          - distro: ubuntu1804
+          - distro: ubuntu2204
             playbook: http-port.yml
-          - distro: ubuntu1804
+          - distro: ubuntu2204
             playbook: prefix.yml
-          - distro: ubuntu1804
+          - distro: ubuntu2204
             playbook: plugins-with-home.yml
-          - distro: centos7
+          - distro: rockylinux8
             playbook: jenkins-version.yml
 
     steps:
