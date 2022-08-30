@@ -12,10 +12,9 @@
     jenkins_plugin_timeout: 120
 
   pre_tasks:
-    - name: Update apt cache.
-      apt: update_cache=yes cache_valid_time=600
-      when: ansible_os_family == 'Debian'
-      changed_when: false
+    - include_tasks: debian-setup.yml
+      when:
+        - ansible_distribution == 'Debian'
 
   roles:
     - geerlingguy.java
