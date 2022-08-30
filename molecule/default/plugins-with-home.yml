@@ -7,9 +7,15 @@
     jenkins_plugins:
       - ghprb
       - greenballs
-      - {name: cloudbees-folder, version: 6.11}
+      - {name: cloudbees-folder, version: 6.18}
     jenkins_home: /tmp/jenkins
     jenkins_plugin_timeout: 120
+
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=yes cache_valid_time=600
+      when: ansible_os_family == 'Debian'
+      changed_when: false
 
   roles:
     - geerlingguy.java
