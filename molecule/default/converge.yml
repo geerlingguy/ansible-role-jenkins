@@ -5,8 +5,7 @@
 
   pre_tasks:
     - include_tasks: debian-setup.yml
-      when:
-        - ansible_os_family == 'Debian'
+      when: ansible_os_family == 'Debian'
 
   roles:
     - role: geerlingguy.java

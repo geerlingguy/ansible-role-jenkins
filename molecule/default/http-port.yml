@@ -7,15 +7,7 @@
     jenkins_http_port: 8081
 
   pre_tasks:
-    - name: Update apt cache.
-      apt: update_cache=yes cache_valid_time=600
-      when: ansible_os_family == 'Debian'
-      changed_when: false
-
-    - name: Set the java_packages variable (Debian).
-      set_fact:
-        java_packages:
-          - openjdk-17-jdk
+    - include_tasks: debian-setup.yml
       when: ansible_os_family == 'Debian'
 
   roles:

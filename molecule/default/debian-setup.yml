@@ -3,7 +3,7 @@
   apt: update_cache=yes cache_valid_time=600
   changed_when: false
 
-- name: Set the java_packages variable (Debian).
+- name: Set the java_packages variable.
   set_fact:
     java_packages:
       - openjdk-17-jdk
