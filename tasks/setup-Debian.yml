@@ -8,11 +8,9 @@
     state: present
 
 - name: Add Jenkins apt repository key.
-  ansible.builtin.get_url:
+  apt_key:
     url: "{{ jenkins_repo_key_url }}"
-    dest: /etc/apt/trusted.gpg.d/jenkins.gpg
-    mode: '0644'
-    force: true
+    state: present
 
 - name: Add Jenkins apt repository.
   apt_repository:
