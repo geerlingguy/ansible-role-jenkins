@@ -18,10 +18,11 @@ jenkins_https_port: -1
 jenkins_https_crt: jenkins.crt
 jenkins_https_key: jenkins.key
 jenkins_jar_location: /opt/jenkins-cli.jar
+jenkins_keystore_pass: ""
 jenkins_url_prefix: ""
 jenkins_options: ""
 jenkins_java_options: "-Djenkins.install.runSetupWizard=false"
-jenkins_args: "--prefix={{ jenkins_url_prefix }} --httpsPort={{ jenkins_https_port }} --httpsCertificate=${{ jenkins_https_crt_param }} --httpsPrivateKey=${{ jenkins_https_key_param }}"
+jenkins_args: "--prefix={{ jenkins_url_prefix }} --httpsPort={{ jenkins_https_port }}"
 
 # Plugin list can use the plugin name, or a name/version dict.
 jenkins_plugins: []
@@ -45,8 +46,6 @@ jenkins_process_group: "{{ jenkins_process_user }}"
 jenkins_init_changes:
   - option: "JENKINS_OPTS"
     value: "{{ jenkins_options }}"
-  - option: "JENKINS_ARGS"
-    value: "{{ jenkins_args }}"
   - option: "{{ jenkins_java_options_env_var }}"
     value: "{{ jenkins_java_options }}"
   - option: "JENKINS_HOME"
@@ -56,16 +55,24 @@ jenkins_init_changes:
   - option: "JENKINS_PORT"
     value: "{{ jenkins_http_port }}"
 
+# If using https, these get added to the override.conf
+jenkins_init_https_changes:
+  - option: "JENKINS_HTTPS_PORT"
+    value: "{{ jenkins_https_port }}"
+  - option: "JENKINS_HTTPS_KEYSTORE"
+    value: "{{ jenkins_home }}/secrets/jenkins-https-keystore.p7b"
+  - option: "JENKINS_HTTPS_KEYSTORE_PASSWORD"
+    value: "{{ jenkins_keystore_pass }}"
 
 jenkins_https_files:
   - src: "{{ jenkins_https_crt }}"
     dst: "{{ jenkins_home }}/secrets/{{ jenkins_https_crt | basename }}"
     mode: '0444'
-    decrypt: no
+    decrypt: false
   - src: "{{ jenkins_https_key }}"
     dst: "{{ jenkins_home }}/secrets/{{ jenkins_https_key | basename }}"
     mode: '0400'
-    decrypt: yes
+    decrypt: true
 
 # If Jenkins is behind a proxy, configure this.
 jenkins_proxy_host: ""
