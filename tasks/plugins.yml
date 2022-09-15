@@ -23,12 +23,17 @@
     mode: 0755
 
 - name: Download current plugin updates from Jenkins update site.
+  environment:
+    http_proxy: "{{ jenkins_proxy_host }}:{{ jenkins_proxy_port }}"
+    https_proxy: "{{ jenkins_proxy_host }}:{{ jenkins_proxy_port }}"
+    no_proxy: "{{ jenkins_proxy_noproxy | join(',') }}"
   get_url:
     url: "{{ jenkins_updates_url }}/update-center.json"
     dest: "{{ jenkins_home }}/updates/default.json"
     owner: jenkins
     group: jenkins
     mode: 0440
+    use_proxy: "{{ 'yes' if jenkins_proxy_host != '' else 'no' }}"
   changed_when: false
   register: get_result
   until: get_result is success
