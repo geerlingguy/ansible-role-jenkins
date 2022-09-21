@@ -5,6 +5,7 @@
       - curl
       - apt-transport-https
       - gnupg
+      - openjdk-8-jdk
     state: present
 
 - name: Add Jenkins apt repository key.
