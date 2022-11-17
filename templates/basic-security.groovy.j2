@@ -23,6 +23,9 @@ else {
     instance.setSecurityRealm(hudsonRealm)
 
     def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
+    {% if jenkins_allow_anonymous_read not true %}
+    strategy.setAllowAnonymousRead(false)
+    {% endif %}
     instance.setAuthorizationStrategy(strategy)
     instance.save()
 }
