@@ -17,8 +17,6 @@
   post_tasks:
     - name: Check installed version of Jenkins.
       command: rpm -q jenkins
-      args:
-        warn: false
       changed_when: false
       register: jenkins_rpm_version
       tags: ['skip_ansible_lint']
