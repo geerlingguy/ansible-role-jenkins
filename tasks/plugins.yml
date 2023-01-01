@@ -24,7 +24,7 @@
 
 - name: Download current plugin updates from Jenkins update site.
   get_url:
-    url: "{{ jenkins_updates_url }}/update-center.json"
+    url: "{{ jenkins_updates_url }}/update-center.actual.json"
     dest: "{{ jenkins_home }}/updates/default.json"
     owner: jenkins
     group: jenkins
@@ -34,11 +34,6 @@
   until: get_result is success
   retries: 3
   delay: 2
-
-- name: Remove first and last line from json file.
-  replace:  # noqa 208
-    path: "{{ jenkins_home }}/updates/default.json"
-    regexp: "1d;$d"
 
 - name: Install Jenkins plugins using password.
   jenkins_plugin:
