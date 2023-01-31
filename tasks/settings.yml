@@ -40,13 +40,32 @@
   with_items: "{{ jenkins_init_changes }}"
   register: jenkins_init_prefix
 
+- name: Ensure user and group are properly sets on in init file.
+  lineinfile:
+    dest: "{{ jenkins_init_file }}"
+    line: "{{ item }}"
+    state: present
+    mode: 0644
+  with_items:
+    - "User={{ jenkins_process_user }}"
+    - "Group={{ jenkins_process_group }}"
+  register: jenkins_init_prefix
+
 - name: Ensure jenkins_home {{ jenkins_home }} exists.
   file:
     path: "{{ jenkins_home }}"
     state: directory
-    owner: jenkins
-    group: jenkins
+    owner: "{{ jenkins_process_user }}"
+    group: "{{ jenkins_process_group }}"
     mode: u+rwx
+    follow: true
+
+- name: Ensure owner and group are properly sets on the cache folder.
+  file:
+    path: /var/cache/jenkins
+    state: directory
+    owner: "{{ jenkins_process_user }}"
+    group: "{{ jenkins_process_group }}"
     follow: true
 
 - name: Immediately restart Jenkins on init config changes.
