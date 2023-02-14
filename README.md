@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/geerlingguy/ansible-role-jenkins/workflows/CI/badge.svg?event=push)](https://github.com/geerlingguy/ansible-role-jenkins/actions?query=workflow%3ACI)
 
-Installs Jenkins CI on RHEL/CentOS and Debian/Ubuntu servers.
+Installs Jenkins CI on RHEL/CentOS, Debian/Ubuntu, and openSUSE/SUSE servers.
 
 ## Requirements
 
