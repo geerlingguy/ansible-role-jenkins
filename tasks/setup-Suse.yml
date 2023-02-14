@@ -1,0 +1,41 @@
+---
+- name: Ensure dependencies are installed.
+  zypper:
+    name:
+      - curl
+      - insserv-compat
+    state: present
+
+- name: Ensure Jenkins repo is installed.
+  zypper_repository:
+    name: jenkins
+    repo: "{{ jenkins_repo_url }}"
+    state: present
+    overwrite_multiple: true
+    auto_import_keys: true
+  when: jenkins_repo_url | default(false)
+
+- name: Download specific Jenkins version.
+  get_url:
+    url: "{{ jenkins_pkg_url }}/jenkins-{{ jenkins_version }}-1.2.noarch.rpm"
+    dest: "/tmp/jenkins-{{ jenkins_version }}-1.2.noarch.rpm"
+  when: jenkins_version is defined
+
+- name: Check if we downloaded a specific version of Jenkins.
+  stat:
+    path: "/tmp/jenkins-{{ jenkins_version }}-1.2.noarch.rpm"
+  register: specific_version
+  when: jenkins_version is defined
+
+- name: Install our specific version of Jenkins.
+  zypper:
+    name: "/tmp/jenkins-{{ jenkins_version }}-1.2.noarch.rpm"
+    state: present
+  when: jenkins_version is defined and specific_version.stat.exists
+  notify: configure default users
+
+- name: Ensure Jenkins is installed.
+  zypper:
+    name: jenkins
+    state: "{{ jenkins_package_state }}"
+  notify: configure default users

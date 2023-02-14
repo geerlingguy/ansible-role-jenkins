@@ -7,8 +7,18 @@
     - include_tasks: debian-setup.yml
       when: ansible_os_family == 'Debian'
 
+    - name: Install Jenkins dependencies
+      community.general.zypper:
+        name:
+          - dejavu-fonts
+          - fontconfig
+          - java-11-openjdk
+        state: present
+      when: ansible_os_family == "Suse"
+
   roles:
     - role: geerlingguy.java
+      when: ansible_os_family != "Suse"
     - role: geerlingguy.jenkins
 
   post_tasks:

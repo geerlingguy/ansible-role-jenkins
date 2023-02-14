@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/geerlingguy/ansible-role-jenkins/workflows/CI/badge.svg?event=push)](https://github.com/geerlingguy/ansible-role-jenkins/actions?query=workflow%3ACI)
 
-Installs Jenkins CI on RHEL/CentOS and Debian/Ubuntu servers.
+Installs Jenkins CI on RHEL/CentOS, Debian/Ubuntu, and openSUSE/SUSE servers.
 
 ## Requirements
 
@@ -95,6 +95,10 @@ The default repositories (listed below) can be overridden as well.
     # For Debian/Ubuntu:
     jenkins_repo_url: deb https://pkg.jenkins.io/debian{{ '-stable' if (jenkins_prefer_lts | bool) else '' }} binary/
     jenkins_repo_key_url: https://pkg.jenkins.io/debian{{ '-stable' if (jenkins_prefer_lts | bool) else '' }}/jenkins.io.key
+
+    # For Suse:
+    jenkins_repo_url: https://pkg.jenkins.io/opensuse{{ '-stable' if (jenkins_prefer_lts | bool) else '' }}
+    jenkins_repo_key_url: https://pkg.jenkins.io/opensuse{{ '-stable' if (jenkins_prefer_lts | bool) else '' }}/jenkins.io.key
 
 It is also possible to prevent the repo file from being added by setting  `jenkins_repo_url: ''`. This is useful if, for example, you sign your own packages or run internal package management (e.g. Spacewalk).
 

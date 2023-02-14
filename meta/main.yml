@@ -22,6 +22,9 @@ galaxy_info:
     - name: Ubuntu
       versions:
         - all
+    - name: openSUSE
+      versions:
+        - 15
   galaxy_tags:
     - development
     - packaging
