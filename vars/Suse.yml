@@ -1,0 +1,4 @@
+---
+__jenkins_repo_url: https://pkg.jenkins.io/opensuse{{ '-stable' if (jenkins_prefer_lts | bool) else '' }}
+__jenkins_repo_key_url: https://pkg.jenkins.io/opensuse{{ '-stable' if (jenkins_prefer_lts | bool) else '' }}/jenkins.io.key
+__jenkins_pkg_url: https://mirrors.jenkins.io/opensuse/
