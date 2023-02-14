@@ -5,12 +5,13 @@ name: CI
   push:
     branches:
       - master
-  schedule:
-    - cron: "30 7 * * 2"
+      - opensuse_dev
+  #schedule:
+  #  - cron: "30 7 * * 2"
 
 defaults:
   run:
-    working-directory: 'geerlingguy.jenkins'
+    working-directory: 'kraker.jenkins'
 
 jobs:
 
@@ -21,7 +22,7 @@ jobs:
       - name: Check out the codebase.
         uses: actions/checkout@v2
         with:
-          path: 'geerlingguy.jenkins'
+          path: 'kraker.jenkins'
 
       - name: Set up Python 3.
         uses: actions/setup-python@v2
@@ -41,28 +42,30 @@ jobs:
     strategy:
       matrix:
         include:
-          - distro: rockylinux8
+          - distro: geerlingguy/docker-rockylinux8-ansible
             playbook: converge.yml
-          - distro: ubuntu2204
+          - distro: geerlingguy/docker-ubuntu2204-ansible
             playbook: converge.yml
-          - distro: debian11
+          - distro: geerlingguy/docker-debian11-ansible
+            playbook: converge.yml
+          - distro: krakerdev/opensuse-ansible
             playbook: converge.yml
 
           # Test other role features.
-          - distro: ubuntu2204
+          - distro: geerlingguy/docker-ubuntu2204-ansible
             playbook: http-port.yml
-          - distro: ubuntu2204
+          - distro: geerlingguy/docker-ubuntu2204-ansible
             playbook: prefix.yml
-          - distro: ubuntu2204
+          - distro: geerlingguy/docker-ubuntu2204-ansible
             playbook: plugins-with-home.yml
-          - distro: rockylinux8
+          - distro: geerlingguy/docker-rockylinux8-ansible
             playbook: jenkins-version.yml
 
     steps:
       - name: Check out the codebase.
         uses: actions/checkout@v2
         with:
-          path: 'geerlingguy.jenkins'
+          path: 'kraker.jenkins'
 
       - name: Set up Python 3.
         uses: actions/setup-python@v2
