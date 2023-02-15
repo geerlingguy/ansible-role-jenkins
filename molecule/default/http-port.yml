@@ -12,7 +12,7 @@
 
   roles:
     - geerlingguy.java
-    - geerlingguy.jenkins
+    - kraker.jenkins
 
   post_tasks:
     - name: Ensure Jenkins is running on the specified port.

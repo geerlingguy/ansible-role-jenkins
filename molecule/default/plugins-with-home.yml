@@ -16,7 +16,7 @@
 
   roles:
     - geerlingguy.java
-    - geerlingguy.jenkins
+    - kraker.jenkins
 
   post_tasks:
     - name: Verify JENKINS_HOME is correct.
