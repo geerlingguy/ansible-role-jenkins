@@ -19,7 +19,7 @@
   roles:
     - role: geerlingguy.java
       when: ansible_os_family != "Suse"
-    - role: geerlingguy.jenkins
+    - role: kraker.jenkins
 
   post_tasks:
     - name: Check if Jenkins is running.
