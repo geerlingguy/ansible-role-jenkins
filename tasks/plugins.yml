@@ -22,6 +22,15 @@
     group: jenkins
     mode: 0755
 
+- name: Set environment variables if proxy is set
+  set_fact:
+    proxy_env:
+      http_proxy: "{{ jenkins_proxy_host }}:{{ jenkins_proxy_port }}"
+      https_proxy: "{{ jenkins_proxy_host }}:{{ jenkins_proxy_port }}"
+  when: 
+    - jenkins_proxy_host != ""
+    - jenkins_proxy_port != ""
+
 - name: Download current plugin updates from Jenkins update site.
   get_url:
     url: "{{ jenkins_updates_url }}/update-center.json"
@@ -34,6 +43,7 @@
   until: get_result is success
   retries: 3
   delay: 2
+  environment: "{{ proxy_env | default(omit) }}"
 
 - name: Remove first and last line from json file.
   replace:  # noqa 208
