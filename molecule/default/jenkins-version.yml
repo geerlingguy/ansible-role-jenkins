@@ -4,7 +4,7 @@
   become: true
 
   vars:
-    jenkins_version: "2.346"
+    jenkins_version: "2.397"
 
   pre_tasks:
     - include_tasks: debian-setup.yml
