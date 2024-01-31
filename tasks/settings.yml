@@ -33,7 +33,7 @@
   lineinfile:
     dest: "{{ jenkins_init_file }}"
     insertafter: '^Environment="{{ item.option }}='
-    regexp: '^Environment="{{ item.option }} '
+    regexp: '^Environment="{{ item.option }}='
     line: 'Environment="{{ item.option }}={{ item.value }}"'
     state: present
     mode: 0644
