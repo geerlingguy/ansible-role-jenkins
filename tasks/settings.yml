@@ -29,6 +29,18 @@
     content: "[Service]"
   when: not jenkins_init_file_stat.stat.exists
 
+- name: Populate jenkins_init_file with jenkins_process_user/group
+  with_dict:
+    User: "{{ jenkins_process_user }}"
+    Group: "{{ jenkins_process_group }}"
+  ini_file:
+    path: "{{ jenkins_init_file }}"
+    section: Service
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+    no_extra_spaces: yes
+    state: "{{ 'absent' if item.value=='jenkins' else 'present' }}"
+
 - name: Modify variables in init file.
   lineinfile:
     dest: "{{ jenkins_init_file }}"
