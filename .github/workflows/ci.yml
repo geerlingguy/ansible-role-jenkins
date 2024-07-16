@@ -41,7 +41,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - distro: rockylinux8
+          - distro: rockylinux9
             playbook: converge.yml
           - distro: ubuntu2204
             playbook: converge.yml
@@ -55,7 +55,7 @@ jobs:
             playbook: prefix.yml
           - distro: ubuntu2204
             playbook: plugins-with-home.yml
-          - distro: rockylinux8
+          - distro: rockylinux9
             playbook: jenkins-version.yml
 
     steps:
