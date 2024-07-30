@@ -1,6 +1,6 @@
 ---
 - name: Ensure dependencies are installed.
-  package:
+  dnf:
     name:
       - curl
       - initscripts
