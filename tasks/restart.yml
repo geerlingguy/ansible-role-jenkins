@@ -1,0 +1,8 @@
+---
+- name: restart jenkins via service
+  service: name=jenkins state=restarted
+  when: jenkins_restart_behavior == 'service'
+
+- name: safe-restart jenkins via CLI
+  ansible.builtin.command: java -jar {{ jenkins_jar_location }} -auth {{ jenkins_admin_username }}:{{ jenkins_admin_password }} -s http://{{ jenkins_hostname }}:{{ jenkins_http_port }} safe-restart
+  when: jenkins_restart_behavior == 'safe-restart'

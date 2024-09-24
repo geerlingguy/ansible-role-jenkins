@@ -128,6 +128,10 @@ Changes made to the Jenkins systemd override.conf file; the default set of chang
 
 If you are running Jenkins behind a proxy server, configure these options appropriately. Otherwise Jenkins will be configured with a direct Internet connection.
 
+    jenkins_restart_method: `service`
+
+You can change `jenkins_restart_method` to `safe-restart`, if you want to make sure all running jobs on the Jenkins server are completed. Otherwise `service` will restart the Jenkins systemd-service.
+
 ## Dependencies
 
 None.
