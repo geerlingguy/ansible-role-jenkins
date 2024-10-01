@@ -2,9 +2,10 @@
 # jenkins_plugin module doesn't support password files.
 - name: Get Jenkins admin password from file.
   slurp:
-    src: "{{ jenkins_admin_password_file }}"
+    src: "{{ [jenkins_home, jenkins_admin_password_file] | join('/') }}"
   register: adminpasswordfile
   no_log: true
+  ignore_errors: true
   when: jenkins_admin_password_file | default(false)
   tags: ['skip_ansible_lint']
 

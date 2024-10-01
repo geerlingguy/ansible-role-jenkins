@@ -77,8 +77,15 @@
     - jenkins_proxy_host | length > 0
     - jenkins_proxy_port | length > 0
 
-- name: Trigger handlers immediately in case Jenkins was installed
-  meta: flush_handlers
+- name: configure default users
+  template:
+    src: basic-security.groovy.j2
+    dest: "{{ jenkins_home }}/init.groovy.d/basic-security.groovy"
+    owner: "{{ jenkins_process_user }}"
+    group: "{{ jenkins_process_group }}"
+    mode: 0775
+  no_log: true
+  register: jenkins_users_config
 
 - name: Immediately restart Jenkins on http or user changes.
   service: name=jenkins state=restarted
