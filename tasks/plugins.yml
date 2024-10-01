@@ -5,6 +5,7 @@
     src: "{{ [jenkins_home, jenkins_admin_password_file] | join('/') }}"
   register: adminpasswordfile
   no_log: true
+  ignore_errors: true
   when: jenkins_admin_password_file | default(false)
   tags: ['skip_ansible_lint']
 
