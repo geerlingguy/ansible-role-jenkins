@@ -41,6 +41,11 @@
   when: jenkins_version is defined and specific_version.stat.exists
   notify: configure default users
 
+- name: Ensure the Apt cache is up-to-date
+  apt:
+    update_cache: yes
+  when: jenkins_package_state == "latest"
+
 - name: Ensure Jenkins is installed.
   apt:
     name: jenkins
