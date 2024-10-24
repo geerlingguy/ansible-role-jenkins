@@ -52,6 +52,10 @@ Jenkins plugins to be installed automatically during provisioning. Defaults to e
 
 Whether Jenkins plugins to be installed should also install any plugin dependencies.
 
+    jenkins_plugin_update_dependencies: true
+
+Whether the dependencies of Jenkins plugins should be updated. Together with setting `jenkins_plugins_state` to `latest`, this will ensure that all your plugins and dependencies are up to date.
+
     jenkins_plugins_state: present
 
 Use `latest` to ensure all plugins are running the most up-to-date version. For any plugin that has a specific version set in `jenkins_plugins` list, state `present` will be used instead of `jenkins_plugins_state` value.
