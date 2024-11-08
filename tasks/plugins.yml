@@ -43,7 +43,7 @@
 - name: Create Jenkins API token for admin user if not present
   shell: |
     # Groovy script to generate API token for Jenkins admin user if not present
-    java -jar /var/jenkins_home/war/WEB-INF/jenkins-cli.jar -s http://localhost:8080 groovy = <<EOF
+    java -jar {{ jenkins_jar_location }} -s http://{{ jenkins_hostname }}:{{ jenkins_http_port }} groovy = <<EOF
     import hudson.security.*
     import jenkins.model.*
     import jenkins.security.*
