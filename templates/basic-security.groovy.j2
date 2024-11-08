@@ -16,6 +16,15 @@ if ("{{ jenkins_admin_username }}" in users_s) {
     def password = hudson.security.HudsonPrivateSecurityRealm.Details.fromPlainPassword('{{ jenkins_admin_password }}')
     user.addProperty(password)
 
+    if (apiTokenProperty == null) {
+        println "No API token found. Generating a new API token..."
+        def result = apiTokenProperty.tokenStore.generateNewToken('defaultTokenName')
+        // Save the API token to a file for later use
+        new File("/tmp/jenkins_api_token").text = result.getTokenValue()
+    } else {
+        println "API token already exists."
+    }
+
     user.save()
 }
 else {
@@ -29,6 +38,15 @@ else {
     instance.save()
 
     def user = hudson.model.User.get('{{ jenkins_admin_username }}')
+
+    if (apiTokenProperty == null) {
+        println "No API token found. Generating a new API token..."
+        def result = apiTokenProperty.tokenStore.generateNewToken('defaultTokenName')
+        // Save the API token to a file for later use
+        new File("/tmp/jenkins_api_token").text = result.getTokenValue()
+    } else {
+        println "API token already exists."
+    }
 
     user.save()
 }
