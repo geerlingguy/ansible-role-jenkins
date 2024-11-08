@@ -8,6 +8,11 @@
   when: jenkins_admin_password_file | default(false)
   tags: ['skip_ansible_lint']
 
+- name: Retrieve Jenkins API token from file
+  ansible.builtin.slurp:
+    src: /tmp/jenkins_api_token
+  register: api_token_file
+
 - name: Set Jenkins admin password fact.
   set_fact:
     jenkins_admin_password: "{{ adminpasswordfile['stdout'] | default(jenkins_admin_password) }}"
@@ -41,12 +46,12 @@
     regexp: "1d;$d"
 
 - name: Install Jenkins plugins using password.
-  jenkins_plugin:
+  webfx.general.jenkins_plugin:
     name: "{{ item.name | default(item) }}"
     version: "{{ item.version | default(omit) }}"
     jenkins_home: "{{ jenkins_home }}"
     url_username: "{{ jenkins_admin_username }}"
-    url_password: "{{ jenkins_admin_password }}"
+    url_password: "{{ api_token_file['content'] | b64decode if api_token_file['content'] else jenkins_admin_password }}"
     state: "{{ 'present' if item.version is defined else jenkins_plugins_state }}"
     timeout: "{{ jenkins_plugin_timeout }}"
     updates_expiration: "{{ jenkins_plugin_updates_expiration }}"

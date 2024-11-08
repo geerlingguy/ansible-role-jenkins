@@ -1,6 +1,7 @@
 #!groovy
 import hudson.security.*
 import jenkins.model.*
+import jenkins.security.*
 
 def instance = Jenkins.getInstance()
 def hudsonRealm = new HudsonPrivateSecurityRealm(false)
@@ -14,6 +15,14 @@ if ("{{ jenkins_admin_username }}" in users_s) {
     def user = hudson.model.User.get('{{ jenkins_admin_username }}');
     def password = hudson.security.HudsonPrivateSecurityRealm.Details.fromPlainPassword('{{ jenkins_admin_password }}')
     user.addProperty(password)
+
+    def apiTokenProperty = user.getProperty(ApiTokenProperty.class)
+    if (apiTokenProperty == null) {
+        println "No API token found. Generating a new API token..."
+        def result = apiTokenProperty.tokenStore.generateNewToken(tokenName)
+        new File("/tmp/jenkins_api_token").text = apiToken
+    }
+
     user.save()
 }
 else {
@@ -25,4 +34,15 @@ else {
     def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
     instance.setAuthorizationStrategy(strategy)
     instance.save()
+
+    def user = hudson.model.User.get('{{ jenkins_admin_username }}')
+
+    def apiTokenProperty = user.getProperty(ApiTokenProperty.class)
+    if (apiTokenProperty == null) {
+        println "No API token found. Generating a new API token..."
+        def result = apiTokenProperty.tokenStore.generateNewToken(tokenName)
+        new File("/tmp/jenkins_api_token").text = apiToken
+    }
+
+    user.save()
 }
