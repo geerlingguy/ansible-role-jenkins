@@ -19,8 +19,6 @@ if ("{{ jenkins_admin_username }}" in users_s) {
     if (apiTokenProperty == null) {
         println "No API token found. Generating a new API token..."
         def result = apiTokenProperty.tokenStore.generateNewToken('defaultTokenName')
-        // Save the API token to a file for later use
-        new File("/tmp/jenkins_api_token").text = result.getTokenValue()
     } else {
         println "API token already exists."
     }
@@ -42,8 +40,6 @@ else {
     if (apiTokenProperty == null) {
         println "No API token found. Generating a new API token..."
         def result = apiTokenProperty.tokenStore.generateNewToken('defaultTokenName')
-        // Save the API token to a file for later use
-        new File("/tmp/jenkins_api_token").text = result.getTokenValue()
     } else {
         println "API token already exists."
     }

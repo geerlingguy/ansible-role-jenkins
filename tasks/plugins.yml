@@ -40,11 +40,24 @@
     path: "{{ jenkins_home }}/updates/default.json"
     regexp: "1d;$d"
 
-- name: Retrieve Jenkins API token from file
-  ansible.builtin.slurp:
-    src: /tmp/jenkins_api_token
-  register: api_token_file
-  ignore_errors: true
+- name: Retrieve Jenkins API token from Jenkins API
+  uri:
+    url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}/user/{{ jenkins_admin_username }}/api/json?depth=1"
+    method: GET
+    user: "{{ jenkins_admin_username }}"
+    password: "{{ jenkins_admin_password }}"
+    headers:
+      Content-Type: "application/json"
+    return_content: yes
+    validate_certs: no
+  register: api_token_response
+  failed_when: api_token_response.status != 200
+  when: jenkins_admin_password is defined
+
+- name: Set API token variable
+  set_fact:
+    jenkins_api_token: "{{ api_token_response.json['apiToken'] }}"
+  when: api_token_response.json.apiToken is defined
 
 - name: Install Jenkins plugins using password.
   webfx.general.jenkins_plugin:
@@ -52,8 +65,8 @@
     version: "{{ item.version | default(omit) }}"
     jenkins_home: "{{ jenkins_home }}"
     url_username: "{{ jenkins_admin_username }}"
-    force_basic_auth: "{{ api_token_file is defined }}"
-    url_password: "{{ api_token_file['content'] | b64decode if api_token_file is defined else jenkins_admin_password }}"
+    force_basic_auth: "{{ jenkins_api_token is defined }}"
+    url_password: "{{ jenkins_api_token | default(jenkins_admin_password) }}"
     state: "{{ 'present' if item.version is defined else jenkins_plugins_state }}"
     timeout: "{{ jenkins_plugin_timeout }}"
     updates_expiration: "{{ jenkins_plugin_updates_expiration }}"
