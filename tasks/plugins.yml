@@ -8,11 +8,6 @@
   when: jenkins_admin_password_file | default(false)
   tags: ['skip_ansible_lint']
 
-- name: Retrieve Jenkins API token from file
-  ansible.builtin.slurp:
-    src: /tmp/jenkins_api_token
-  register: api_token_file
-
 - name: Set Jenkins admin password fact.
   set_fact:
     jenkins_admin_password: "{{ adminpasswordfile['stdout'] | default(jenkins_admin_password) }}"
@@ -75,6 +70,12 @@
   register: api_token_creation_result
   changed_when: false  # The task is informational, we don't want it to show as changed unless the token is generated.
   when: jenkins_admin_password | default(false)
+
+- name: Retrieve Jenkins API token from file
+  ansible.builtin.slurp:
+    src: /tmp/jenkins_api_token
+  register: api_token_file
+  when: api_token_creation_result.changed 
 
 - name: Install Jenkins plugins using password.
   webfx.general.jenkins_plugin:
