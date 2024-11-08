@@ -40,14 +40,21 @@
     path: "{{ jenkins_home }}/updates/default.json"
     regexp: "1d;$d"
 
-- name: Run Groovy script to create Jenkins API token for admin user if not present
-  shell: |
-    # Execute Groovy script from template file to create API token if not present
-    java -jar {{ jenkins_jar_location }} -s http://{{ jenkins_hostname }}:{{ jenkins_http_port }} groovy ../templates/basic-security.groovy.j2
-  become: true  # Optional: Use this if you need elevated privileges
-  register: api_token_creation_result
-  changed_when: false  # The task is informational, we don't want it to show as changed unless the token is generated.
-  when: jenkins_admin_password | default(false)
+- name: Check if the Jenkins admin user exists
+  uri:
+    url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}/user/{{ jenkins_admin_username }}/api/json"
+    method: GET
+    user: "{{ jenkins_admin_username }}"
+    password: "{{ jenkins_admin_password }}"
+    force_basic_auth: true
+    status_code: 200
+  register: user_check_result
+  ignore_errors: yes
+
+- name: Fail if the Jenkins admin user does not exist
+  fail:
+    msg: "Jenkins admin user {{ jenkins_admin_username }} does not exist."
+  when: user_check_result.status != 200
 
 - name: Retrieve Jenkins API token from file
   ansible.builtin.slurp:
