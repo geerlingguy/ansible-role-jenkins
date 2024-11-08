@@ -45,6 +45,37 @@
     path: "{{ jenkins_home }}/updates/default.json"
     regexp: "1d;$d"
 
+- name: Create Jenkins API token for admin user if not present
+  shell: |
+    # Groovy script to generate API token for Jenkins admin user if not present
+    java -jar /var/jenkins_home/war/WEB-INF/jenkins-cli.jar -s http://localhost:8080 groovy = <<EOF
+    import hudson.security.*
+    import jenkins.model.*
+    import jenkins.security.*
+
+    def instance = Jenkins.getInstance()
+
+    // Fetch user details
+    def user = hudson.model.User.get('{{ jenkins_admin_username }}')
+    def apiTokenProperty = user.getProperty(ApiTokenProperty.class)
+
+    // If the API token does not exist, generate a new one
+    if (apiTokenProperty == null) {
+        println "No API token found. Generating a new API token..."
+        def result = apiTokenProperty.tokenStore.generateNewToken('defaultTokenName')
+        // Save the API token to a file for later use
+        new File("/tmp/jenkins_api_token").text = result.getTokenValue()
+    } else {
+        println "API token already exists."
+    }
+
+    user.save()
+    EOF
+  become: true  # Optional: Use this if you need elevated privileges
+  register: api_token_creation_result
+  changed_when: false  # The task is informational, we don't want it to show as changed unless the token is generated.
+  when: jenkins_admin_password | default(false)
+
 - name: Install Jenkins plugins using password.
   webfx.general.jenkins_plugin:
     name: "{{ item.name | default(item) }}"
