@@ -2,6 +2,8 @@
 import hudson.security.*
 import jenkins.model.*
 import jenkins.security.*
+import java.nio.file.Files
+import java.nio.file.Paths
 
 def instance = Jenkins.getInstance()
 def hudsonRealm = new HudsonPrivateSecurityRealm(false)
@@ -12,6 +14,8 @@ users_s = users.collect { it.toString() }
 if ("{{ jenkins_admin_username }}" in users_s) {
     println "Admin user already exists - updating password"
 
+    def apiTokenPath = "/var/lib/jenkins/api_tokens/defaultTokenName.token"
+
     def user = hudson.model.User.get('{{ jenkins_admin_username }}');
     def password = hudson.security.HudsonPrivateSecurityRealm.Details.fromPlainPassword('{{ jenkins_admin_password }}')
     user.addProperty(password)
@@ -19,6 +23,8 @@ if ("{{ jenkins_admin_username }}" in users_s) {
     if (apiTokenProperty == null) {
         println "No API token found. Generating a new API token..."
         def result = apiTokenProperty.tokenStore.generateNewToken('defaultTokenName')
+        def token = apiTokenProperty.tokenStore.generateNewToken('defaultTokenName').plainValue
+        Files.write(Paths.get(apiTokenPath), token.getBytes())
     } else {
         println "API token already exists."
     }
@@ -27,6 +33,8 @@ if ("{{ jenkins_admin_username }}" in users_s) {
 }
 else {
     println "--> creating local admin user"
+
+    def apiTokenPath = "/var/lib/jenkins/api_tokens/defaultTokenName.token"
 
     hudsonRealm.createAccount('{{ jenkins_admin_username }}', '{{ jenkins_admin_password }}')
     instance.setSecurityRealm(hudsonRealm)
@@ -40,6 +48,8 @@ else {
     if (apiTokenProperty == null) {
         println "No API token found. Generating a new API token..."
         def result = apiTokenProperty.tokenStore.generateNewToken('defaultTokenName')
+        def token = apiTokenProperty.tokenStore.generateNewToken('defaultTokenName').plainValue
+        Files.write(Paths.get(apiTokenPath), token.getBytes())
     } else {
         println "API token already exists."
     }

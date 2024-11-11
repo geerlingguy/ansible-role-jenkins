@@ -40,24 +40,14 @@
     path: "{{ jenkins_home }}/updates/default.json"
     regexp: "1d;$d"
 
-- name: Retrieve Jenkins API token from Jenkins API
-  uri:
-    url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}/user/{{ jenkins_admin_username }}/api/json?depth=1"
-    method: GET
-    user: "{{ jenkins_admin_username }}"
-    password: "{{ jenkins_admin_password }}"
-    headers:
-      Content-Type: "application/json"
-    return_content: yes
-    validate_certs: no
-  register: api_token_response
-  failed_when: api_token_response.status != 200
-  when: jenkins_admin_password is defined
+- name: Read the generated API token from Jenkins server
+  slurp:
+    src: /var/lib/jenkins/api_tokens/defaultTokenName.token
+  register: api_token_data
 
-- name: Set API token variable
+- name: Decode and set the API token fact
   set_fact:
-    jenkins_api_token: "{{ api_token_response.json['apiToken'] }}"
-  when: api_token_response.json.apiToken is defined
+    jenkins_api_token: "{{ api_token_data.content | b64decode }}"
 
 - name: Install Jenkins plugins using password.
   webfx.general.jenkins_plugin:
