@@ -1,7 +1,6 @@
 #!groovy
 import hudson.security.*
 import jenkins.model.*
-import jenkins.security.*
 
 def instance = Jenkins.getInstance()
 def hudsonRealm = new HudsonPrivateSecurityRealm(false)
@@ -15,7 +14,6 @@ if ("{{ jenkins_admin_username }}" in users_s) {
     def user = hudson.model.User.get('{{ jenkins_admin_username }}');
     def password = hudson.security.HudsonPrivateSecurityRealm.Details.fromPlainPassword('{{ jenkins_admin_password }}')
     user.addProperty(password)
-
     user.save()
 }
 else {
@@ -27,6 +25,4 @@ else {
     def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
     instance.setAuthorizationStrategy(strategy)
     instance.save()
-
-    user.save()
 }
