@@ -40,14 +40,81 @@
     path: "{{ jenkins_home }}/updates/default.json"
     regexp: "1d;$d"
 
-- name: Read the generated API token from Jenkins server
-  slurp:
-    src: /var/lib/jenkins/api_tokens/defaultTokenName.token
-  register: api_token_data
+- name: Create and replace API token for the user in Jenkins using Groovy script
+  jenkins_script:
+    script: |
+      import hudson.model.User
+      import jenkins.security.*
 
-- name: Decode and set the API token fact
+      def user = User.get('{{ jenkins_admin_username }}')
+      def apiTokenProperty = user.getProperty(ApiTokenProperty.class)
+
+      // Check if token property exists
+      if (!apiTokenProperty) {
+          user.addProperty(new ApiTokenProperty())
+          apiTokenProperty = user.getProperty(ApiTokenProperty.class)
+      }
+
+      // Generate a new token with a pre-defined value
+      def newToken = user.getProperty(ApiTokenProperty.class).tokenStore.generateToken("{{ jenkins_admin_username }}-token")
+
+      user.save()
+      
+      if (newToken != null) {
+          return newToken.plainValue
+      } else {
+          return "Failure: Could not create a new token"
+      }
+  args:
+    url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}"
+    user: "{{ jenkins_admin_username }}"
+    password: "{{ jenkins_admin_password }}"
+  register: generated_token
+  when: jenkins_use_api_token | bool and jenkins_users_config is defined
+
+- name: Debug generated_token variable
+  debug:
+    msg: "The value of generated_token is: {{ generated_token }}"
+  when: jenkins_use_api_token | bool and jenkins_users_config is defined
+
+- name: Clean up and extract token value from generated_token
   set_fact:
-    jenkins_api_token: "{{ api_token_data.content | b64decode }}"
+    jenkins_api_token_value: "{{ generated_token.output | regex_replace('^Result: ', '') | regex_replace('\\n', '') }}"
+  when: generated_token.output is defined and jenkins_use_api_token | bool and jenkins_users_config is defined
+
+- name: Debug the cleaned-up API token
+  debug:
+    msg: "The value of the API token is: {{ jenkins_api_token_value }}"
+  when: jenkins_use_api_token | bool and jenkins_users_config is defined
+
+- name: Load decrypted content of API token file
+  set_fact:
+    decrypted_api_token: "{{ lookup('ansible.builtin.unvault', jenkins_api_token_file_path) }}"
+  when: jenkins_use_api_token | bool and jenkins_users_config is defined
+
+- name: Update the API token with the new value
+  set_fact:
+    decrypted_api_token: "{{ jenkins_api_token_value }}"
+  when: jenkins_use_api_token | bool and jenkins_users_config is defined
+
+- name: Save the updated API token back to the encrypted file
+  ansible.builtin.copy:
+    content: "{{ decrypted_api_token }}"
+    dest: "{{ jenkins_api_token_file_path }}"
+    force: yes
+  delegate_to: localhost
+  when: jenkins_use_api_token | bool and jenkins_users_config is defined
+
+- name: Re-encrypt the file using ansible-vault
+  ansible.builtin.command:
+    cmd: "ansible-vault encrypt {{ jenkins_api_token_file_path }}"
+  when: decrypted_api_token is defined and jenkins_use_api_token | bool and jenkins_users_config is defined
+  delegate_to: localhost
+
+- name: Debug the final API token
+  debug:
+    msg: "The value of the new API token is: {{ jenkins_api_token }}"
+  when: jenkins_use_api_token | bool and jenkins_users_config is defined
 
 - name: Install Jenkins plugins using password.
   webfx.general.jenkins_plugin:
@@ -55,7 +122,7 @@
     version: "{{ item.version | default(omit) }}"
     jenkins_home: "{{ jenkins_home }}"
     url_username: "{{ jenkins_admin_username }}"
-    force_basic_auth: "{{ jenkins_api_token is defined }}"
+    force_basic_auth: "{{ jenkins_use_api_token }}"
     url_password: "{{ jenkins_api_token | default(jenkins_admin_password) }}"
     state: "{{ 'present' if item.version is defined else jenkins_plugins_state }}"
     timeout: "{{ jenkins_plugin_timeout }}"
