@@ -66,7 +66,7 @@
   when: jenkins_use_api_token | bool and jenkins_users_config is defined
 
 - name: Install Jenkins plugins using password or API token.
-  webfx.general.jenkins_plugin:
+  jenkins_plugin:
     name: "{{ item.name | default(item) }}"
     version: "{{ item.version | default(omit) }}"
     jenkins_home: "{{ jenkins_home }}"
