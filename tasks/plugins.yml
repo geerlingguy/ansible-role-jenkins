@@ -61,3 +61,28 @@
   until: plugin_result is success
   retries: 3
   delay: 2
+
+- name: Update Jenkins plugins dependencies
+  when: jenkins_plugin_update_dependencies
+  ansible.builtin.shell: |
+    set -o pipefail
+    # This will ensure that only plugins with a pending update are updated.
+    # The output of `list-plugin` is a list of all plugins, but only those with a closing bracket ")" at the end have a pending update.
+    UPDATE_LIST=$( \
+      java -jar {{ jenkins_jar_location }} \
+      -auth {{ jenkins_admin_username }}:{{ jenkins_admin_password }} \
+      -s http://{{ jenkins_hostname }}:{{ jenkins_http_port }} \
+      list-plugins | \
+      grep -e ')$' | \
+      awk '{ print $1 }' \
+    );
+    if [ ! -z "${UPDATE_LIST}" ]; then
+        echo Updating Jenkins Plugins: ${UPDATE_LIST};
+        java -jar {{ jenkins_jar_location }} \
+          -auth {{ jenkins_admin_username }}:{{ jenkins_admin_password }} \
+          -s http://{{ jenkins_hostname }}:{{ jenkins_http_port }} \
+          install-plugin ${UPDATE_LIST};
+    fi
+  register: result
+  changed_when: result.stdout.startswith("Updating Jenkins Plugins:")
+  notify: restart jenkins
