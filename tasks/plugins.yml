@@ -40,13 +40,39 @@
     path: "{{ jenkins_home }}/updates/default.json"
     regexp: "1d;$d"
 
-- name: Install Jenkins plugins using password.
+- name: Add pre-defined API token for the user in Jenkins on start up using Groovy script
+  jenkins_script:
+    script: |
+      import hudson.model.User
+      import jenkins.security.*
+
+      def user = User.get('{{ jenkins_admin_username }}')
+      def apiTokenProperty = user.getProperty(ApiTokenProperty.class)
+
+      // Check if token property exists
+      if (!apiTokenProperty) {
+          user.addProperty(new ApiTokenProperty())
+          apiTokenProperty = user.getProperty(ApiTokenProperty.class)
+      }
+
+      // Generate a new token with a pre-defined value
+      def newToken = user.getProperty(ApiTokenProperty.class).tokenStore.addFixedNewToken("{{ jenkins_admin_username }}-token", "{{ jenkins_api_token }}")
+
+      user.save()
+  args:
+    url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}"
+    user: "{{ jenkins_admin_username }}"
+    password: "{{ jenkins_admin_password }}"
+  when: jenkins_use_api_token | bool and jenkins_users_config is defined
+
+- name: Install Jenkins plugins using password or API token.
   jenkins_plugin:
     name: "{{ item.name | default(item) }}"
     version: "{{ item.version | default(omit) }}"
     jenkins_home: "{{ jenkins_home }}"
     url_username: "{{ jenkins_admin_username }}"
-    url_password: "{{ jenkins_admin_password }}"
+    force_basic_auth: "{{ jenkins_use_api_token }}"
+    url_password: "{{ jenkins_api_token | default(jenkins_admin_password) }}"
     state: "{{ 'present' if item.version is defined else jenkins_plugins_state }}"
     timeout: "{{ jenkins_plugin_timeout }}"
     updates_expiration: "{{ jenkins_plugin_updates_expiration }}"

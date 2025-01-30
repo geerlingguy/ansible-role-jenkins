@@ -62,3 +62,5 @@ jenkins_init_folder: "/etc/systemd/system/jenkins.service.d"
 jenkins_init_file: "{{ jenkins_init_folder }}/override.conf"
 
 jenkins_restart_behavior: "service"
+
+jenkins_use_api_token: false
